@@ -1,0 +1,38 @@
+{
+  "name": "core",
+  "version": "1.0.0",
+  "main": "build/index.js",
+  "repository": "https://gitlab.com/crystud/core.git",
+  "author": "Cwisni <grigortsevandrei@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "serve": "nodemon --exec babel-node ./src",
+    "build": "babel ./src --out-dir dist",
+    "lint": "eslint ./src --fix"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "sequelize": "^5.21.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.6.3",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-import": "^2.18.2",
+    "husky": "^3.0.9",
+    "nodemon": "^1.19.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  }
+}
