@@ -1,9 +1,9 @@
 import { Model, DataTypes } from 'sequelize'
 import Teachers from './teachers'
-import Group from './group'
+import Groups from './groups'
 import Subgroups from './subgroups'
 import Subjects from './subjects'
-import sequelize from '../database'
+import database from '../database'
 
 class Classes extends Model {}
 Classes.init({
@@ -23,7 +23,7 @@ Classes.init({
   groupID: {
     type: DataTypes.INTEGER,
     references: {
-      model: Group,
+      model: Groups,
       key: 'id',
     },
   },
@@ -43,7 +43,7 @@ Classes.init({
   },
 },
 {
-  sequelize,
+  database,
   modelName: 'classes',
 })
 

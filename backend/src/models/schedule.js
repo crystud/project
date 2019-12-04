@@ -1,7 +1,7 @@
 import { Model, DataTypes } from 'sequelize'
 import Timetable from './timetable'
 import Rooms from './rooms'
-import Lessons from './lessons'
+import Classes from './classes'
 import sequelize from '../database'
 
 class Schedule extends Model {}
@@ -12,14 +12,14 @@ Schedule.init({
     autoIncrement: true,
   },
   day: DataTypes.SMALLINT,
-  lessonsID: {
+  classID: {
     type: DataTypes.SMALLINT,
     references: {
-      model: Lessons,
+      model: Classes,
       key: 'id',
     },
   },
-  tabletimeID: {
+  timetableID: {
     type: DataTypes.SMALLINT,
     references: {
       model: Timetable,

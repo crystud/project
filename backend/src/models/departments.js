@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize'
 import sequelize from '../database'
+import Teachers from './teachers'
 
 class Departments extends Model {}
 Departments.init({
@@ -10,7 +11,13 @@ Departments.init({
   },
   name: DataTypes.TEXT,
   description: DataTypes.TEXT,
-  leader: DataTypes.INTEGER,
+  leaderID: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Teachers,
+      key: 'id',
+    },
+  },
 },
 {
   sequelize,

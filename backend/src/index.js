@@ -1,10 +1,11 @@
 import express from 'express'
-import sequelize from './database'
+
+import database from './database'
 
 const app = express()
 const port = process.env.PORT || 3000
 
-sequelize
+database
   .authenticate()
   .then(() => {
     console.log('Connection has been established successfully.')

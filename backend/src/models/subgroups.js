@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize'
-import Group from './group'
+import Groups from './groups'
 import sequelize from '../database'
 
 class Subgroups extends Model {}
@@ -12,7 +12,7 @@ Subgroups.init({
   groupID: {
     type: DataTypes.INTEGER,
     references: {
-      model: Group,
+      model: Groups,
       key: 'id',
     },
   },
