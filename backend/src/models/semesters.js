@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize'
-import Specialtys from './specialtys'
+import Specialty from './specialty'
 import sequelize from '../database'
 
 class Semesters extends Model {}
@@ -13,7 +13,7 @@ Semesters.init({
   specialtyID: {
     type: DataTypes.SMALLINT,
     references: {
-      model: Specialtys,
+      model: Specialty,
       key: 'id',
     },
   },

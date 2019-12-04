@@ -1,27 +1,26 @@
 import { Model, DataTypes } from 'sequelize'
-import Specialtys from './specialtys'
+import Departments from './departments'
 import sequelize from '../database'
 
-class Group extends Model {}
-Group.init({
+class Specialty extends Model {}
+Specialty.init({
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
-  entry: DataTypes.DATE,
-  graduation: DataTypes.DATE,
-  specialtyID: {
+  departmentID: {
     type: DataTypes.INTEGER,
     references: {
-      model: Specialtys,
+      model: Departments,
       key: 'id',
     },
   },
+  name: DataTypes.TEXT,
 },
 {
   sequelize,
-  modelName: 'group',
+  modelName: 'specialty',
 })
 
-export default Group
+export default Specialty

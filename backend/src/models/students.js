@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize'
-import Group from './group'
+import Groups from './groups'
 import Users from './users'
 import sequelize from '../database'
 
@@ -14,7 +14,7 @@ Students.init({
   groupID: {
     type: DataTypes.INTEGER,
     references: {
-      model: Group,
+      model: Groups,
       key: 'id',
     },
   },

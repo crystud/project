@@ -10,7 +10,6 @@ Rooms.init({
   },
   name: DataTypes.TEXT,
   floor: DataTypes.SMALLINT,
-  pavilionId: DataTypes.SMALLINT,
 },
 {
   sequelize,
