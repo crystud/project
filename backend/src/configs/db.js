@@ -3,7 +3,7 @@ module.exports = {
     username: process.env.DEV_DB_USERNAME || 'root',
     password: process.env.DEV_DB_PASSWORD || '',
     database: process.env.DEV_DB_NAME || 'database_dev',
-    host: process.env.TEST_DB_HOSTNAME || 'localhost',
+    host: process.env.DEV_DB_HOSTNAME || 'localhost',
     dialect: 'mariadb',
   },
   test: {
