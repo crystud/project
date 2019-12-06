@@ -13,7 +13,7 @@ export default class SubjectTypeController {
 
     return {
       created: true,
-      subjectType: create.dataValues
+      subjectType: create.dataValues,
     }
   }
 
