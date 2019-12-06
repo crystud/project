@@ -10,6 +10,7 @@ router.use(verifyUser)
 
 router.post('/create', checkSchema({
   departmentID: {
+    in: 'body',
     isNumeric: {
       errorMessage: 'Invalid department Id',
     },
@@ -18,6 +19,7 @@ router.post('/create', checkSchema({
     },
   },
   name: {
+    in: 'body',
     isString: {
       errorMessage: 'Invalid specialty name',
     },
@@ -41,6 +43,7 @@ router.post('/create', checkSchema({
 
 router.post('/edit', checkSchema({
   specialtyID: {
+    in: 'body',
     isNumeric: {
       errorMessage: 'Invalid specialty id',
     },
@@ -49,6 +52,7 @@ router.post('/edit', checkSchema({
     },
   },
   departmentID: {
+    in: 'body',
     isNumeric: {
       errorMessage: 'Invalid department Id',
     },
@@ -57,6 +61,7 @@ router.post('/edit', checkSchema({
     },
   },
   name: {
+    in: 'body',
     isString: {
       errorMessage: 'Invalid specialty name',
     },
