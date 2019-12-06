@@ -10,7 +10,10 @@ Users.init({
   },
   name: DataTypes.TEXT,
   address: DataTypes.TEXT,
-  email: DataTypes.TEXT,
+  email: {
+    type: DataTypes.TEXT,
+    unique: true,
+  },
   password: DataTypes.TEXT,
 },
 {
