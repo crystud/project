@@ -27,6 +27,9 @@ router.post('/create', checkSchema({
 router.post('/edit', checkSchema({
   id: {
     in: 'body',
+    isNumeric: {
+      errorMessage: 'Id is not correctly',
+    },
   },
   name: {
     in: 'body',

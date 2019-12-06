@@ -22,13 +22,13 @@ export default class CommissionsController {
       return { errors }
     }
 
-    await Commissions.create({
-      ...commission,
-    })
+    const created = await Commissions.create({ name })
 
-    return {
-      ...commission,
+    if (!created.dataValue) {
+      return { created: false }
     }
+
+    return commission
   }
 
   static async edit({ id, name }) {
