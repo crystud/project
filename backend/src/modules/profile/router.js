@@ -20,7 +20,9 @@ router.post('/getInformation', checkSchema({
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.json(errors.array())
+    return res.json({
+      errors: errors.array(),
+    })
   }
 
   const result = await Controller.getInformation(req.body)
@@ -53,7 +55,9 @@ router.post('/edit', checkSchema({
   const { user } = req
 
   if (!errors.isEmpty()) {
-    return res.json(errors.array())
+    return res.json({
+      errors: errors.array(),
+    })
   }
 
   const editProfileResult = await Controller.editProfile({
@@ -89,7 +93,9 @@ router.post('/changePassword', checkSchema({
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.json(errors.array())
+    return res.json({
+      errors: errors.array(),
+    })
   }
 
   const { user } = req
