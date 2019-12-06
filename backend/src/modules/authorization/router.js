@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import { checkSchema, validationResult } from 'express-validator'
-
 import config from '../../configs/authorization'
 import Controller from './controller'
 
@@ -70,6 +69,15 @@ router.post('/signUp', checkSchema({
   const result = await Controller.signUp(req.body)
 
   return res.json(result)
+})
+
+router.post('/logOut', async (req, res) => {
+  const error = await Controller.logOut(req.headers.authorization)
+  if (error.isEmpty) res.sendStatus(200)
+  else {
+    res.status(500)
+    res.json(error[0])
+  }
 })
 
 export default router

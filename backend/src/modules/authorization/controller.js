@@ -82,4 +82,35 @@ export default class AuthorizationController {
 
     return this.signIn(user)
   }
+
+  static async logOut(token) {
+    const errors = []
+    if (token === undefined) {
+      errors.push({
+        msg: 'argument is empty',
+        param: 'argument',
+        location: 'controller.js',
+      })
+      return errors
+    }
+    const refreshToken = token.split(' ')
+    const error = await RefreshTokens.update({
+      status: 'WITHDRAWN',
+    },
+    {
+      where: {
+        value: `${refreshToken[1]}`,
+      },
+    })
+
+    if (error[0] <= 0) {
+      errors.push({
+        msg: 'there is nothing to update or incorrect token',
+        param: 'refresh token',
+        location: 'header',
+      })
+      return errors
+    }
+    return errors
+  }
 }
