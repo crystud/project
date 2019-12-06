@@ -73,7 +73,7 @@ router.post('/signUp', checkSchema({
 
 router.post('/logOut', checkSchema({
   authorization: {
-    in: 'headers',
+    in: 'body',
     notEmpty: {
       errorMessage: 'token is missing',
     },
@@ -83,7 +83,7 @@ router.post('/logOut', checkSchema({
   if (!errors.isEmpty()) {
     res.json({ errors: errors.array() })
   } else {
-    await Controller.logOut(req.headers.authorization)
+    await Controller.logOut(req.body)
     res.sendStatus(200)
   }
 })
