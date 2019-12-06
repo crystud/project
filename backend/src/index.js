@@ -6,6 +6,8 @@ import authorization from './modules/authorization'
 import profile from './modules/profile'
 import specialtys from './modules/specialty'
 import subjectType from './modules/subjectType'
+import subject from './modules/subject'
+import hours from './modules/hours'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -25,5 +27,7 @@ authorization(app, database)
 profile(app)
 specialtys(app)
 subjectType(app)
+subject(app)
+hours(app)
 
 app.listen(port)
