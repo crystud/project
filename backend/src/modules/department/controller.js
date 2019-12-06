@@ -3,18 +3,17 @@ import Teachers from '../../models/teachers'
 
 export default class DepartmentsController {
   static async create(department) {
-    const {name, leaderID} = department
+    const { name, leaderID } = department
 
     const errors = []
-    
+
     const nameIsFree = await Departments.findAll({
       attributes: ['id'],
-      where:{
-        name
-      }
+      where: {
+        name,
+      },
     })
-    console.log(nameIsFree)
-    if (nameIsFree.length){
+    if (nameIsFree.length) {
       errors.push({
         msg: 'This department exists',
         param: 'name',
@@ -26,49 +25,51 @@ export default class DepartmentsController {
 
     const leader = await Teachers.findAll({
       attributes: ['id'],
-      where:{
-        id: leaderID
-      }
+      where: {
+        id: leaderID,
+      },
     })
-    
-    if (leader.length){
+
+    if (!leader.length) {
       errors.push({
         msg: 'The teacher doesn`t exist',
         param: 'leaderID',
         location: 'body',
       })
 
-      return {errors}
+      return { errors }
     }
 
     const created = await Departments.create(department)
 
-    if (!created){
+    if (!created) {
       return { created: false }
     }
-    
+
     return {
       created: true,
-      department
+      department,
     }
   }
 
   static async edit(department) {
-    const {id, name, description, leaderID} = department
-    
+    const {
+      id, name, description, leaderID,
+    } = department
+
     const updated = await Departments.update({ name, description, leaderID }, {
       where: {
-        id 
+        id,
       },
     })
 
-    if (!updated){
+    if (!updated) {
       return { updated: false }
     }
-    
+
     return {
       updated: true,
-      department
+      department,
     }
   }
 }
