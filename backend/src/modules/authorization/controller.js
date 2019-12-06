@@ -22,8 +22,8 @@ export default class AuthorizationController {
 
     if (!passwordIsCorrectly) {
       errors.push({
-        msg: 'Email is used',
-        param: 'email',
+        msg: 'Password is incorrect',
+        param: 'password',
         location: 'body',
       })
 
@@ -42,7 +42,7 @@ export default class AuthorizationController {
       roles: [], // TODO: select users roles
     }, config.token.access.secret, {
       expiresIn: `${config.token.access.time}m`,
-      algorithm: 'RS256',
+      algorithm: 'HS256',
     })
 
     return {
