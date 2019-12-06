@@ -38,6 +38,7 @@ Schedule.init({
 {
   sequelize,
   modelName: 'schedule',
+  tableName: 'schedule',
 })
 
 export default Schedule

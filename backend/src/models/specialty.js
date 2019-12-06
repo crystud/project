@@ -21,6 +21,7 @@ Specialty.init({
 {
   sequelize,
   modelName: 'specialty',
+  tableName: 'specialty',
 })
 
 export default Specialty

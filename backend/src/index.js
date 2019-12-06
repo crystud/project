@@ -4,6 +4,7 @@ import database from './database'
 
 import authorization from './modules/authorization'
 import profile from './modules/profile'
+import specialtys from './modules/specialty'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -21,5 +22,6 @@ database
 
 authorization(app, database)
 profile(app)
+specialtys(app)
 
 app.listen(port)

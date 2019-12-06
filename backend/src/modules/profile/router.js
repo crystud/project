@@ -4,7 +4,11 @@ import { checkSchema, validationResult } from 'express-validator'
 import Controller from './controller'
 import { password } from '../../configs/authorization'
 
+import verifyUser from '../../middlewares/verifyUser'
+
 const router = Router()
+
+router.use(verifyUser)
 
 router.post('/getInformation', checkSchema({
   userId: {
