@@ -22,7 +22,7 @@ router.post('/signIn', checkSchema({
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.json(errors.array())
+    return res.json({ errors: errors.array() })
   }
 
   const result = await Controller.signIn(req.body)
@@ -63,7 +63,7 @@ router.post('/signUp', checkSchema({
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.json(errors.array())
+    return res.json({ errors: errors.array() })
   }
 
   const result = await Controller.signUp(req.body)
@@ -71,12 +71,20 @@ router.post('/signUp', checkSchema({
   return res.json(result)
 })
 
-router.post('/logOut', async (req, res) => {
-  const error = await Controller.logOut(req.headers.authorization)
-  if (error.isEmpty) res.sendStatus(200)
-  else {
-    res.status(500)
-    res.json(error[0])
+router.post('/logOut', checkSchema({
+  authorization: {
+    in: 'headers',
+    notEmpty: {
+      errorMessage: 'token is missing',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    res.json({ errors: errors.array() })
+  } else {
+    await Controller.logOut(req.headers.authorization)
+    res.sendStatus(200)
   }
 })
 
