@@ -8,6 +8,8 @@ import specialtys from './modules/specialty'
 import subjectType from './modules/subjectType'
 import subject from './modules/subject'
 import hours from './modules/hours'
+import commissions from './modules/commissions'
+import department from './modules/department'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -29,5 +31,7 @@ specialtys(app)
 subjectType(app)
 subject(app)
 hours(app)
+commissions(app)
+department(app)
 
 app.listen(port)
