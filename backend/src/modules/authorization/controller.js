@@ -134,7 +134,7 @@ export default class AuthorizationController {
 
     const deactivate = await RefreshTokens.update({
       status: 'USED',
-      date_od_used: DataTypes.NOW,
+      date_of_used: DataTypes.NOW,
     },
     {
       where: {
