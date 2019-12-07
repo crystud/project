@@ -1,5 +1,4 @@
 import Specialty from '../../models/specialty'
-import { adminRoleName } from '../../configs/roles'
 
 export default class SpecialtysController {
   static async createSpecialty(data) {
@@ -50,7 +49,7 @@ export default class SpecialtysController {
       specialtyID: id,
     } = data
 
-    if (!user.roles.includes(adminRoleName)) {
+    if (!user.roles.includes('admin')) {
       return { created: false }
     }
 
