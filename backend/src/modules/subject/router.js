@@ -95,4 +95,28 @@ router.post('/edit', checkSchema({
   return res.json(edit)
 })
 
+router.post('/get', checkSchema({
+  subjectID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid subject id',
+    },
+    notEmpty: {
+      errorMessage: 'No subject id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const subject = await Controller.get(req.body)
+
+  return res.json(subject)
+})
+
 export default router
