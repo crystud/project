@@ -1,5 +1,5 @@
 import router from './router'
 
 export default (app) => {
-  app.use('/profile', router)
+  app.use('/subjectType', router)
 }
