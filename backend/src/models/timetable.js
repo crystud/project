@@ -16,6 +16,7 @@ Timetable.init({
 {
   sequelize,
   modelName: 'timetable',
+  tableName: 'timetable',
 })
 
 export default Timetable
