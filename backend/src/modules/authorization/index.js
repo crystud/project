@@ -1,5 +1,5 @@
 import router from './router'
 
-export default (app, database) => {
+export default (app) => {
   app.use('/auth', router)
 }

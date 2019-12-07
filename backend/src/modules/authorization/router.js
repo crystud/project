@@ -72,4 +72,23 @@ router.post('/signUp', checkSchema({
   return res.json(result)
 })
 
+router.post('/refresh', checkSchema({
+  token: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'Token is not correct',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json(errors.array())
+  }
+
+  const result = await Controller.refresh(req.body)
+
+  return res.json(result)
+})
+
 export default router
