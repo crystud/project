@@ -24,4 +24,9 @@ Specialty.init({
   tableName: 'specialty',
 })
 
+Specialty.belongsTo(Departments, {
+  foreignKey: 'departmentID',
+  as: 'department',
+})
+
 export default Specialty
