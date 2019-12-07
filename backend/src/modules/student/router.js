@@ -107,4 +107,28 @@ router.post('/edit', checkSchema({
   return res.json(create)
 })
 
+router.post('/get', checkSchema({
+  studentID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid studentID',
+    },
+    notEmpty: {
+      errorMessage: 'No student id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const student = await Controller.get(req.body)
+
+  return res.json(student)
+})
+
 export default router
