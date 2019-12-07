@@ -1,20 +1,45 @@
 import Subject from '../../models/subjects'
 
 export default class SubjectController {
-  static async createSubject({ name, commissionID, subjectTypeID: subjectType }) {
-    const create = await Subject.create({
+  static async createSubject(data) {
+    const {
+      name,
+      commissionID,
+      subjectTypeID: subjectType,
+    } = data
+
+    const subjectData = {
       name,
       commissionID,
       subjectType,
-    })
-
-    if (!create.dataValues) {
-      return { created: false }
     }
 
-    return {
-      created: true,
-      subject: create.dataValues,
+    try {
+      const exists = await Subject.findAll({
+        where: subjectData,
+      })
+
+      if (exists.length) {
+        return {
+          created: false,
+          msg: 'Such subject already exists',
+          param: 'name',
+          location: 'body',
+        }
+      }
+
+      const create = await Subject.create(subjectData)
+
+      if (!create.dataValues) {
+        return { created: false }
+      }
+
+      return {
+        created: true,
+        subject: create.dataValues,
+      }
+    } catch (e) {
+      return { created: false }
     }
   }
 

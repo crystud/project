@@ -2,13 +2,32 @@ import Specialty from '../../models/specialty'
 import { adminRoleName } from '../../configs/roles'
 
 export default class SpecialtysController {
-  static async createSpecialty({ specialty, user }) {
-    if (!user.roles.includes(adminRoleName)) {
-      return { created: false }
-    }
+  static async createSpecialty(data) {
+    const {
+      departmentID,
+      name,
+    } = data
 
     try {
-      const create = await Specialty.create(specialty)
+      const specialtyData = {
+        departmentID,
+        name,
+      }
+
+      const exists = await Specialty.findAll({
+        where: specialtyData,
+      })
+
+      if (exists.length) {
+        return {
+          created: false,
+          msg: 'Specialty with such data already exist',
+          location: 'body',
+          param: 'name',
+        }
+      }
+
+      const create = await Specialty.create(specialtyData)
 
       if (!create.dataValues) {
         return { created: false }
