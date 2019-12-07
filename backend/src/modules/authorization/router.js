@@ -23,7 +23,7 @@ router.post('/signIn', checkSchema({
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.json(errors.array())
+    return res.json({ errors: errors.array() })
   }
 
   const result = await Controller.signIn(req.body)
@@ -64,7 +64,7 @@ router.post('/signUp', checkSchema({
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.json(errors.array())
+    return res.json({ errors: errors.array() })
   }
 
   const result = await Controller.signUp(req.body)
@@ -83,7 +83,7 @@ router.post('/refresh', checkSchema({
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.json(errors.array())
+    return res.json({ errors: errors.array() })
   }
 
   const result = await Controller.refresh(req.body)

@@ -44,7 +44,6 @@ export default class AuthorizationController {
       roles,
     }, config.token.access.secret, {
       expiresIn: `${config.token.access.time}m`,
-      algorithm: 'HS256',
     })
 
     return {
