@@ -72,12 +72,31 @@ router.post('/edit', checkSchema({
   },
   number: {
     in: 'body',
+    notEmpty: {
+      errorMessage: 'Number souldn`t be empty',
+    },
+    isNumeric: {
+      errorMessage: 'Number must be numeric',
+    },
+    isInt: {
+      errorMessage: `Number must be at least ${config.number.minNumber} and not more than ${config.number.maxNumber}`,
+      options: {
+        min: config.number.minNumber,
+        max: config.number.maxNumber,
+      },
+    },
   },
   weeks: {
     in: 'body',
   },
   specialtyID: {
     in: 'body',
+    notEmpty: {
+      errorMessage: 'Specialty id souldn`t be empty',
+    },
+    isNumeric: {
+      errorMessage: 'Specialty id must be numeric',
+    },
   },
 }), async (req, res) => {
   const errors = validationResult(req)

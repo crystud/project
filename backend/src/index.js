@@ -10,7 +10,7 @@ import subject from './modules/subject'
 import hours from './modules/hours'
 import commissions from './modules/commissions'
 import department from './modules/department'
-import semester from "./modules/semester";
+import semester from './modules/semester'
 
 const app = express()
 const port = process.env.PORT || 3000

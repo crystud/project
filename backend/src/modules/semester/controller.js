@@ -7,14 +7,14 @@ export default class SemestersController {
 
     const errors = []
 
-    const specialty = await Specialties.findAll({
+    const specialty = await Specialties.findOne({
       attributes: ['id'],
       where: {
         id: specialtyID,
       },
     })
 
-    if (!specialty.length) {
+    if (!specialty) {
       errors.push({
         msg: 'The specialty doesn`t exist',
         param: 'specialtyID',
@@ -24,7 +24,7 @@ export default class SemestersController {
       return { errors }
     }
 
-    const recordExists = await Semesters.findAll({
+    const recordExists = await Semesters.findOne({
       attributes: ['id'],
       where: {
         number,
@@ -32,7 +32,7 @@ export default class SemestersController {
       },
     })
 
-    if (recordExists.length) {
+    if (recordExists) {
       errors.push({
         msg: 'The record exists',
         param: ['number', 'specialtyID'],
@@ -61,7 +61,7 @@ export default class SemestersController {
 
     const errors = []
 
-    const recordExists = await Semesters.findAll({
+    const recordExists = await Semesters.findOne({
       attributes: ['id'],
       where: {
         number,
@@ -69,10 +69,27 @@ export default class SemestersController {
       },
     })
 
-    if (recordExists.length) {
+    if (recordExists) {
       errors.push({
         msg: 'The record exists',
         param: ['number', 'specialtyID'],
+        location: 'body',
+      })
+
+      return { errors }
+    }
+
+    const noRecord = await Semesters.findOne({
+      attributes: ['id'],
+      where: {
+        id,
+      },
+    })
+
+    if (!noRecord) {
+      errors.push({
+        msg: 'The record doesn`t exist',
+        param: 'id',
         location: 'body',
       })
 
