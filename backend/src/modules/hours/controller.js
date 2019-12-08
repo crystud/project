@@ -2,6 +2,8 @@ import Hours from '../../models/hours'
 
 export default class HoursController {
   static async create({ hours, semesterID, subjectID }) {
+    const errors = []
+
     try {
       const exists = await Hours.findAll({
         where: {
@@ -11,12 +13,13 @@ export default class HoursController {
       })
 
       if (exists.length) {
-        return {
-          created: false,
+        errors.push({
           location: 'body',
           param: 'subjectID',
           msg: 'Hours with such semester and subject already exists',
-        }
+        })
+
+        return { errors }
       }
 
       const create = await Hours.create({

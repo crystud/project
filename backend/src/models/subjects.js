@@ -31,4 +31,14 @@ Subjects.init({
   modelName: 'subjects',
 })
 
+Subjects.belongsTo(Commissions, {
+  foreignKey: 'commissionID',
+  as: 'commission',
+})
+
+Subjects.belongsTo(SubjectTypes, {
+  foreignKey: 'subjectType',
+  as: 'subjectTypeData',
+})
+
 export default Subjects
