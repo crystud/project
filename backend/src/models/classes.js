@@ -47,4 +47,24 @@ Classes.init({
   modelName: 'classes',
 })
 
+Classes.belongsTo(Groups, {
+  foreignKey: 'groupID',
+  as: 'group',
+})
+
+Classes.belongsTo(Subgroups, {
+  foreignKey: 'subgroupID',
+  as: 'subgroup',
+})
+
+Classes.hasOne(Teachers, {
+  foreignKey: 'id',
+  as: 'teacher',
+})
+
+Classes.belongsTo(Subjects, {
+  foreignKey: 'subjectID',
+  as: 'subject',
+})
+
 export default Classes

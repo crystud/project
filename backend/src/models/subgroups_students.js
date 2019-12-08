@@ -30,4 +30,14 @@ SubgroupsStudents.init({
   modelName: 'subgroups_students',
 })
 
+Subgroups.hasMany(SubgroupsStudents, {
+  foreignKey: 'subgroupID',
+  as: 'students',
+})
+
+SubgroupsStudents.belongsTo(Students, {
+  foreignKey: 'studentID',
+  as: 'studentData',
+})
+
 export default SubgroupsStudents
