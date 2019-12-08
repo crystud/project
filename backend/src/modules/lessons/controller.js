@@ -2,6 +2,7 @@ import lessons from '../../models/lessons'
 
 export default class lessonsController {
   static async create(data) {
+    const errors = []
     const {
       classID,
       date,
@@ -10,15 +11,16 @@ export default class lessonsController {
     } = data
 
     const isTaken = await lessons.findAll({
-      where: classID, date,
+      where: { classID, date },
     })
 
     if (isTaken.length) {
-      return {
+      errors.push({
         msg: 'This class has a lesson in this time already',
         param: 'classId, date',
         location: 'body',
-      }
+      })
+      return { errors }
     }
 
     const created = await lessons.create({
@@ -28,8 +30,7 @@ export default class lessonsController {
       home_work: homeWork,
     })
 
-    if (created) return { created: true }
-    return { created: false }
+    return { created: created !== null }
   }
 
   static async setTopic({ lessonId, topic }) {

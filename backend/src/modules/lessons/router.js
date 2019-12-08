@@ -2,11 +2,11 @@ import { Router } from 'express'
 import { checkSchema, validationResult } from 'express-validator'
 
 import Controller from './controller'
-import verifyUser from '../../middlewares/verifyUser'
+import checkRoles from '../../middlewares/checkRoles'
 
 const router = Router()
 
-router.use(verifyUser['teacher'])
+router.use(checkRoles(['teacher']))
 
 router.post('/create', checkSchema({
   classID: {
@@ -81,9 +81,7 @@ router.post('/setTopic', checkSchema({
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return {
-      errors: errors.array(),
-    }
+    return res.json({ errors: errors.array() })
   }
 
   const edited = Controller.setHomeWork(req.body)
@@ -114,9 +112,7 @@ router.post('/setHomeWork', checkSchema({
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return {
-      errors: errors.array(),
-    }
+    return res.json({ errors: errors.array() })
   }
 
   const edited = Controller.setHomeWork(req.body)
