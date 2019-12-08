@@ -82,15 +82,12 @@ router.post('/logOut', checkSchema({
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    res.json({ errors: errors.array() })
+    return res.json({ errors: errors.array() })
   }
 
   const bool = await Controller.logOut(req.body)
 
-  if (bool) res.status(200)
-  else res.status(500)
-
-  return res.json({ logout: bool })
+  return res.json(bool)
 })
 
 export default router

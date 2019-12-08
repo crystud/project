@@ -96,7 +96,7 @@ export default class AuthorizationController {
       },
     })
 
-    if (result[0] > 0) return true
+    if (result[0]) return true
     return false
   }
 }
