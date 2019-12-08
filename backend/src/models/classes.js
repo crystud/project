@@ -3,7 +3,7 @@ import Teachers from './teachers'
 import Groups from './groups'
 import Subgroups from './subgroups'
 import Subjects from './subjects'
-import database from '../database'
+import sequelize from '../database'
 
 class Classes extends Model {}
 Classes.init({
@@ -43,7 +43,7 @@ Classes.init({
   },
 },
 {
-  database,
+  sequelize,
   modelName: 'classes',
 })
 

@@ -9,16 +9,14 @@ export default class ProfileController {
 
     const userResult = await Users.findOne({
       attributes: ['id', 'name', 'address', 'email'],
-      where: {
-        id,
-      },
+      where: { id },
     })
 
     if (!userResult) {
       errors.push({
         location: 'body',
         param: 'id',
-        msg: 'There is user with such id',
+        msg: 'There is no user with such id',
       })
 
       return { errors }

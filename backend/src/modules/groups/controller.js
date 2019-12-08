@@ -1,7 +1,11 @@
 import Groups from '../../models/groups'
+import Specialty from '../../models/specialty'
+import Students from '../../models/students'
 
 export default class GroupsController {
   static async create(data) {
+    const errors = []
+
     const {
       entry,
       graduation,
@@ -20,12 +24,13 @@ export default class GroupsController {
       })
 
       if (exists.length) {
-        return {
-          created: false,
+        errors.push({
           msg: 'Such group already exists',
           location: 'body',
           param: 'specialtyID',
-        }
+        })
+
+        return { errors }
       }
 
       const create = await Groups.create(groupData)
@@ -72,6 +77,42 @@ export default class GroupsController {
       }
     } catch (e) {
       return { edited: false }
+    }
+  }
+
+  static async get({ groupID: id }) {
+    const errors = []
+
+    try {
+      const group = await Groups.findOne({
+        where: { id },
+        include: [
+          {
+            model: Specialty,
+            as: 'specialty',
+          },
+          {
+            model: Students,
+            as: 'students',
+          },
+        ],
+      })
+
+      if (!group) {
+        errors.push({
+          msg: 'There is no such group',
+          location: 'body',
+          param: 'groupID',
+        })
+
+        return { errors }
+      }
+
+      return { group }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
     }
   }
 }

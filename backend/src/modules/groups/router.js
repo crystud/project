@@ -101,4 +101,28 @@ router.post('/edit', checkSchema({
   return res.json(create)
 })
 
+router.post('/get', checkSchema({
+  groupID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid group id',
+    },
+    notEmpty: {
+      errorMessage: 'No group id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const group = await Controller.get(req.body)
+
+  return res.json(group)
+})
+
 export default router
