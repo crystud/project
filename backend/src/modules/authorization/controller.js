@@ -110,6 +110,23 @@ export default class AuthorizationController {
     return this.signIn(user)
   }
 
+  static async logOut(token) {
+    const { authorization } = token
+    const refreshToken = authorization.split(' ')
+
+    const [updated] = await RefreshTokens.update({
+      status: 'WITHDRAWN',
+    },
+    {
+      where: {
+        value: refreshToken[1],
+      },
+    })
+
+    if (updated) return { logedOut: true }
+    return { logedOut: false }
+  }
+
   static async refresh({ token }) {
     const errors = []
 
