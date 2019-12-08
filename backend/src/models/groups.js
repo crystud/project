@@ -24,4 +24,9 @@ Groups.init({
   modelName: 'groups',
 })
 
+Groups.belongsTo(Specialty, {
+  foreignKey: 'specialtyID',
+  as: 'specialty',
+})
+
 export default Groups

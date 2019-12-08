@@ -5,6 +5,7 @@ import Controller from './controller'
 
 const router = Router()
 
+
 router.post('/signIn', checkSchema({
   email: {
     in: 'body',
@@ -71,6 +72,25 @@ router.post('/signUp', checkSchema({
   return res.json(result)
 })
 
+router.post('/refresh', checkSchema({
+  token: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'Token is incorrect',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({ errors: errors.array() })
+  }
+
+  const result = await Controller.refresh(req.body)
+
+  return res.json(result)
+})
+
 router.post('/logOut', checkSchema({
   authorization: {
     in: 'body',
@@ -85,9 +105,9 @@ router.post('/logOut', checkSchema({
     return res.json({ errors: errors.array() })
   }
 
-  const bool = await Controller.logOut(req.body)
+  const result = await Controller.logOut(req.body)
 
-  return res.json(bool)
+  return res.json(result)
 })
 
 export default router

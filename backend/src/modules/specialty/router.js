@@ -83,4 +83,28 @@ router.post('/edit', checkSchema({
   return res.json(create)
 })
 
+router.post('/get', checkSchema({
+  specialtyID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid specialty id',
+    },
+    notEmpty: {
+      errorMessage: 'No specialty id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const specialty = await Controller.get(req.body)
+
+  return res.json(specialty)
+})
+
 export default router

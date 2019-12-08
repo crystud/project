@@ -1,36 +1,42 @@
 import { Router } from 'express'
 import { validationResult, checkSchema } from 'express-validator'
 
-import verifyUser from '../../middlewares/verifyUser'
 import Controller from './controller'
+import verifyUser from '../../middlewares/verifyUser'
 
 const router = Router()
 
 router.use(verifyUser)
 
 router.post('/create', checkSchema({
-  subjectTypeID: {
-    in: 'body',
-    isNumeric: {
-      errorMessage: 'Subject type id is invalid',
-    },
-    notEmpty: {
-      errorMessage: 'No subject type id provided',
-    },
-  },
-  commissionID: {
-    in: 'body',
-    isNumeric: {
-      errorMessage: 'Commission id is invalid',
-    },
-    notEmpty: {
-      errorMessage: 'No commission id provided',
-    },
-  },
   name: {
     in: 'body',
     notEmpty: {
-      errorMessage: 'No name provided',
+      errorMessage: 'No student name provided',
+    },
+  },
+  groupID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid group id',
+    },
+    notEmpty: {
+      errorMessage: 'No group id provided',
+    },
+  },
+  address: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No address provided',
+    },
+  },
+  userID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid user id',
+    },
+    notEmpty: {
+      errorMessage: 'No user id provided',
     },
   },
 }), async (req, res) => {
@@ -42,43 +48,49 @@ router.post('/create', checkSchema({
     })
   }
 
-  const create = await Controller.createSubject(req.body)
+  const create = await Controller.create(req.body)
 
   return res.json(create)
 })
 
 router.post('/edit', checkSchema({
-  subjectID: {
+  studentID: {
     in: 'body',
     isNumeric: {
-      errorMessage: 'Subject type id is invalid',
+      errorMessage: 'Invalid student id',
     },
     notEmpty: {
-      errorMessage: 'No subject type id provided',
-    },
-  },
-  subjectTypeID: {
-    in: 'body',
-    isNumeric: {
-      errorMessage: 'Subject type id is invalid',
-    },
-    notEmpty: {
-      errorMessage: 'No subject type id provided',
-    },
-  },
-  commissionID: {
-    in: 'body',
-    isNumeric: {
-      errorMessage: 'Commission id is invalid',
-    },
-    notEmpty: {
-      errorMessage: 'No commission id provided',
+      errorMessage: 'No student id provided',
     },
   },
   name: {
     in: 'body',
     notEmpty: {
-      errorMessage: 'No name provided',
+      errorMessage: 'No student name provided',
+    },
+  },
+  groupID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid group id',
+    },
+    notEmpty: {
+      errorMessage: 'No group id provided',
+    },
+  },
+  address: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No address provided',
+    },
+  },
+  userID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid user id',
+    },
+    notEmpty: {
+      errorMessage: 'No user id provided',
     },
   },
 }), async (req, res) => {
@@ -90,19 +102,19 @@ router.post('/edit', checkSchema({
     })
   }
 
-  const edit = await Controller.editSubject(req.body)
+  const create = await Controller.edit(req.body)
 
-  return res.json(edit)
+  return res.json(create)
 })
 
 router.post('/get', checkSchema({
-  subjectID: {
+  studentID: {
     in: 'body',
     isNumeric: {
-      errorMessage: 'Invalid subject id',
+      errorMessage: 'Invalid studentID',
     },
     notEmpty: {
-      errorMessage: 'No subject id provided',
+      errorMessage: 'No student id provided',
     },
   },
 }), async (req, res) => {
@@ -114,9 +126,9 @@ router.post('/get', checkSchema({
     })
   }
 
-  const subject = await Controller.get(req.body)
+  const student = await Controller.get(req.body)
 
-  return res.json(subject)
+  return res.json(student)
 })
 
 export default router

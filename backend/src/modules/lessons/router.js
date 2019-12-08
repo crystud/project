@@ -2,12 +2,11 @@ import { Router } from 'express'
 import { checkSchema, validationResult } from 'express-validator'
 
 import Controller from './controller'
-// import verifyUser from '../../middlewares/verifyUser'
-
+import verifyUser from '../../middlewares/verifyUser'
 
 const router = Router()
 
-// router.use(verifyUser)
+router.use(verifyUser['teacher'])
 
 router.post('/create', checkSchema({
   classID: {
