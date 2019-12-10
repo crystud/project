@@ -1,10 +1,15 @@
-import { Op } from 'sequelize'
+import sequelize from 'sequelize'
 
 import Students from '../../models/students'
 import Groups from '../../models/groups'
 import Users from '../../models/users'
 import Marks from '../../models/marks'
 import Lessons from '../../models/lessons'
+import Teachers from '../../models/teachers'
+import Classes from '../../models/classes'
+import SubgroupsStudents from '../../models/subgroups_students'
+import Subgroups from '../../models/subgroups'
+import Commissions from '../../models/commissions'
 
 export default class StudentController {
   static async create(data) {
@@ -183,6 +188,80 @@ export default class StudentController {
     }
   }
 
+  static async getStudentTeachers({ studentID }) {
+    const errors = []
+
+    try {
+      const studentGroup = await Students.findOne({
+        attributes: ['groupID'],
+        where: {
+          id: studentID,
+        },
+      })
+
+      if (!studentGroup) {
+        errors.push({
+          msg: 'Student does not exists or has no group',
+          param: 'studentID',
+          location: 'body',
+        })
+
+        return { errors }
+      }
+
+      const { groupID } = studentGroup
+
+      const [simpleClassTeachers, subgroupsTeachers] = await Promise.all([
+        Teachers.findAll({
+          include: [
+            {
+              model: Classes,
+              as: 'class',
+              where: { groupID },
+            },
+          ],
+        }),
+        SubgroupsStudents.findAll({
+          where: { studentID },
+          attributes: ['id'],
+          include: [
+            {
+              attributes: ['id'],
+              model: Subgroups,
+              as: 'subgroup',
+              include: [
+                {
+                  model: Classes,
+                  as: 'class',
+                  include: [
+                    {
+                      model: Teachers,
+                      as: 'teacher',
+                      include: {
+                        attributes: ['email'],
+                        model: Users,
+                        as: 'user',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        }),
+      ])
+
+      return {
+        simpleClassTeachers,
+        subgroupsTeachers,
+      }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
   static async getCustomRangeStatistics(data) {
     const errors = []
 
@@ -198,8 +277,8 @@ export default class StudentController {
 
     if (startTime && endTime) {
       where.date = {
-        [Op.lt]: new Date(endTime),
-        [Op.gt]: new Date(startTime),
+        [sequelize.Op.lt]: new Date(endTime),
+        [sequelize.Op.gt]: new Date(startTime),
       }
     }
 
