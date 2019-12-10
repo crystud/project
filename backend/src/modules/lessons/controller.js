@@ -10,8 +10,9 @@ export default class lessonsController {
       homeWork,
     } = data
 
-    const isTaken = await lessons.findAll({
+    const isTaken = await lessons.findOne({
       where: { classID, date },
+      attributes: ['id']
     })
 
     if (isTaken.length) {
