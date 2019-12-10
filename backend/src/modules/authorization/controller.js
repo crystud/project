@@ -123,8 +123,7 @@ export default class AuthorizationController {
       },
     })
 
-    if (updated) return { logedOut: true }
-    return { logedOut: false }
+    return { logedOut: !!updated }
   }
 
   static async refresh({ token }) {
