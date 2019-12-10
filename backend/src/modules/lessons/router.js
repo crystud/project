@@ -38,7 +38,7 @@ router.post('/create', checkSchema({
       errorMessage: 'Topic shouldn`t be empty',
     },
   },
-  home_work: {
+  homeWork: {
     in: 'body',
     isString: {
       errorMessage: 'Invalid homework',
