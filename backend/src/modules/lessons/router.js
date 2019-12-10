@@ -6,6 +6,7 @@ import checkRoles from '../../middlewares/checkRoles'
 
 const router = Router()
 
+router.use(verifyUser)
 router.use(checkRoles(['teacher']))
 
 router.post('/create', checkSchema({
