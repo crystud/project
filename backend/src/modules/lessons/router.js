@@ -3,6 +3,7 @@ import { checkSchema, validationResult } from 'express-validator'
 
 import Controller from './controller'
 import checkRoles from '../../middlewares/checkRoles'
+import verifyUser from '../../middlewares/verifyUser'
 
 const router = Router()
 
