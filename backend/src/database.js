@@ -1,12 +1,14 @@
 import Sequelize from 'sequelize'
 
-import { production, test, development } from './configs/db'
+import { production, development } from './configs/db'
+
+const dbData = process.env.NODE_ENV === 'production' ? production : development
 
 const database = new Sequelize({
-  username: production.username || test.username || development.username,
-  password: production.password || test.password || development.password,
-  database: production.database || test.database || development.database,
-  host: production.host || test.host || development.host,
+  username: dbData.username,
+  password: dbData.password,
+  database: dbData.database,
+  host: dbData.host,
   dialect: 'mariadb',
   timezone: 'Etc/GMT0',
   omitNull: true,

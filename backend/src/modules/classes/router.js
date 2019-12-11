@@ -182,7 +182,7 @@ router.post('/getGroupClasses', checkRoles(['admin', 'teacher', 'student']), che
 router.post('/setMark', checkRoles(['teacher', 'admin']), checkSchema({
   mark: {
     in: 'body',
-    isInt: {
+    isNumeric: {
       errorMessage: 'Invalid mark',
     },
     notEmpty: {
@@ -239,7 +239,7 @@ router.post('/setMark', checkRoles(['teacher', 'admin']), checkSchema({
   return res.json(set)
 })
 
-router.post('/getClassMarks', checkSchema({
+router.post('/getMarks', checkRoles(['admin', 'teacher', 'student']), checkSchema({
   classID: {
     in: 'body',
     isInt: {
@@ -264,6 +264,33 @@ router.post('/getClassMarks', checkSchema({
   const classMarks = await Controller.getClassMarks(req.body)
 
   return res.json(classMarks)
+})
+
+router.post('/getStatistics', checkRoles(['admin', 'teacher', 'student']), checkSchema({
+  classID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid class id',
+      options: {
+        min: 1,
+      },
+    },
+    notEmpty: {
+      errorMessage: 'No class id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const stats = await Controller.getStatistics(req.body)
+
+  return res.json(stats)
 })
 
 export default router

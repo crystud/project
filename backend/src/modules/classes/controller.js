@@ -6,6 +6,8 @@ import Subjects from '../../models/subjects'
 import Students from '../../models/students'
 import Lessons from '../../models/lessons'
 import Marks from '../../models/marks'
+import SubjectTypes from '../../models/subject_types'
+import ScoringSystems from '../../models/scoring_systems'
 
 export default class ClassesController {
   static async checkTeacherPriviligies({ lessonID, user }) {
@@ -75,9 +77,11 @@ export default class ClassesController {
       }
 
       const setAlready = await Marks.findOne({
-        studentID,
-        lessonID,
-        isMiss,
+        where: {
+          studentID,
+          lessonID,
+          type: isMiss ? 'miss' : 'mark',
+        },
       })
 
       if (setAlready) {
@@ -122,7 +126,50 @@ export default class ClassesController {
         return { errors }
       }
 
-      // TODO: Make more advanced system of marks types
+      const lesson = await Lessons.findOne({
+        where: { id: lessonID },
+        attributes: [],
+        include: {
+          model: Classes,
+          as: 'class',
+          attributes: ['subjectID'],
+          include: {
+            model: Subjects,
+            as: 'subject',
+            attributes: ['subjectType'],
+            include: {
+              model: SubjectTypes,
+              as: 'subjectTypeData',
+              attributes: ['scoringSystemID'],
+              include: {
+                model: ScoringSystems,
+                as: 'scoring_system',
+              },
+            },
+          },
+        },
+      })
+
+      const {
+        subject: {
+          subjectTypeData: {
+            scoring_system: {
+              min,
+              max,
+            },
+          },
+        },
+      } = lesson.class
+
+      if (mark < min || mark > max) {
+        errors.push({
+          msg: `Minimum mark is ${min}. Maximum is ${max}`,
+          location: 'body',
+          param: 'mark',
+        })
+
+        return { errors }
+      }
 
       const set = await Marks.create({
         studentID,
@@ -288,9 +335,9 @@ export default class ClassesController {
         return { errors }
       }
 
-      const exists = await Classes.findOne({ where: insertData })
+      const classExists = await Classes.findOne({ where: insertData })
 
-      if (exists) {
+      if (classExists) {
         errors.push({
           msg: 'Such class already exists',
           param: 'groupID',
@@ -342,9 +389,9 @@ export default class ClassesController {
         return { errors }
       }
 
-      const exists = await Classes.findOne({ where: { id } })
+      const classExists = await Classes.findOne({ where: { id } })
 
-      if (!exists) {
+      if (!classExists) {
         errors.push({
           msg: 'Such class does not exist',
           param: 'classID',
@@ -515,6 +562,28 @@ export default class ClassesController {
         fetched: true,
         classMarks,
       }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async getStatistics({ classID }) {
+    try {
+      const marks = await Marks.findAll({
+        attributes: ['mark', 'studentID'],
+        include: {
+          model: Lessons,
+          as: 'lesson',
+          attributes: ['date'],
+          where: {
+            classID,
+          },
+        },
+      })
+
+      return { marks }
     } catch (e) {
       console.error(e)
 
