@@ -239,7 +239,7 @@ router.post('/setMark', checkRoles(['teacher', 'admin']), checkSchema({
   return res.json(set)
 })
 
-router.post('/getMarks', checkSchema({
+router.post('/getMarks', checkRoles(['admin', 'teacher', 'student']), checkSchema({
   classID: {
     in: 'body',
     isInt: {
@@ -266,7 +266,7 @@ router.post('/getMarks', checkSchema({
   return res.json(classMarks)
 })
 
-router.post('/getStatistics', checkSchema({
+router.post('/getStatistics', checkRoles(['admin', 'teacher', 'student']), checkSchema({
   classID: {
     in: 'body',
     isInt: {
