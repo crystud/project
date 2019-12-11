@@ -1,30 +1,36 @@
 import bcrypt from 'bcryptjs'
 
 import Users from '../../models/users'
+import Students from '../../models/students'
+
 import { password } from '../../configs/authorization'
 
 export default class ProfileController {
   static async getInformation({ userId: id }) {
     const errors = []
 
-    const userResult = await Users.findOne({
+    const user = await Users.findOne({
       attributes: ['id', 'name', 'address', 'email'],
       where: {
         id,
       },
+      include: {
+        model: Students,
+        as: 'student',
+      },
     })
 
-    if (!userResult) {
+    if (!user) {
       errors.push({
         location: 'body',
         param: 'id',
-        msg: 'There is user with such id',
+        msg: 'There is no user with such id',
       })
 
       return { errors }
     }
 
-    return { user: userResult.dataValues }
+    return { user }
   }
 
   static async editProfile({ name, address, user }) {

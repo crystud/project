@@ -32,4 +32,9 @@ Students.init({
   modelName: 'students',
 })
 
+Users.hasOne(Students, {
+  foreignKey: 'userID',
+  as: 'student',
+})
+
 export default Students
