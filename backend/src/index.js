@@ -11,6 +11,7 @@ import hours from './modules/hours'
 import commissions from './modules/commissions'
 import department from './modules/department'
 import semester from './modules/semester'
+import rooms from './modules/rooms'
 import classes from './modules/classes'
 
 const app = express()
@@ -36,6 +37,6 @@ hours(app)
 commissions(app)
 department(app)
 semester(app)
+rooms(app)
 classes(app)
-
 app.listen(port)

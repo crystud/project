@@ -56,4 +56,9 @@ Schedule.belongsTo(Classes, {
   as: 'class',
 })
 
+Rooms.hasMany(Schedule, {
+  foreignKey: 'roomID',
+  as: 'schedules',
+})
+
 export default Schedule
