@@ -133,7 +133,7 @@ router.post('/get', checkRoles(['admin', 'teacher']), checkSchema({
   return res.json(student)
 })
 
-router.post('/statstics/week', checkSchema({
+router.post('/statistics/week', checkSchema({
   studentID: {
     in: 'body',
     isInt: {
@@ -157,7 +157,7 @@ router.post('/statstics/week', checkSchema({
   return res.json(statistics)
 })
 
-router.post('/statstics/month', checkSchema({
+router.post('/statistics/month', checkSchema({
   studentID: {
     in: 'body',
     isInt: {
@@ -181,7 +181,7 @@ router.post('/statstics/month', checkSchema({
   return res.json(statistics)
 })
 
-router.post('/statstics/global', checkSchema({
+router.post('/statistics/global', checkSchema({
   studentID: {
     in: 'body',
     isInt: {
@@ -203,6 +203,30 @@ router.post('/statstics/global', checkSchema({
   const statistics = await Controller.getGlobalStatistics(req.body)
 
   return res.json(statistics)
+})
+
+router.post('/getTeachers', checkSchema({
+  studentID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid student id',
+    },
+    notEmpty: {
+      errorMessage: 'No student id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const teachers = await Controller.getStudentTeachers(req.body)
+
+  return res.json(teachers)
 })
 
 export default router
