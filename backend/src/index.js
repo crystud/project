@@ -4,6 +4,13 @@ import database from './database'
 
 import authorization from './modules/authorization'
 import profile from './modules/profile'
+import specialtys from './modules/specialty'
+import subjectType from './modules/subjectType'
+import subject from './modules/subject'
+import hours from './modules/hours'
+import commissions from './modules/commissions'
+import department from './modules/department'
+import semester from './modules/semester'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -21,5 +28,12 @@ database
 
 authorization(app, database)
 profile(app)
+specialtys(app)
+subjectType(app)
+subject(app)
+hours(app)
+commissions(app)
+department(app)
+semester(app)
 
 app.listen(port)

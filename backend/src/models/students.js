@@ -35,6 +35,20 @@ Students.init({
 Users.hasOne(Students, {
   foreignKey: 'userID',
   as: 'student',
+=======
+Students.belongsTo(Groups, {
+  as: 'group',
+  foreignKey: 'groupID',
+})
+
+Students.belongsTo(Users, {
+  as: 'user',
+  foreignKey: 'userID',
+})
+
+Groups.hasMany(Students, {
+  as: 'students',
+  foreignKey: 'groupID',
 })
 
 export default Students

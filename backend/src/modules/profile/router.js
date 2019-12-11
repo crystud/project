@@ -4,7 +4,11 @@ import { checkSchema, validationResult } from 'express-validator'
 import Controller from './controller'
 import { password } from '../../configs/authorization'
 
+import verifyUser from '../../middlewares/verifyUser'
+
 const router = Router()
+
+router.use(verifyUser)
 
 router.post('/getInformation', checkSchema({
   userId: {
@@ -20,7 +24,9 @@ router.post('/getInformation', checkSchema({
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.json(errors.array())
+    return res.json({
+      errors: errors.array(),
+    })
   }
 
   const result = await Controller.getInformation(req.body)
@@ -53,7 +59,9 @@ router.post('/edit', checkSchema({
   const { user } = req
 
   if (!errors.isEmpty()) {
-    return res.json(errors.array())
+    return res.json({
+      errors: errors.array(),
+    })
   }
 
   const editProfileResult = await Controller.editProfile({
@@ -89,7 +97,9 @@ router.post('/changePassword', checkSchema({
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.json(errors.array())
+    return res.json({
+      errors: errors.array(),
+    })
   }
 
   const { user } = req
