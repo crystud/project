@@ -90,13 +90,9 @@ export default class ScheduleController {
         type: isNumerator ? 'numerator' : 'denominator',
       })
 
-      if (!create) {
-        return { created: false }
-      }
-
       return {
-        created: true,
-        schedule: create.dataValues,
+        created: !!create,
+        schedule: create || null,
       }
     } catch (e) {
       console.log(e)
