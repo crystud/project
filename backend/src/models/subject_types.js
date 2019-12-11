@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize'
 import sequelize from '../database'
+import ScoringSystems from './scoring_systems'
 
 class SubjectTypes extends Model {}
 SubjectTypes.init({
@@ -10,10 +11,27 @@ SubjectTypes.init({
   },
   name: DataTypes.TEXT,
   coefficient: DataTypes.FLOAT,
+  scoringSystemID: {
+    type: DataTypes.SMALLINT,
+    references: {
+      model: ScoringSystems,
+      key: 'id',
+    },
+  },
 },
 {
   sequelize,
   modelName: 'subject_types',
+})
+
+SubjectTypes.belongsTo(ScoringSystems, {
+  as: 'scoring_system',
+  foreignKey: 'scoringSystemID',
+})
+
+ScoringSystems.hasMany(SubjectTypes, {
+  as: 'subject_types',
+  foreignKey: 'scoringSystemID',
 })
 
 export default SubjectTypes
