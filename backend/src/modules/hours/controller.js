@@ -15,7 +15,7 @@ export default class HoursController {
       if (exists.length) {
         errors.push({
           location: 'body',
-          param: 'subjectID',
+          param: ['subjectID', 'semesterID'],
           msg: 'Hours with such semester and subject already exists',
         })
 
@@ -28,13 +28,9 @@ export default class HoursController {
         subjectID,
       })
 
-      if (!create.dataValues) {
-        return { created: false }
-      }
-
       return {
-        created: true,
-        hours: create.dataValues,
+        created: !!create,
+        hours: create || null,
       }
     } catch (e) {
       return { created: false }
@@ -60,13 +56,9 @@ export default class HoursController {
         where: { id },
       })
 
-      if (!edit) {
-        return { edited: false }
-      }
-
       return {
-        edited: true,
-        hours: newData,
+        edited: !!edit,
+        hours: newData || null,
       }
     } catch (e) {
       return { edited: false }
