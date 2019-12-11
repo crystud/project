@@ -111,7 +111,7 @@ router.post('/removeStudent', checkRoles(['admin']), checkSchema({
   return res.json(insert)
 })
 
-router.post('/get', checkRoles(['admin', 'teacher']), checkSchema({
+router.post('/get', checkRoles(['admin', 'teacher', 'student']), checkSchema({
   subgroupID: {
     isInt: {
       errorMessage: 'Invalid subgroup id',
