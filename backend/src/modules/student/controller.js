@@ -9,7 +9,6 @@ import Teachers from '../../models/teachers'
 import Classes from '../../models/classes'
 import SubgroupsStudents from '../../models/subgroups_students'
 import Subgroups from '../../models/subgroups'
-import Commissions from '../../models/commissions'
 
 export default class StudentController {
   static async create(data) {
