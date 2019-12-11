@@ -16,7 +16,9 @@ export default class RoomController {
     }
 
     try {
-      const exists = await Rooms.findOne(roomData)
+      const exists = await Rooms.findOne({
+        where: { roomData },
+      })
 
       if (exists) {
         errors.push({
