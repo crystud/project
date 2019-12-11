@@ -2,13 +2,15 @@ import { Router } from 'express'
 import { validationResult, checkSchema } from 'express-validator'
 
 import Controller from './controller'
+
 import verifyUser from '../../middlewares/verifyUser'
+import checkRoles from '../../middlewares/checkRoles'
 
 const router = Router()
 
 router.use(verifyUser)
 
-router.post('/create', checkSchema({
+router.post('/create', checkRoles(['admin']), checkSchema({
   name: {
     in: 'body',
     notEmpty: {
@@ -53,7 +55,7 @@ router.post('/create', checkSchema({
   return res.json(create)
 })
 
-router.post('/edit', checkSchema({
+router.post('/edit', checkRoles(['admin']), checkSchema({
   studentID: {
     in: 'body',
     isNumeric: {
@@ -107,7 +109,7 @@ router.post('/edit', checkSchema({
   return res.json(create)
 })
 
-router.post('/get', checkSchema({
+router.post('/get', checkRoles(['admin', 'teacher']), checkSchema({
   studentID: {
     in: 'body',
     isNumeric: {
@@ -129,6 +131,78 @@ router.post('/get', checkSchema({
   const student = await Controller.get(req.body)
 
   return res.json(student)
+})
+
+router.post('/statstics/week', checkSchema({
+  studentID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid user id',
+      options: {
+        min: 1,
+      },
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const statistics = await Controller.getWeekStatistics(req.body)
+
+  return res.json(statistics)
+})
+
+router.post('/statstics/month', checkSchema({
+  studentID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid user id',
+      options: {
+        min: 1,
+      },
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const statistics = await Controller.getMonthStatistics(req.body)
+
+  return res.json(statistics)
+})
+
+router.post('/statstics/global', checkSchema({
+  studentID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid user id',
+      options: {
+        min: 1,
+      },
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const statistics = await Controller.getGlobalStatistics(req.body)
+
+  return res.json(statistics)
 })
 
 export default router
