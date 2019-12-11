@@ -25,4 +25,9 @@ Lessons.init({
   modelName: 'lessons',
 })
 
+Lessons.belongsTo(Classes, {
+  foreignKey: 'classID',
+  as: 'class',
+})
+
 export default Lessons
