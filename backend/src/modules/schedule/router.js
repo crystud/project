@@ -9,9 +9,8 @@ import Controller from './controller'
 const router = Router()
 
 router.use(verifyUser)
-router.use(checkRoles(['admin']))
 
-router.post('/create', checkSchema({
+router.post('/create', checkRoles(['admin']), checkSchema({
   day: {
     in: 'body',
     isInt: {
@@ -84,7 +83,7 @@ router.post('/create', checkSchema({
   return res.json(create)
 })
 
-router.post('/day', checkSchema({
+router.post('/day', checkRoles(['admin', 'teacher', 'student']), checkSchema({
   day: {
     isInt: {
       errorMessage: 'Invalid day',
@@ -122,7 +121,7 @@ router.post('/day', checkSchema({
   return res.json(schedule)
 })
 
-router.post('/week', checkSchema({
+router.post('/week', checkRoles(['admin', 'teacher', 'student']), checkSchema({
   groupID: {
     isInt: {
       errorMessage: 'Invalid group id',
