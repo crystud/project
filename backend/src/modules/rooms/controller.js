@@ -1,4 +1,10 @@
 import Rooms from '../../models/rooms'
+import Schedule from '../../models/schedule'
+import Timetable from '../../models/timetable'
+import Classes from '../../models/classes'
+import Teachers from '../../models/teachers'
+import Groups from '../../models/groups'
+import Subjects from '../../models/subjects'
 
 export default class RoomController {
   static async create({ name, floor }) {
@@ -27,13 +33,9 @@ export default class RoomController {
         floor,
       })
 
-      if (!create) {
-        return { created: false }
-      }
-
       return {
-        created: true,
-        room: create.dataValues,
+        created: !!create,
+        room: create || null,
       }
     } catch (e) {
       console.error(e)
@@ -66,13 +68,9 @@ export default class RoomController {
         where: { id },
       })
 
-      if (!edit) {
-        return { edited: false }
-      }
-
       return {
-        edited: true,
-        room: newRoomData,
+        edited: !!edit,
+        room: edit ? newRoomData : null,
       }
     } catch (e) {
       console.error(e)
@@ -87,6 +85,34 @@ export default class RoomController {
     try {
       const room = await Rooms.findOne({
         where: { id },
+        include: {
+          model: Schedule,
+          as: 'schedules',
+          include: [
+            {
+              model: Timetable,
+              as: 'timetable',
+            },
+            {
+              model: Classes,
+              as: 'class',
+              include: [
+                {
+                  model: Teachers,
+                  as: 'teacher',
+                },
+                {
+                  model: Groups,
+                  as: 'group',
+                },
+                {
+                  model: Subjects,
+                  as: 'subject',
+                },
+              ],
+            },
+          ],
+        },
       })
 
       if (!room) {
@@ -99,7 +125,10 @@ export default class RoomController {
         return { errors }
       }
 
-      return { room }
+      return {
+        fetched: !!room,
+        room: room || null,
+      }
     } catch (e) {
       console.error(e)
 
