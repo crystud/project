@@ -25,13 +25,9 @@ export default class ShortenedDaysController {
         date, reason,
       })
 
-      if (!create) {
-        return { created: false }
-      }
-
       return {
-        created: true,
-        shortenedDay: create.dataValues,
+        created: !!create,
+        shortenedDay: create || null,
       }
     } catch (e) {
       console.error(e)
@@ -62,13 +58,8 @@ export default class ShortenedDaysController {
         where: { id },
       })
 
-      if (!deleteShortDay) {
-        return { deleted: false }
-      }
-
       return {
-        deleted: true,
-        shortenedDay: deleteShortDay.dataValues,
+        deleted: !!deleteShortDay,
       }
     } catch (e) {
       console.error(e)
@@ -95,8 +86,7 @@ export default class ShortenedDaysController {
       }
 
       return {
-        fetched: true,
-        hasShortenedDaysAfter: true,
+        hasShortenedDaysAfter: !!shortenedDay,
         shortenedDay,
       }
     } catch (e) {
