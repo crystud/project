@@ -1,28 +1,29 @@
 import { Router } from 'express'
-import { checkSchema, validationResult } from 'express-validator'
+import { validationResult, checkSchema } from 'express-validator'
+
+import checkRoles from '../../middlewares/checkRoles'
+import verifyUser from '../../middlewares/verifyUser'
 
 import Controller from './controller'
 
-import checkRoles from '../../middlewares/checkRoles'
-import userVerify from '../../middlewares/verifyUser'
-
 const router = Router()
 
-router.use(userVerify)
+router.use(verifyUser)
 
 router.post('/create', checkRoles(['admin']), checkSchema({
   name: {
     in: 'body',
     notEmpty: {
-      errorMessage: 'No name specified',
+      errorMessage: 'No room name provided',
     },
   },
-  coefficient: {
+  floor: {
+    in: 'body',
     isNumeric: {
-      errorMessage: 'Invalid coefficient specified',
+      errorMessage: 'Invalid floor value',
     },
     notEmpty: {
-      errorMessage: 'No coefficient specified',
+      errorMessage: 'No floor provided',
     },
   },
 }), async (req, res) => {
@@ -34,57 +35,34 @@ router.post('/create', checkRoles(['admin']), checkSchema({
     })
   }
 
-  const create = await Controller.createSubjectType(req.body)
+  const create = await Controller.create(req.body)
 
   return res.json(create)
 })
 
 router.post('/edit', checkRoles(['admin']), checkSchema({
-  subjectTypeID: {
+  roomID: {
     in: 'body',
-    notEmpty: {
-      errorMessage: 'No subject type id provided',
-    },
     isNumeric: {
-      errorMessage: 'Invalid subject type id',
+      errorMessage: 'Invalid room id',
+    },
+    notEmpty: {
+      errorMessage: 'No room id provided',
     },
   },
   name: {
     in: 'body',
     notEmpty: {
-      errorMessage: 'No name specified',
+      errorMessage: 'No room name provided',
     },
   },
-  coefficient: {
-    isNumeric: {
-      errorMessage: 'Invalid coefficient specified',
-    },
-    notEmpty: {
-      errorMessage: 'No coefficient specified',
-    },
-  },
-}), async (req, res) => {
-  const errors = validationResult(req)
-
-  if (!errors.isEmpty()) {
-    return res.json({
-      errors: errors.array(),
-    })
-  }
-
-  const edit = await Controller.editSubjectType(req.body)
-
-  return res.json(edit)
-})
-
-router.post('/get', checkRoles(['teacher', 'admin']), checkSchema({
-  subjectTypeID: {
+  floor: {
     in: 'body',
     isNumeric: {
-      errorMessage: 'Invalid subject type id',
+      errorMessage: 'Invalid floor value',
     },
     notEmpty: {
-      errorMessage: 'No subject type id provided',
+      errorMessage: 'No floor provided',
     },
   },
 }), async (req, res) => {
@@ -96,9 +74,33 @@ router.post('/get', checkRoles(['teacher', 'admin']), checkSchema({
     })
   }
 
-  const subjectType = await Controller.get(req.body)
+  const create = await Controller.edit(req.body)
 
-  return res.json(subjectType)
+  return res.json(create)
+})
+
+router.post('/get', checkRoles(['admin', 'teacher', 'student']), checkSchema({
+  roomID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid room id',
+    },
+    notEmpty: {
+      errorMessage: 'No room id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const create = await Controller.get(req.body)
+
+  return res.json(create)
 })
 
 export default router

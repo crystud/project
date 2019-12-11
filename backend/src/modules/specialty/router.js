@@ -2,13 +2,15 @@ import { Router } from 'express'
 import { checkSchema, validationResult } from 'express-validator'
 
 import Controller from './controller'
+
 import verifyUser from '../../middlewares/verifyUser'
+import checkRoles from '../../middlewares/checkRoles'
 
 const router = Router()
 
 router.use(verifyUser)
 
-router.post('/create', checkSchema({
+router.post('/create', checkRoles(['admin']), checkSchema({
   departmentID: {
     in: 'body',
     isNumeric: {
@@ -41,7 +43,7 @@ router.post('/create', checkSchema({
   return res.json(create)
 })
 
-router.post('/edit', checkSchema({
+router.post('/edit', checkRoles(['admin']), checkSchema({
   specialtyID: {
     in: 'body',
     isNumeric: {
@@ -83,7 +85,7 @@ router.post('/edit', checkSchema({
   return res.json(create)
 })
 
-router.post('/get', checkSchema({
+router.post('/get', checkRoles(['admin', 'teacher', 'student']), checkSchema({
   specialtyID: {
     in: 'body',
     isNumeric: {

@@ -2,13 +2,15 @@ import { Router } from 'express'
 import { validationResult, checkSchema } from 'express-validator'
 
 import verifyUser from '../../middlewares/verifyUser'
+import checkRoles from '../../middlewares/checkRoles'
+
 import Controller from './controller'
 
 const router = Router()
 
 router.use(verifyUser)
 
-router.post('/create', checkSchema({
+router.post('/create', checkRoles(['admin']), checkSchema({
   subjectTypeID: {
     in: 'body',
     isNumeric: {
@@ -47,7 +49,7 @@ router.post('/create', checkSchema({
   return res.json(create)
 })
 
-router.post('/edit', checkSchema({
+router.post('/edit', checkRoles(['admin']), checkSchema({
   subjectID: {
     in: 'body',
     isNumeric: {
@@ -117,6 +119,96 @@ router.post('/get', checkSchema({
   const subject = await Controller.get(req.body)
 
   return res.json(subject)
+})
+
+router.post('/createScoringSystem', checkSchema({
+  minPossibleMark: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No minimal possible mark provided',
+    },
+  },
+  maxPossibleMark: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No maximal possible mark provided',
+    },
+  },
+  minPassingMark: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No minimal passing mark provided',
+    },
+  },
+  name: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No name provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const create = await Controller.createScoringSystem(req.body)
+
+  return res.json(create)
+})
+
+router.post('/editScoringSystem', checkSchema({
+  scoringSystemID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid scoring system id provided',
+      options: {
+        min: 1,
+      },
+    },
+    notEmpty: {
+      errorMessage: 'No scoring system id provided',
+    },
+  },
+  minPossibleMark: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No minimal possible mark provided',
+    },
+  },
+  maxPossibleMark: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No maximal possible mark provided',
+    },
+  },
+  minPassingMark: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No minimal passing mark provided',
+    },
+  },
+  name: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No name provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const create = await Controller.editScoringSystem(req.body)
+
+  return res.json(create)
 })
 
 export default router

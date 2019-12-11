@@ -5,19 +5,9 @@ export default class SpecialtysController {
   static async createSpecialty(data) {
     const errors = []
 
-    const {
-      departmentID,
-      name,
-    } = data
-
     try {
-      const specialtyData = {
-        departmentID,
-        name,
-      }
-
       const exists = await Specialty.findAll({
-        where: specialtyData,
+        where: data,
       })
 
       if (exists.length) {
@@ -30,15 +20,11 @@ export default class SpecialtysController {
         return { errors }
       }
 
-      const create = await Specialty.create(specialtyData)
-
-      if (!create.dataValues) {
-        return { created: false }
-      }
+      const create = await Specialty.create(data)
 
       return {
-        created: true,
-        specialty: create.dataValues,
+        created: !!create,
+        specialty: create || null,
       }
     } catch (e) {
       return { created: false }
@@ -49,13 +35,8 @@ export default class SpecialtysController {
     const {
       name,
       departmentID,
-      user,
       specialtyID: id,
     } = data
-
-    if (!user.roles.includes('admin')) {
-      return { created: false }
-    }
 
     try {
       const [update] = await Specialty.update({
@@ -65,13 +46,9 @@ export default class SpecialtysController {
         where: { id },
       })
 
-      if (!update) {
-        return { updated: false }
-      }
-
       return {
-        updated: true,
-        specialty: update.dataValues,
+        updated: !!update,
+        specialty: update ? data : null,
       }
     } catch (e) {
       return { updated: false }
@@ -84,15 +61,11 @@ export default class SpecialtysController {
     try {
       const specialty = await Specialty.findOne({
         where: { id },
-        include: [
-          {
-            model: Departments,
-            as: 'department',
-          },
-        ],
+        include: {
+          model: Departments,
+          as: 'department',
+        },
       })
-
-      console.log(specialty)
 
       if (!specialty) {
         errors.push({

@@ -4,6 +4,7 @@ import Groups from './groups'
 import Subgroups from './subgroups'
 import Subjects from './subjects'
 import sequelize from '../database'
+import SubgroupsStudents from './subgroups_students'
 
 class Classes extends Model {}
 Classes.init({
@@ -45,6 +46,41 @@ Classes.init({
 {
   sequelize,
   modelName: 'classes',
+})
+
+Classes.belongsTo(Groups, {
+  foreignKey: 'groupID',
+  as: 'group',
+})
+
+Classes.belongsTo(Subgroups, {
+  foreignKey: 'subgroupID',
+  as: 'class',
+})
+
+Subgroups.hasOne(Classes, {
+  foreignKey: 'subgroupID',
+  as: 'class',
+})
+
+Classes.belongsTo(Teachers, {
+  foreignKey: 'teacherID',
+  as: 'teacher',
+})
+
+Classes.belongsTo(Subjects, {
+  foreignKey: 'subjectID',
+  as: 'subject',
+})
+
+Teachers.belongsTo(Classes, {
+  foreignKey: 'id',
+  as: 'class',
+})
+
+SubgroupsStudents.belongsTo(Subgroups, {
+  id: 'subgroupID',
+  as: 'subgroup',
 })
 
 export default Classes

@@ -41,4 +41,24 @@ Schedule.init({
   tableName: 'schedule',
 })
 
+Classes.belongsTo(Schedule, {
+  foreignKey: 'id',
+  as: 'schedule',
+})
+
+Schedule.belongsTo(Timetable, {
+  foreignKey: 'timetableID',
+  as: 'timetable',
+})
+
+Schedule.belongsTo(Classes, {
+  foreignKey: 'classID',
+  as: 'class',
+})
+
+Rooms.hasMany(Schedule, {
+  foreignKey: 'roomID',
+  as: 'schedules',
+})
+
 export default Schedule
