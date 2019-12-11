@@ -1,0 +1,110 @@
+pipeline {
+    agent any
+    
+    environment {
+        HOME = "."
+        REGISTRY_HOST = "localhost"
+        REGISTRY_PORT = "5000"
+    }
+
+    stages {
+        stage("Crystud") {
+            parallel {
+                stage("Frontend") {
+                    environment {
+                        IMAGE_NAME = "frontend:${env.GIT_BRANCH}-${env.GIT_COMMIT}"
+                        REGISTRY_TAG = "${env.REGISTRY_HOST}:${env.REGISTRY_PORT}/${env.IMAGE_NAME}"
+
+                        REGISTRY_VERSION_TAG = "${env.REGISTRY_HOST}:${env.REGISTRY_PORT}/frontend:${env.BRANCH_NAME == "master" ? "alpine" : "develop" }"
+                        PORT = "${env.BRANCH_NAME == "master" ? "3001" : "3002"}"
+                    }
+
+                    stages {
+                        stage("Frontend build") {
+                            steps {
+                                dir("frontend") {
+                                    sh "docker build -t ${IMAGE_NAME} ."
+                                    sh "docker tag ${IMAGE_NAME} ${REGISTRY_TAG}"
+                                    sh "docker push ${REGISTRY_TAG}"
+                                }
+                            }
+                        }
+
+                        stage("Frontend delivery") {
+                            environment {
+                                RUNNING_CONTAINER_ID = "${sh(script:'docker ps -q --filter name=frontend-$GIT_BRANCH', returnStdout: true)}"
+                            }
+
+                            steps {
+                                
+                                dir("frontend") {
+                                    sh "docker tag ${IMAGE_NAME} ${REGISTRY_VERSION_TAG}"
+                                    sh "docker push ${REGISTRY_VERSION_TAG}"
+
+                                    catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+                                        sh "docker stop ${RUNNING_CONTAINER_ID}"
+                                    }
+
+                                    sh "docker run -d -p ${PORT}:80 --rm --name frontend-${GIT_BRANCH} ${REGISTRY_VERSION_TAG}"
+                                }
+                            }
+                        }
+                    }
+                    post {
+                        always {
+                            sh "docker image remove ${IMAGE_NAME}"
+                        }
+                    }
+                }
+
+                stage("Backend") {
+                    environment {
+                        IMAGE_NAME = "backend:${env.GIT_BRANCH}-${env.GIT_COMMIT}"
+                        REGISTRY_TAG = "${env.REGISTRY_HOST}:${env.REGISTRY_PORT}/${env.IMAGE_NAME}"
+
+                        REGISTRY_VERSION_TAG = "${env.REGISTRY_HOST}:${env.REGISTRY_PORT}/backend:${env.BRANCH_NAME == "master" ? "lates" : "develop" }"
+                        PORT = "${env.BRANCH_NAME == "master" ? "4001" : "4002"}"
+                        DB_NAME = "${env.BRANCH_NAME == "master" ? "ctystud" : "crystud_dev"}"
+                    }
+
+                    stages {
+                        stage("Backend build") {
+                            steps {
+                                dir("backend") {
+                                    sh "docker build -t ${IMAGE_NAME} ."
+                                    sh "docker tag ${IMAGE_NAME} ${REGISTRY_TAG}"
+                                    sh "docker push ${REGISTRY_TAG}"
+                                }
+                            }
+                        }
+                        stage("Backend delivery") {
+                            environment {
+                                RUNNING_CONTAINER_ID = "${sh(script:'docker ps -q --filter name=backend-$GIT_BRANCH', returnStdout: true)}"
+                            }
+
+                            steps {
+                                dir("backend") {
+                                    sh "docker tag ${IMAGE_NAME} ${REGISTRY_VERSION_TAG}"
+                                    sh "docker push ${REGISTRY_VERSION_TAG}"
+
+                                    catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+                                        sh "docker stop ${RUNNING_CONTAINER_ID}"
+                                    }
+
+                                    withCredentials([usernamePassword(credentialsId: 'db_production', usernameVariable: 'DB_USERNAME', passwordVariable: 'DB_PASSWORD')]) {
+                                        sh "docker run -d -p ${PORT}:${PORT} -e DB_HOSTNAME='crystud.kirashchuk.ga' -e PORT='${port}' -e NODE_ENV='production' -e DB_USERNAME='${DB_USERNAME}' -e DB_PASSWORD='${DB_PASSWORD}' -e DB_NAME='${DB_NAME}' --rm --name backend-${GIT_BRANCH} ${REGISTRY_VERSION_TAG}"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    post {
+                        always {
+                            sh "docker image remove ${IMAGE_NAME}"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
