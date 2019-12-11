@@ -6,21 +6,9 @@ export default class GroupsController {
   static async create(data) {
     const errors = []
 
-    const {
-      entry,
-      graduation,
-      specialtyID,
-    } = data
-
     try {
-      const groupData = {
-        entry,
-        graduation,
-        specialtyID,
-      }
-
       const exists = await Groups.findAll({
-        where: groupData,
+        where: data,
       })
 
       if (exists.length) {
@@ -33,7 +21,7 @@ export default class GroupsController {
         return { errors }
       }
 
-      const create = await Groups.create(groupData)
+      const create = await Groups.create(data)
 
       if (!create.dataValues) {
         return { created: false }
