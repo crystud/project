@@ -8,7 +8,9 @@ export default class SubgroupsController {
     const errors = []
 
     try {
-      const exists = await Groups.findOne({ where: { id: groupID } })
+      const exists = await Groups.findOne({
+        where: { id: groupID },
+      })
 
       if (!exists) {
         errors.push({
@@ -22,13 +24,9 @@ export default class SubgroupsController {
 
       const create = await Subgroups.create({ groupID })
 
-      if (!create) {
-        return { created: false }
-      }
-
       return {
-        created: true,
-        subgroup: create.dataValues,
+        created: !!create,
+        subgroup: create || null,
       }
     } catch (e) {
       console.error(e)
@@ -58,9 +56,7 @@ export default class SubgroupsController {
       }
 
       const subgroupExists = await Subgroups.findOne({
-        where: {
-          id: subgroupID,
-        },
+        where: { id: subgroupID },
       })
 
       if (!subgroupExists) {
@@ -91,13 +87,9 @@ export default class SubgroupsController {
 
       const create = await SubgroupsStudents.create(insertData)
 
-      if (!create) {
-        return { added: false }
-      }
-
       return {
-        added: true,
-        subgroupStudent: create.dataValues,
+        added: !!create,
+        subgroupStudent: create || null,
       }
     } catch (e) {
       console.error(e)
@@ -109,14 +101,15 @@ export default class SubgroupsController {
   static async removeStudent({ studentID, subgroupID }) {
     try {
       const deleteSubgroupStudent = await SubgroupsStudents.destroy({
-        where: { studentID, subgroupID },
+        where: {
+          studentID,
+          subgroupID,
+        },
       })
 
-      if (!deleteSubgroupStudent) {
-        return { deleted: false }
+      return {
+        deleted: !!deleteSubgroupStudent,
       }
-
-      return { deleted: true }
     } catch (e) {
       console.error(e)
 
@@ -130,18 +123,14 @@ export default class SubgroupsController {
     try {
       const subgroup = await Subgroups.findOne({
         where: { id },
-        include: [
-          {
-            model: SubgroupsStudents,
-            as: 'students',
-            include: [
-              {
-                model: Students,
-                as: 'studentData',
-              },
-            ],
+        include: {
+          model: SubgroupsStudents,
+          as: 'students',
+          include: {
+            model: Students,
+            as: 'studentData',
           },
-        ],
+        },
       })
 
       if (!subgroup) {
@@ -155,7 +144,7 @@ export default class SubgroupsController {
       }
 
       return {
-        fetched: true,
+        fetched: !!subgroup,
         subgroup,
       }
     } catch (e) {
