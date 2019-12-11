@@ -1,6 +1,7 @@
 import Subject from '../../models/subjects'
 import Commissions from '../../models/commissions'
 import SubjectTypes from '../../models/subject_types'
+import ScoringSystems from '../../models/scoring_systems'
 
 export default class SubjectController {
   static async createSubject(data) {
@@ -10,20 +11,38 @@ export default class SubjectController {
       name,
       commissionID,
       subjectTypeID: subjectType,
+      scoringSystemID,
     } = data
 
     const subjectData = {
       name,
       commissionID,
       subjectType,
+      scoringSystemID,
     }
 
     try {
-      const exists = await Subject.findAll({
+      const scoringSystemExists = await ScoringSystems.findOne({
+        where: {
+          id: scoringSystemID,
+        },
+      })
+
+      if (!scoringSystemExists) {
+        errors.push({
+          msg: 'Such scoring system does not exist',
+          param: 'scoringSystemID',
+          location: 'body',
+        })
+
+        return { errors }
+      }
+
+      const exists = await Subject.findOne({
         where: subjectData,
       })
 
-      if (exists.length) {
+      if (exists) {
         errors.push({
           msg: 'Such subject already exists',
           param: 'name',
@@ -35,16 +54,127 @@ export default class SubjectController {
 
       const create = await Subject.create(subjectData)
 
-      if (!create.dataValues) {
-        return { created: false }
-      }
-
       return {
-        created: true,
-        subject: create.dataValues,
+        created: !!create,
+        subject: create || null,
       }
     } catch (e) {
       return { created: false }
+    }
+  }
+
+  static async createScoringSystem(data) {
+    const errors = []
+
+    const {
+      minPossibleMark: min,
+      maxPossibleMark: max,
+      minPassingMark: minMark,
+      name,
+    } = data
+
+    try {
+      const exists = await ScoringSystems.findOne({
+        where: {
+          min,
+          max,
+          minMark,
+        },
+      })
+
+      if (exists) {
+        errors.push({
+          msg: 'Such scoring system already exists.',
+          param: ['name', 'minPossibleMark', 'maxPossibleMark', 'minPassingMark'],
+          location: 'body',
+        })
+
+        return { errors }
+      }
+
+      const create = await ScoringSystems.create({
+        name,
+        min,
+        max,
+        minMark,
+      })
+
+      return {
+        created: !!create,
+        scoringSystem: create || null,
+      }
+    } catch (e) {
+      console.error(e)
+
+      return { created: false }
+    }
+  }
+
+  static async editScoringSystem(data) {
+    const errors = []
+
+    const {
+      scoringSystemID,
+      minPossibleMark: min,
+      maxPossibleMark: max,
+      minPassingMark: minMark,
+      name,
+    } = data
+
+    try {
+      const existsForChanges = await ScoringSystems.findOne({
+        where: {
+          id: scoringSystemID,
+        },
+      })
+
+      if (!existsForChanges) {
+        errors.push({
+          msg: 'Such scoring system does not exists.',
+          location: 'body',
+          param: 'scoringSystemID',
+        })
+
+        return { errors }
+      }
+
+      const exists = await ScoringSystems.findOne({
+        where: {
+          min,
+          max,
+          minMark,
+        },
+      })
+
+      if (exists) {
+        errors.push({
+          msg: 'Such scoring system already exists.',
+          param: ['name', 'minPossibleMark', 'maxPossibleMark', 'minPassingMark'],
+          location: 'body',
+        })
+
+        return { errors }
+      }
+
+      const [update] = await ScoringSystems.update({
+        name,
+        min,
+        max,
+        minMark,
+      }, {
+        where: {
+          id: scoringSystemID,
+        },
+      })
+
+      return {
+        edited: !!update,
+        scoringSystem: update ? data : null,
+      }
+    } catch (e) {
+      console.error(e)
+
+      return { edited: false }
     }
   }
 
@@ -90,6 +220,10 @@ export default class SubjectController {
           {
             as: 'subjectTypeData',
             model: SubjectTypes,
+            include: {
+              as: 'scoring_system',
+              model: ScoringSystems,
+            },
           },
         ],
       })
@@ -106,6 +240,8 @@ export default class SubjectController {
 
       return { subject }
     } catch (e) {
+      console.error(e)
+
       return { fetched: false }
     }
   }
