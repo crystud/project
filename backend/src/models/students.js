@@ -32,6 +32,10 @@ Students.init({
   modelName: 'students',
 })
 
+Users.hasOne(Students, {
+  foreignKey: 'userID',
+  as: 'student',
+=======
 Students.belongsTo(Groups, {
   as: 'group',
   foreignKey: 'groupID',
