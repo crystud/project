@@ -13,6 +13,7 @@ import department from './modules/department'
 import semester from './modules/semester'
 import rooms from './modules/rooms'
 import classes from './modules/classes'
+import students from './modules/student'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -39,4 +40,6 @@ department(app)
 semester(app)
 rooms(app)
 classes(app)
+students(app)
+
 app.listen(port)

@@ -10,6 +10,8 @@ import Classes from '../../models/classes'
 import SubgroupsStudents from '../../models/subgroups_students'
 import Subgroups from '../../models/subgroups'
 
+import config from '../../configs/students'
+
 export default class StudentController {
   static async create(data) {
     const errors = []
@@ -218,6 +220,11 @@ export default class StudentController {
               as: 'class',
               where: { groupID },
             },
+            {
+              model: Users,
+              as: 'user',
+              attributes: ['email'],
+            },
           ],
         }),
         SubgroupsStudents.findAll({
@@ -253,6 +260,49 @@ export default class StudentController {
       return {
         simpleClassTeachers,
         subgroupsTeachers,
+      }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async list({ page }) {
+    const order = [
+      ['id', 'DESC'],
+    ]
+
+    const { itemsOnPage: limit } = config
+
+    try {
+      const students = await Students.findAll({
+        order,
+        limit,
+        offset: limit * page,
+        include: [
+          {
+            attributes: ['name', 'id', 'address', 'email'],
+            model: Users,
+            as: 'user',
+          },
+          {
+            model: Groups,
+            as: 'group',
+          },
+        ],
+      })
+
+      const hasNextPage = await Students.findOne({
+        order,
+        limit,
+        offset: (limit * (page + 1)),
+        attributes: ['id'],
+      })
+
+      return {
+        students,
+        hasNextPage: !!hasNextPage,
       }
     } catch (e) {
       console.error(e)
