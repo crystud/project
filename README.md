@@ -4,10 +4,13 @@
 1. Clone
 `git clone https://github.com/crystud/project`
 
-2. Install dependencies
+2. Change directory into backend
+`cd backend`
+
+3. Install dependencies
 `yarn install` or `npm install`
 
-3. Run (develop mode)
+4. Run (develop mode)
 `yarn serve` or `npm run serve`
 
 **Build backend**
