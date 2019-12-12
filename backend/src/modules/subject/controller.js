@@ -261,7 +261,7 @@ export default class SubjectController {
       })
 
       const hasNextPage = await Subject.findOne({
-        offset: (Config.itemsOnPage * (page + 1)) + 1,
+        offset: (Config.itemsOnPage * (page + 1)),
         order,
       })
 
