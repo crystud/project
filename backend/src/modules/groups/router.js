@@ -127,4 +127,28 @@ router.post('/get', checkRoles(['admin', 'teacher', 'student']), checkSchema({
   return res.json(group)
 })
 
+router.post('/statistics', checkSchema({
+  groupID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid group id',
+    },
+    notEmpty: {
+      errorMessage: 'No group id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const result = await Controller.getStatistics(req.body)
+
+  return res.json(result)
+})
+
 export default router

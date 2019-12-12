@@ -1,6 +1,8 @@
 import Groups from '../../models/groups'
 import Specialty from '../../models/specialty'
 import Students from '../../models/students'
+import Marks from '../../models/marks'
+import Lessons from '../../models/lessons'
 
 export default class GroupsController {
   static async create(data) {
@@ -97,6 +99,91 @@ export default class GroupsController {
       }
 
       return { group }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async getStatistics({ groupID }) {
+    const errors = []
+
+    try {
+      const groupExists = await Groups.findOne({
+        where: { id: groupID },
+        attributes: ['id'],
+      })
+
+      if (!groupExists) {
+        errors.push({
+          msg: 'Such group does not exist',
+          param: 'groupID',
+          location: 'body',
+        })
+
+        return { errors }
+      }
+
+      const students = await Students.findAll({
+        where: { groupID },
+        attributes: ['id', 'name'],
+        include: {
+          model: Marks,
+          as: 'marks',
+          attributes: ['type', 'mark', 'lessonID'],
+          include: {
+            model: Lessons,
+            as: 'lesson',
+            attributes: ['date'],
+          },
+        },
+      })
+
+      const info = {
+        students: [],
+        groupAVG: 0,
+        marksValuesCount: 0,
+        marksCount: 0,
+      }
+
+      students.forEach((student) => {
+        const studentData = student.toJSON()
+
+        const studyProgress = {
+          avg: 0,
+          marksValuesCount: 0,
+        }
+
+        if (!student.marks.length) {
+          info.students.push({
+            ...studyProgress,
+            ...studentData,
+          })
+
+          return
+        }
+
+        student.marks.forEach(({ mark }) => {
+          studyProgress.marksValuesCount += mark
+          info.marksValuesCount += mark
+
+          info.marksCount += 1
+        })
+
+        studyProgress.avg = studyProgress.marksValuesCount / student.marks.length
+
+        info.students.push({
+          ...studyProgress,
+          ...studentData,
+        })
+      })
+
+      info.students.sort((studentA, studentB) => studentB.avg - studentA.avg)
+
+      info.groupAVG = +(info.marksValuesCount / info.marksCount).toFixed(5)
+
+      return info
     } catch (e) {
       console.error(e)
 
