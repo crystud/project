@@ -1,6 +1,8 @@
 import Specialty from '../../models/specialty'
 import Departments from '../../models/departments'
 
+import config from '../../configs/specialtys'
+
 export default class SpecialtysController {
   static async createSpecialty(data) {
     const errors = []
@@ -78,6 +80,33 @@ export default class SpecialtysController {
       }
 
       return { specialty }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async list({ page }) {
+    const order = [['name']]
+    const limit = config.itemsOnPage
+
+    try {
+      const list = await Specialty.findAll({
+        order,
+        limit,
+        offset: page * limit,
+      })
+
+      const hasNextPage = await Specialty.findOne({
+        limit,
+        offset: (page + 1) * limit,
+      })
+
+      return {
+        list,
+        hasNextPage: !!hasNextPage,
+      }
     } catch (e) {
       console.error(e)
 
