@@ -1,11 +1,14 @@
 import { Router } from 'express'
 import { checkSchema, validationResult } from 'express-validator'
 
+import verifyUser from '../../middlewares/verifyUser'
+import checkRoles from '../../middlewares/checkRoles'
+
 import Controller from './controller'
 
 const router = Router()
 
-router.post('/create', checkSchema({
+router.post('/create', verifyUser, checkRoles(['admin']), checkSchema({
   name: {
     in: 'body',
     notEmpty: {
@@ -23,15 +26,11 @@ router.post('/create', checkSchema({
   },
   userID: {
     in: 'body',
-    custom: {
+    notEmpty: {
+      errors: 'User id shouldn`t be empty',
+    },
+    isNumeric: {
       errorMessage: 'User id must be numeric',
-      options: (value) => {
-        if (value && value.isNumeric) {
-          return value
-        }
-
-        return 0
-      },
     },
   },
 }), async (req, res) => {
@@ -46,7 +45,7 @@ router.post('/create', checkSchema({
   return res.json(result)
 })
 
-router.post('/edit', checkSchema({
+router.post('/edit', verifyUser, checkRoles(['admin']), checkSchema({
   id: {
     in: 'body',
     notEmpty: {
@@ -72,18 +71,6 @@ router.post('/edit', checkSchema({
       },
     },
   },
-  userID: {
-    in: 'body',
-    custom: {
-      errorMessage: 'User id must be numeric',
-      options: (value) => {
-        if (!value || typeof value === 'number') {
-          return true
-        }
-        return false
-      },
-    },
-  },
 }), async (req, res) => {
   const errors = validationResult(req)
 
@@ -96,7 +83,7 @@ router.post('/edit', checkSchema({
   return res.json(result)
 })
 
-router.post('/classes', checkSchema({
+router.post('/classes', checkRoles(['admin', 'teacher', 'student']), checkSchema({
   id: {
     in: 'body',
     notEmpty: {
@@ -114,6 +101,31 @@ router.post('/classes', checkSchema({
   }
 
   const result = await Controller.getClasses(req.body)
+
+  return res.json(result)
+})
+
+router.post('/list', checkRoles(['admin', 'teacher', 'student']), checkSchema({
+  page: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid page provided',
+      options: {
+        min: 0,
+      },
+    },
+    notEmpty: {
+      errorMessage: 'No page provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({ errors: errors.array() })
+  }
+
+  const result = await Controller.getList(req.body)
 
   return res.json(result)
 })
