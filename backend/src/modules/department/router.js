@@ -9,7 +9,7 @@ router.post('/create', checkSchema({
   name: {
     in: 'body',
     notEmpty: {
-      errorMessage: 'Name souldn`t be empty',
+      errorMessage: 'No name provided',
     },
   },
   description: {
@@ -18,17 +18,19 @@ router.post('/create', checkSchema({
   leaderID: {
     in: 'body',
     isNumeric: {
-      errorMessage: 'Incorrect input',
+      errorMessage: 'Incorrect leader id provided',
     },
     notEmpty: {
-      errorMessage: 'Leader sould be chosen',
+      errorMessage: 'No leader provided',
     },
   },
 }), async (req, res) => {
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.json({ errors: errors.array() })
+    return res.json({
+      errors: errors.array(),
+    })
   }
 
   const result = await Controller.create(req.body)
@@ -40,10 +42,10 @@ router.post('/edit', checkSchema({
   id: {
     in: 'body',
     notEmpty: {
-      errorMessage: 'id souldn`t be empty',
+      errorMessage: 'No department id provided',
     },
     isNumeric: {
-      errorMessage: 'id must be numeric',
+      errorMessage: 'Invalid department id provided',
     },
   },
   name: {
@@ -65,6 +67,31 @@ router.post('/edit', checkSchema({
   const result = await Controller.edit(req.body)
 
   return res.json(result)
+})
+
+router.post('/list', checkSchema({
+  page: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No page provided',
+    },
+    isInt: {
+      errorMessage: 'Invalid page provided',
+      options: { min: 0 },
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const departments = await Controller.list(req.body)
+
+  return res.json(departments)
 })
 
 export default router
