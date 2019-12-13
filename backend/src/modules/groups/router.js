@@ -10,7 +10,7 @@ const router = Router()
 
 router.use(verifyUser)
 
-router.post('/create', checkRoles(['admin']), checkSchema({
+router.post('/create', checkSchema({
   entry: {
     in: 'body',
     isISO8601: {
@@ -36,6 +36,21 @@ router.post('/create', checkRoles(['admin']), checkSchema({
     },
     notEmpty: {
       errorMessage: 'No specialty id provided',
+    },
+  },
+  symbol: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No group symbol provided',
+    },
+  },
+  number: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid number provided',
+    },
+    notEmpty: {
+      errorMessage: 'No group number provided',
     },
   },
 }), async (req, res) => {
@@ -87,6 +102,21 @@ router.post('/edit', checkRoles(['admin']), checkSchema({
     },
     notEmpty: {
       errorMessage: 'No specialty id provided',
+    },
+  },
+  symbol: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No group symbol provided',
+    },
+  },
+  number: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid number provided',
+    },
+    notEmpty: {
+      errorMessage: 'No group number provided',
     },
   },
 }), async (req, res) => {

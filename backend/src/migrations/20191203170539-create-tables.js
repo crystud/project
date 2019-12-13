@@ -42,6 +42,8 @@ module.exports = {
       entry: Sequelize.DATE,
       graduation: Sequelize.DATE,
       specialtyID: Sequelize.INTEGER,
+      number: Sequelize.INTEGER,
+      symbol: Sequelize.TEXT,
     }, { transaction: t }),
 
     queryInterface.createTable('hours', {

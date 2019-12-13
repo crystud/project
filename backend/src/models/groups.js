@@ -18,6 +18,8 @@ Groups.init({
       key: 'id',
     },
   },
+  number: DataTypes.INTEGER,
+  symbol: DataTypes.TEXT,
 },
 {
   sequelize,

@@ -9,11 +9,11 @@ export default class GroupsController {
     const errors = []
 
     try {
-      const exists = await Groups.findAll({
+      const exists = await Groups.count({
         where: data,
       })
 
-      if (exists.length) {
+      if (exists) {
         errors.push({
           msg: 'Such group already exists',
           location: 'body',
@@ -23,17 +23,29 @@ export default class GroupsController {
         return { errors }
       }
 
-      const create = await Groups.create(data)
+      const specialtyExists = await Specialty.count({
+        where: { id: data.specialtyID },
+      })
 
-      if (!create.dataValues) {
-        return { created: false }
+      if (!specialtyExists) {
+        errors.push({
+          msg: 'Such specialty does not exist',
+          param: 'specialtyID',
+          location: 'body',
+        })
+
+        return { errors }
       }
+
+      const group = await Groups.create(data)
 
       return {
-        created: true,
-        group: create.dataValues,
+        created: !!group,
+        group,
       }
     } catch (e) {
+      console.error(e)
+
       return { created: false }
     }
   }
@@ -44,12 +56,16 @@ export default class GroupsController {
       entry,
       graduation,
       specialtyID,
+      number,
+      symbol,
     } = data
 
     const groupData = {
       entry,
       graduation,
       specialtyID,
+      number,
+      symbol,
     }
 
     try {
@@ -57,12 +73,8 @@ export default class GroupsController {
         where: { id },
       })
 
-      if (!update) {
-        return { edited: false }
-      }
-
       return {
-        edited: true,
+        edited: !!update,
         group: groupData,
       }
     } catch (e) {
