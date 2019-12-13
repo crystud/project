@@ -13,7 +13,7 @@ export default class TeachersController {
 
     const errors = []
 
-    const test = await Users.findOne({
+    const user = await Users.findOne({
       where: {
         id: userID,
       },
@@ -27,7 +27,7 @@ export default class TeachersController {
       }],
     })
 
-    if (!test) {
+    if (!user) {
       errors.push({
         msg: 'The user doesn`t exist',
         param: 'userID',
@@ -37,7 +37,7 @@ export default class TeachersController {
       return { errors }
     }
 
-    if (test.teacher || test.student) {
+    if (user.teacher || user.student) {
       errors.push({
         msg: 'The user is booked',
         param: 'userID',
@@ -64,10 +64,10 @@ export default class TeachersController {
       return { errors }
     }
 
-    await Teachers.create(teacher)
+    const create = await Teachers.create(teacher)
 
     return {
-      created: !!teacher,
+      created: !!create,
       teacher: teacher || null,
     }
   }
@@ -101,14 +101,14 @@ export default class TeachersController {
       }
     }
 
-    await Teachers.update({ name, userID, commissionID }, {
+    const update = await Teachers.update({ name, userID, commissionID }, {
       where: {
         id,
       },
     })
 
     return {
-      updated: !!teacher,
+      updated: !!update,
       teacher: teacher || null,
     }
   }
