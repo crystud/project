@@ -1,5 +1,7 @@
 import Commissions from '../../models/commissions'
 
+import config from '../../configs/commissions'
+
 export default class CommissionsController {
   static async create(commission) {
     const { name } = commission
@@ -45,7 +47,7 @@ export default class CommissionsController {
   }
 
   static async list({ page }) {
-    const limit = 30
+    const { itemsOnPage: limit } = config
 
     try {
       const commissions = await Commissions.findAll({
