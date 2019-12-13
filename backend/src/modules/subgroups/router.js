@@ -23,6 +23,12 @@ router.post('/create', checkRoles(['admin']), checkSchema({
       errorMessage: 'No group id provided',
     },
   },
+  name: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No subgroup name provided',
+    },
+  },
 }), async (req, res) => {
   const errors = validationResult(req)
 
@@ -111,7 +117,7 @@ router.post('/removeStudent', checkRoles(['admin']), checkSchema({
   return res.json(insert)
 })
 
-router.post('/get', checkRoles(['admin', 'teacher', 'student']), checkSchema({
+router.post('/get', checkRoles(['admin', 'teacher']), checkSchema({
   subgroupID: {
     isInt: {
       errorMessage: 'Invalid subgroup id',
@@ -132,6 +138,31 @@ router.post('/get', checkRoles(['admin', 'teacher', 'student']), checkSchema({
   const subgroup = await Controller.get(req.body)
 
   return res.json(subgroup)
+})
+
+router.post('/list', checkRoles(['admin', 'teacher']), checkSchema({
+  page: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid page provided',
+      options: { min: 0 },
+    },
+    notEmpty: {
+      errorMessage: 'No page provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const subgroups = await Controller.list(req.body)
+
+  return res.json(subgroups)
 })
 
 export default router

@@ -3,8 +3,10 @@ import Groups from '../../models/groups'
 import Students from '../../models/students'
 import SubgroupsStudents from '../../models/subgroups_students'
 
+import config from '../../configs/subgroups'
+
 export default class SubgroupsController {
-  static async create({ groupID }) {
+  static async create({ groupID, name }) {
     const errors = []
 
     try {
@@ -22,7 +24,7 @@ export default class SubgroupsController {
         return { errors }
       }
 
-      const create = await Subgroups.create({ groupID })
+      const create = await Subgroups.create({ groupID, name })
 
       return {
         created: !!create,
@@ -149,6 +151,45 @@ export default class SubgroupsController {
       return {
         fetched: !!subgroup,
         subgroup,
+      }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async list({ page }) {
+    const order = [['groupID']]
+    const { itemsOnPage: limit } = config
+
+    try {
+      const subgroups = await Subgroups.findAll({
+        limit,
+        order,
+        offset: page * limit,
+        include: [
+          {
+            model: Groups,
+            as: 'group',
+            required: true,
+          },
+          {
+            attributes: ['id'],
+            model: SubgroupsStudents,
+            as: 'students',
+          },
+        ],
+      })
+
+      const hasNextPage = await Subgroups.findOne({
+        limit,
+        offset: (page + 1) * limit,
+      })
+
+      return {
+        hasNextPage: !!hasNextPage,
+        subgroups,
       }
     } catch (e) {
       console.error(e)
