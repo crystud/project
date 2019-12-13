@@ -5,14 +5,14 @@ export default class CommissionsController {
     const { name } = commission
     const errors = []
 
-    const nameIsFree = await Commissions.findAll({
+    const nameIsFree = await Commissions.findOne({
       attributes: ['id'],
       where: {
         name,
       },
     })
 
-    if (nameIsFree.length) {
+    if (nameIsFree) {
       errors.push({
         msg: 'Name is used',
         param: 'name',
@@ -24,11 +24,10 @@ export default class CommissionsController {
 
     const created = await Commissions.create({ name })
 
-    if (!created.dataValue) {
-      return { created: false }
+    return {
+      created: !!created,
+      commision: created,
     }
-
-    return commission
   }
 
   static async edit({ id, name }) {
@@ -36,16 +35,37 @@ export default class CommissionsController {
       where: { id },
     })
 
-    if (!update) {
-      return { informationWasUpdated: false }
-    }
-
     return {
-      informationWasUpdated: true,
+      informationWasUpdated: !!update,
       commision: {
         id,
         name,
       },
+    }
+  }
+
+  static async list({ page }) {
+    const limit = 30
+
+    try {
+      const commissions = await Commissions.findAll({
+        order: [['name']],
+        limit,
+        offset: page * limit,
+      })
+
+      const hasNextPage = await Commissions.findOne({
+        offset: (page + 1) * limit,
+      })
+
+      return {
+        commissions,
+        hasNextPage: !!hasNextPage,
+      }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
     }
   }
 }
