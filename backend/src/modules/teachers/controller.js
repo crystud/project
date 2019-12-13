@@ -3,6 +3,9 @@ import { Op } from 'sequelize'
 import Teachers from '../../models/teachers'
 import Users from '../../models/users'
 import Classes from '../../models/classes'
+import Students from '../../models/students'
+
+import config from '../../configs/teachers'
 
 export default class TeachersController {
   static async create(teacher) {
@@ -10,40 +13,38 @@ export default class TeachersController {
 
     const errors = []
 
-    if (userID) {
-      const noUser = await Users.findOne({
-        attributes: ['id'],
-        where: {
-          id: userID,
-        },
+    const test = await Users.findOne({
+      where: {
+        id: userID,
+      },
+      include: [{
+        model: Teachers,
+        as: 'teacher',
+      },
+      {
+        model: Students,
+        as: 'student',
+      }],
+    })
+
+    if (!test) {
+      errors.push({
+        msg: 'The user doesn`t exist',
+        param: 'userID',
+        location: 'body',
       })
 
-      if (!noUser) {
-        errors.push({
-          msg: 'The user doesn`t exist',
-          param: 'userID',
-          location: 'body',
-        })
+      return { errors }
+    }
 
-        return { errors }
-      }
-
-      const userExists = await Teachers.findOne({
-        attributes: ['id'],
-        where: {
-          userID,
-        },
+    if (test.teacher || test.student) {
+      errors.push({
+        msg: 'The user is booked',
+        param: 'userID',
+        location: 'body',
       })
 
-      if (userExists) {
-        errors.push({
-          msg: 'The user exists',
-          param: 'userID',
-          location: 'body',
-        })
-
-        return { errors }
-      }
+      return { errors }
     }
 
     const teacheExists = await Teachers.findOne({
@@ -63,15 +64,11 @@ export default class TeachersController {
       return { errors }
     }
 
-    const created = await Teachers.create(teacher)
-
-    if (!created) {
-      return { created: false }
-    }
+    await Teachers.create(teacher)
 
     return {
-      created: true,
-      teacher,
+      created: !!teacher,
+      teacher: teacher || null,
     }
   }
 
@@ -104,58 +101,15 @@ export default class TeachersController {
       }
     }
 
-    if (userID) {
-      const noUser = await Users.findOne({
-        attributes: ['id'],
-        where: {
-          id: userID,
-        },
-      })
-
-      if (noUser) { //!
-        errors.push({
-          msg: 'The user doesn`t exist',
-          param: 'userID',
-          location: 'body',
-        })
-
-        return { errors }
-      }
-
-      const userExists = await Teachers.findOne({
-        attributes: ['id'],
-        where: {
-          userID,
-          id: {
-            [Op.ne]: id,
-          },
-        },
-      })
-
-      if (userExists) {
-        errors.push({
-          msg: 'The user exists',
-          param: 'userID',
-          location: 'body',
-        })
-
-        return { errors }
-      }
-    }
-
-    const updated = await Teachers.update({ name, userID, commissionID }, {
+    await Teachers.update({ name, userID, commissionID }, {
       where: {
         id,
       },
     })
 
-    if (!updated) {
-      return { updated: false }
-    }
-
     return {
-      updated: true,
-      teacher,
+      updated: !!teacher,
+      teacher: teacher || null,
     }
   }
 
@@ -169,5 +123,33 @@ export default class TeachersController {
     })
 
     return classes
+  }
+
+  static async getList({ page }) {
+    const { itemsOnPage: limit } = config
+    const order = [['name']]
+
+    try {
+      const teachers = await Teachers.findAll({
+        limit,
+        order,
+        offset: page * limit,
+      })
+
+      const hasNextPage = await Teachers.findOne({
+        limit,
+        order,
+        offset: (page + 1) * limit,
+      })
+
+      return {
+        teachers,
+        hasNextPage: !!hasNextPage,
+      }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
   }
 }
