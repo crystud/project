@@ -1,5 +1,18 @@
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.sequelize.transaction((t) => Promise.all([
+    queryInterface.createTable('groups', {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      entry: Sequelize.DATE,
+      graduation: Sequelize.DATE,
+      specialtyID: Sequelize.INTEGER,
+      number: Sequelize.INTEGER,
+      symbol: Sequelize.TEXT,
+    }, { transaction: t }),
+
     queryInterface.createTable('classes', {
       id: {
         type: Sequelize.INTEGER,
@@ -31,19 +44,6 @@ module.exports = {
       name: Sequelize.TEXT,
       description: Sequelize.TEXT,
       leaderID: Sequelize.INTEGER,
-    }, { transaction: t }),
-
-    queryInterface.createTable('groups', {
-      id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      entry: Sequelize.DATE,
-      graduation: Sequelize.DATE,
-      specialtyID: Sequelize.INTEGER,
-      number: Sequelize.INTEGER,
-      symbol: Sequelize.TEXT,
     }, { transaction: t }),
 
     queryInterface.createTable('hours', {

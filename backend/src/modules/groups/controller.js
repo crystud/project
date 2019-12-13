@@ -4,6 +4,8 @@ import Students from '../../models/students'
 import Marks from '../../models/marks'
 import Lessons from '../../models/lessons'
 
+import config from '../../configs/groups'
+
 export default class GroupsController {
   static async create(data) {
     const errors = []
@@ -196,6 +198,38 @@ export default class GroupsController {
       info.groupAVG = +(info.marksValuesCount / info.marksCount).toFixed(5)
 
       return info
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async list({ page }) {
+    const { itemsOnPage: limit } = config
+    const order = [['symbol'], ['number']]
+
+    try {
+      const groups = await Groups.findAll({
+        order,
+        limit,
+        offset: page * limit,
+        include: {
+          attributes: ['id'],
+          model: Students,
+          as: 'students',
+        },
+      })
+
+      const hasNextPage = await Groups.findOne({
+        limit,
+        offset: (page + 1) * limit,
+      })
+
+      return {
+        hasNextPage: !!hasNextPage,
+        groups,
+      }
     } catch (e) {
       console.error(e)
 
