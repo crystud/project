@@ -258,6 +258,22 @@ export default class SubjectController {
         limit: Config.itemsOnPage,
         offset: Config.itemsOnPage * page,
         order,
+        include: [
+          {
+            model: Commissions,
+            as: 'commission',
+            required: true,
+          },
+          {
+            model: SubjectTypes,
+            as: 'subjectTypeData',
+            include: {
+              model: ScoringSystems,
+              as: 'scoring_system',
+            },
+            required: true,
+          },
+        ],
       })
 
       const hasNextPage = await Subject.findOne({

@@ -1,5 +1,17 @@
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.sequelize.transaction((t) => Promise.all([
+    queryInterface.createTable('scoring_systems', {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      name: Sequelize.TEXT,
+      min: Sequelize.FLOAT,
+      max: Sequelize.FLOAT,
+      minMark: Sequelize.FLOAT,
+    }, { transaction: t }),
+
     queryInterface.createTable('classes', {
       id: {
         type: Sequelize.INTEGER,
@@ -172,6 +184,7 @@ module.exports = {
       },
       name: Sequelize.TEXT,
       coefficient: Sequelize.FLOAT,
+      scoringSystemID: Sequelize.SMALLINT,
     }, { transaction: t }),
 
     queryInterface.createTable('subjects', {
