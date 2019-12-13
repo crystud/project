@@ -61,13 +61,12 @@ router.post('/edit', verifyUser, checkRoles(['admin']), checkSchema({
   commissionID: {
     in: 'body',
     custom: {
-      errorMessage: 'Commission id must be numeric',
-      options: (value) => {
-        if (!value || typeof value === 'number') {
-          console.log(value)
-          return true
-        }
-        return false
+      in: 'body',
+      notEmpty: {
+        errors: 'Commission shouldn`t be empty',
+      },
+      isNumeric: {
+        errorMessage: 'Commission id must be numeric',
       },
     },
   },
