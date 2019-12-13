@@ -87,4 +87,31 @@ router.post('/getNext', checkRoles(['admin', 'teacher', 'student']), checkSchema
   return res.json(create)
 })
 
+router.post('/list', checkRoles(['admin', 'student', 'teacher']), checkSchema({
+  page: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No page provided',
+    },
+    isInt: {
+      errorMessage: 'Invalid page provided',
+      options: {
+        min: 0,
+      },
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const days = await Controller.list(req.body)
+
+  return res.json(days)
+})
+
 export default router
