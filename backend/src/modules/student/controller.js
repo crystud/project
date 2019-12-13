@@ -107,12 +107,8 @@ export default class StudentController {
         where: { id },
       })
 
-      if (!update) {
-        return { edited: false }
-      }
-
       return {
-        edited: true,
+        edited: !!update,
         student: {
           updateData,
           ...id,
@@ -151,7 +147,7 @@ export default class StudentController {
         return { errors }
       }
 
-      return student
+      return { student }
     } catch (e) {
       console.error(e)
 
@@ -310,7 +306,9 @@ export default class StudentController {
         offset: limit * page,
         include: [
           {
-            attributes: ['name', 'id', 'address', 'email'],
+            attributes: {
+              exclude: ['password'],
+            },
             model: Users,
             as: 'user',
           },
