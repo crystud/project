@@ -10,7 +10,7 @@ const router = Router()
 
 router.use(verifyUser)
 
-router.post('/create', checkRoles(['admin']), checkSchema({
+router.post('/create', checkSchema({
   name: {
     in: 'body',
     notEmpty: {
