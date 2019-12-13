@@ -1,4 +1,7 @@
 import SubjectType from '../../models/subject_types'
+import ScoringSystems from '../../models/scoring_systems'
+
+import config from '../../configs/subjectTypes'
 
 export default class SubjectTypeController {
   static async createSubjectType({ name, coefficient }) {
@@ -85,6 +88,37 @@ export default class SubjectTypeController {
       }
 
       return { subjectType }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async list({ page }) {
+    const order = [['name']]
+    const { itemsOnPage: limit } = config
+
+    try {
+      const subjectTypes = await SubjectType.findAll({
+        limit,
+        order,
+        offset: page * limit,
+        include: {
+          model: ScoringSystems,
+          as: 'scoring_system',
+        },
+      })
+
+      const hasNextPage = await SubjectType.findOne({
+        limit,
+        offset: (page + 1) * limit,
+      })
+
+      return {
+        hasNextPage: !!hasNextPage,
+        subjectTypes,
+      }
     } catch (e) {
       console.error(e)
 

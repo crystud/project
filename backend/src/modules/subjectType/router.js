@@ -77,7 +77,7 @@ router.post('/edit', checkRoles(['admin']), checkSchema({
   return res.json(edit)
 })
 
-router.post('/get', checkRoles(['teacher', 'admin']), checkSchema({
+router.post('/get', checkRoles(['teacher', 'admin', 'student']), checkSchema({
   subjectTypeID: {
     in: 'body',
     isNumeric: {
@@ -99,6 +99,31 @@ router.post('/get', checkRoles(['teacher', 'admin']), checkSchema({
   const subjectType = await Controller.get(req.body)
 
   return res.json(subjectType)
+})
+
+router.post('/list', checkRoles(['admin', 'teacher', 'student']), checkSchema({
+  page: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No page provided',
+    },
+    isInt: {
+      errorMessage: 'Invalid page provided',
+      options: { min: 0 },
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const subjectTypes = await Controller.list(req.body)
+
+  return res.json(subjectTypes)
 })
 
 export default router
