@@ -46,6 +46,11 @@ Classes.belongsTo(Schedule, {
   as: 'schedule',
 })
 
+Timetable.hasMany(Schedule, {
+  foreignKey: 'timetableID',
+  as: 'schedule',
+})
+
 Schedule.belongsTo(Timetable, {
   foreignKey: 'timetableID',
   as: 'timetable',
@@ -59,6 +64,11 @@ Schedule.belongsTo(Classes, {
 Rooms.hasMany(Schedule, {
   foreignKey: 'roomID',
   as: 'schedules',
+})
+
+Schedule.hasOne(Rooms, {
+  foreignKey: 'id',
+  as: 'room',
 })
 
 export default Schedule

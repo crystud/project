@@ -9,9 +9,8 @@ import Controller from './controller'
 const router = Router()
 
 router.use(verifyUser)
-router.use(checkRoles(['admin']))
 
-router.post('/create', checkSchema({
+router.post('/create', checkRoles(['admin']), checkSchema({
   order: {
     in: 'body',
     isInt: {
@@ -60,6 +59,31 @@ router.post('/create', checkSchema({
   })
 
   return res.json(create)
+})
+
+router.post('/list', checkSchema({
+  page: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid page provided',
+      options: { min: 0 },
+    },
+    notEmpty: {
+      errorMessage: 'No page provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const timetables = await Controller.list(req.body)
+
+  return res.json(timetables)
 })
 
 export default router

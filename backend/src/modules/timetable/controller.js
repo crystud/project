@@ -1,4 +1,12 @@
 import Timetable from '../../models/timetable'
+import Classes from '../../models/classes'
+import Schedule from '../../models/schedule'
+import Rooms from '../../models/rooms'
+import Teachers from '../../models/teachers'
+import Subjects from '../../models/subjects'
+
+import config from '../../configs/timetables'
+import Groups from '../../models/groups'
 
 export default class TimetableController {
   static async createTimetable(data) {
@@ -60,6 +68,61 @@ export default class TimetableController {
       console.error(e)
 
       return { created: false }
+    }
+  }
+
+  static async list({ page }) {
+    const order = [['start'], ['type']]
+    const { itemsOnPage: limit } = config
+
+    try {
+      const timetables = await Timetable.findAll({
+        order,
+        limit,
+        offset: page * limit,
+        include: {
+          model: Schedule,
+          as: 'schedule',
+          include: [
+            {
+              model: Classes,
+              as: 'class',
+              include: [
+                {
+                  model: Subjects,
+                  as: 'subject',
+                },
+                {
+                  model: Teachers,
+                  as: 'teacher',
+                },
+                {
+                  model: Groups,
+                  as: 'group',
+                },
+              ],
+            },
+            {
+              model: Rooms,
+              as: 'room',
+            },
+          ],
+        },
+      })
+
+      const hasNextPage = await Timetable.findOne({
+        limit,
+        offset: (page + 1) * limit,
+      })
+
+      return {
+        hasNextPage: !!hasNextPage,
+        timetables,
+      }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
     }
   }
 }
