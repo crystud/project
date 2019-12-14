@@ -1,8 +1,6 @@
 import SubjectType from '../../models/subject_types'
 import ScoringSystems from '../../models/scoring_systems'
 
-import config from '../../configs/subjectTypes'
-
 export default class SubjectTypeController {
   static async createSubjectType({ name, coefficient }) {
     const errors = []
@@ -29,13 +27,9 @@ export default class SubjectTypeController {
 
       const create = await SubjectType.create(subjectTypeData)
 
-      if (!create.dataValues) {
-        return { created: false }
-      }
-
       return {
-        created: true,
-        subjectType: create.dataValues,
+        created: !!create,
+        subjectType: create || null,
       }
     } catch (e) {
       return { created: false }
@@ -56,16 +50,12 @@ export default class SubjectTypeController {
       where: { id },
     })
 
-    if (!edit) {
-      return { edited: false }
-    }
-
     return {
-      edited: true,
-      subjectType: {
+      edited: !!edit,
+      subjectType: edit ? {
         name,
         coefficient,
-      },
+      } : null,
     }
   }
 
@@ -95,30 +85,17 @@ export default class SubjectTypeController {
     }
   }
 
-  static async list({ page }) {
-    const order = [['name']]
-    const { itemsOnPage: limit } = config
-
+  static async getAll() {
     try {
       const subjectTypes = await SubjectType.findAll({
-        limit,
-        order,
-        offset: page * limit,
+        order: [['name']],
         include: {
           model: ScoringSystems,
           as: 'scoring_system',
         },
       })
 
-      const hasNextPage = await SubjectType.findOne({
-        limit,
-        offset: (page + 1) * limit,
-      })
-
-      return {
-        hasNextPage: !!hasNextPage,
-        subjectTypes,
-      }
+      return { subjectTypes }
     } catch (e) {
       console.error(e)
 

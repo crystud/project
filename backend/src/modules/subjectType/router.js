@@ -101,27 +101,8 @@ router.post('/get', checkRoles(['teacher', 'admin', 'student']), checkSchema({
   return res.json(subjectType)
 })
 
-router.post('/list', checkRoles(['admin', 'teacher', 'student']), checkSchema({
-  page: {
-    in: 'body',
-    notEmpty: {
-      errorMessage: 'No page provided',
-    },
-    isInt: {
-      errorMessage: 'Invalid page provided',
-      options: { min: 0 },
-    },
-  },
-}), async (req, res) => {
-  const errors = validationResult(req)
-
-  if (!errors.isEmpty()) {
-    return res.json({
-      errors: errors.array(),
-    })
-  }
-
-  const subjectTypes = await Controller.list(req.body)
+router.post('/getAll', checkRoles(['admin', 'teacher', 'student']), async (req, res) => {
+  const subjectTypes = await Controller.getAll()
 
   return res.json(subjectTypes)
 })
