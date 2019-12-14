@@ -4,8 +4,6 @@ import Schedule from '../../models/schedule'
 import Rooms from '../../models/rooms'
 import Teachers from '../../models/teachers'
 import Subjects from '../../models/subjects'
-
-import config from '../../configs/timetables'
 import Groups from '../../models/groups'
 
 export default class TimetableController {
@@ -18,18 +16,7 @@ export default class TimetableController {
         start,
         finish,
         isFullTime,
-        user: { roles },
       } = data
-
-      if (!roles.includes('admin')) {
-        errors.push({
-          msg: 'You do not have permission to create timetable',
-          param: 'roles',
-          location: 'user',
-        })
-
-        return { errors }
-      }
 
       const timetableExists = await Timetable.findOne({
         where: {
@@ -56,13 +43,9 @@ export default class TimetableController {
         type: isFullTime ? 'fulltime' : 'pertime',
       })
 
-      if (!create) {
-        return { created: false }
-      }
-
       return {
-        created: true,
-        timetable: create.dataValues,
+        created: !!create,
+        timetable: create,
       }
     } catch (e) {
       console.error(e)
@@ -71,15 +54,10 @@ export default class TimetableController {
     }
   }
 
-  static async list({ page }) {
-    const order = [['start'], ['type']]
-    const { itemsOnPage: limit } = config
-
+  static async getAll() {
     try {
       const timetables = await Timetable.findAll({
-        order,
-        limit,
-        offset: page * limit,
+        order: [['start'], ['type']],
         include: {
           model: Schedule,
           as: 'schedule',
@@ -110,15 +88,7 @@ export default class TimetableController {
         },
       })
 
-      const hasNextPage = await Timetable.findOne({
-        limit,
-        offset: (page + 1) * limit,
-      })
-
-      return {
-        hasNextPage: !!hasNextPage,
-        timetables,
-      }
+      return { timetables }
     } catch (e) {
       console.error(e)
 
