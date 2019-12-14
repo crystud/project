@@ -3,8 +3,6 @@ import Groups from '../../models/groups'
 import Students from '../../models/students'
 import SubgroupsStudents from '../../models/subgroups_students'
 
-import config from '../../configs/subgroups'
-
 export default class SubgroupsController {
   static async create({ groupID, name }) {
     const errors = []
@@ -126,6 +124,11 @@ export default class SubgroupsController {
         where: { id },
         include: [
           {
+            model: Groups,
+            as: 'group',
+            required: true,
+          },
+          {
             model: SubgroupsStudents,
             as: 'students',
             include: [
@@ -159,21 +162,12 @@ export default class SubgroupsController {
     }
   }
 
-  static async list({ page }) {
-    const order = [['groupID']]
-    const { itemsOnPage: limit } = config
-
+  static async getOnGroup({ groupID }) {
     try {
       const subgroups = await Subgroups.findAll({
-        limit,
-        order,
-        offset: page * limit,
+        where: { groupID },
+        order: [['name']],
         include: [
-          {
-            model: Groups,
-            as: 'group',
-            required: true,
-          },
           {
             attributes: ['id'],
             model: SubgroupsStudents,
@@ -182,15 +176,7 @@ export default class SubgroupsController {
         ],
       })
 
-      const hasNextPage = await Subgroups.findOne({
-        limit,
-        offset: (page + 1) * limit,
-      })
-
-      return {
-        hasNextPage: !!hasNextPage,
-        subgroups,
-      }
+      return { subgroups }
     } catch (e) {
       console.error(e)
 

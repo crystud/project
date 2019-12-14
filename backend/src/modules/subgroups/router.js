@@ -140,15 +140,15 @@ router.post('/get', checkRoles(['admin', 'teacher']), checkSchema({
   return res.json(subgroup)
 })
 
-router.post('/list', checkRoles(['admin', 'teacher']), checkSchema({
-  page: {
+router.post('/getOnGroup', checkRoles(['admin', 'teacher']), checkSchema({
+  groupID: {
     in: 'body',
     isInt: {
-      errorMessage: 'Invalid page provided',
-      options: { min: 0 },
+      errorMessage: 'Invalid group id provided',
+      options: { min: 1 },
     },
     notEmpty: {
-      errorMessage: 'No page provided',
+      errorMessage: 'No group id provided',
     },
   },
 }), async (req, res) => {
@@ -160,7 +160,7 @@ router.post('/list', checkRoles(['admin', 'teacher']), checkSchema({
     })
   }
 
-  const subgroups = await Controller.list(req.body)
+  const subgroups = await Controller.getOnGroup(req.body)
 
   return res.json(subgroups)
 })
