@@ -10,8 +10,6 @@ import Classes from '../../models/classes'
 import SubgroupsStudents from '../../models/subgroups_students'
 import Subgroups from '../../models/subgroups'
 
-import config from '../../configs/students'
-
 export default class StudentController {
   static async create(data) {
     const errors = []
@@ -24,7 +22,8 @@ export default class StudentController {
     } = data
 
     try {
-      const studentExists = await Students.count({
+      const studentExists = await Students.findOne({
+        attributes: ['id'],
         where: { userID },
       })
 
@@ -60,7 +59,17 @@ export default class StudentController {
         },
       })
 
-      if (!userData || userData.teacher) {
+      if (!userData) {
+        errors.push({
+          msg: 'Such user does not exist',
+          location: 'body',
+          param: 'userID',
+        })
+
+        return { errors }
+      }
+
+      if (userData.teacher) {
         errors.push({
           msg: 'Teacher cannot be a student',
           location: 'body',
@@ -292,44 +301,17 @@ export default class StudentController {
     }
   }
 
-  static async list({ page }) {
-    const order = [
-      ['id', 'DESC'],
-    ]
-
-    const { itemsOnPage: limit } = config
-
+  static async getAll({ groupID }) {
     try {
       const students = await Students.findAll({
-        order,
-        limit,
-        offset: limit * page,
-        include: [
-          {
-            attributes: {
-              exclude: ['password'],
-            },
-            model: Users,
-            as: 'user',
-          },
-          {
-            model: Groups,
-            as: 'group',
-          },
-        ],
+        attributes: {
+          exclude: ['groupID'],
+        },
+        order: [['id', 'DESC']],
+        where: { groupID },
       })
 
-      const hasNextPage = await Students.findOne({
-        order,
-        limit,
-        offset: (limit * (page + 1)),
-        attributes: ['id'],
-      })
-
-      return {
-        students,
-        hasNextPage: !!hasNextPage,
-      }
+      return { students }
     } catch (e) {
       console.error(e)
 
