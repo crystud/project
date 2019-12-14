@@ -3,8 +3,6 @@ import Commissions from '../../models/commissions'
 import SubjectTypes from '../../models/subject_types'
 import ScoringSystems from '../../models/scoring_systems'
 
-import Config from '../../configs/subjects'
-
 export default class SubjectController {
   static async createSubject(data) {
     const errors = []
@@ -133,16 +131,10 @@ export default class SubjectController {
     }
   }
 
-  static async list({ page }) {
+  static async getAll() {
     try {
-      const order = [
-        ['id', 'DESC'],
-      ]
-
       const subjects = await Subject.findAll({
-        limit: Config.itemsOnPage,
-        offset: Config.itemsOnPage * page,
-        order,
+        order: ['id', 'DESC'],
         include: [
           {
             model: Commissions,
@@ -161,15 +153,7 @@ export default class SubjectController {
         ],
       })
 
-      const hasNextPage = await Subject.findOne({
-        offset: (Config.itemsOnPage * (page + 1)),
-        order,
-      })
-
-      return {
-        subjects,
-        hasNextPage: !!hasNextPage,
-      }
+      return { subjects }
     } catch (e) {
       console.error(e)
 
