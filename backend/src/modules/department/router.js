@@ -69,27 +69,8 @@ router.post('/edit', checkSchema({
   return res.json(result)
 })
 
-router.post('/list', checkSchema({
-  page: {
-    in: 'body',
-    notEmpty: {
-      errorMessage: 'No page provided',
-    },
-    isInt: {
-      errorMessage: 'Invalid page provided',
-      options: { min: 0 },
-    },
-  },
-}), async (req, res) => {
-  const errors = validationResult(req)
-
-  if (!errors.isEmpty()) {
-    return res.json({
-      errors: errors.array(),
-    })
-  }
-
-  const departments = await Controller.list(req.body)
+router.post('/getAll', async (req, res) => {
+  const departments = await Controller.getAll()
 
   return res.json(departments)
 })
