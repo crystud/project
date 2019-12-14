@@ -39,4 +39,5 @@ department(app)
 semester(app)
 rooms(app)
 classes(app)
+
 app.listen(port)

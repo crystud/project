@@ -6,8 +6,6 @@ import Teachers from '../../models/teachers'
 import Groups from '../../models/groups'
 import Subjects from '../../models/subjects'
 
-import config from '../../configs/rooms'
-
 export default class RoomController {
   static async create({ name, floor }) {
     const errors = []
@@ -140,27 +138,14 @@ export default class RoomController {
     }
   }
 
-  static async list({ page }) {
-    const { itemsOnPage: limit } = config
-    const order = [['name']]
-
+  static async getAll({ floor }) {
     try {
       const rooms = await Rooms.findAll({
-        limit,
-        order,
-        offset: page * limit,
+        where: { floor },
+        order: [['name']],
       })
 
-      const hasNextPage = await Rooms.findOne({
-        limit,
-        order,
-        offset: (page + 1) * limit,
-      })
-
-      return {
-        rooms,
-        hasNextPage: !!hasNextPage,
-      }
+      return { rooms }
     } catch (e) {
       console.error(e)
 
