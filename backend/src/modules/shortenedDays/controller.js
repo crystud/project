@@ -2,8 +2,6 @@ import { Op } from 'sequelize'
 
 import ShortenedDays from '../../models/shortened_days'
 
-import config from '../../configs/shortenedDays'
-
 export default class ShortenedDaysController {
   static async create({ date, reason }) {
     const errors = []
@@ -98,27 +96,13 @@ export default class ShortenedDaysController {
     }
   }
 
-  static async list({ page }) {
-    const order = [['date']]
-    const { itemsOnPage: limit } = config
-
+  static async getAll() {
     try {
       const shortenedDays = await ShortenedDays.findAll({
-        order,
-        limit,
-        offset: page * limit,
+        order: [['date']],
       })
 
-      const hasNextPage = await ShortenedDays.findOne({
-        attributes: ['id'],
-        limit,
-        offset: (page + 1) * limit,
-      })
-
-      return {
-        shortenedDays,
-        hasNextPage: !!hasNextPage,
-      }
+      return { shortenedDays }
     } catch (e) {
       console.error(e)
 
