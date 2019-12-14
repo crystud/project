@@ -58,27 +58,8 @@ router.post('/edit', checkRoles(['admin']), checkSchema({
   return res.json(result)
 })
 
-router.post('/list', checkSchema({
-  page: {
-    in: 'body',
-    isInt: {
-      errorMessage: 'Invalid page provided',
-      options: { min: 0 },
-    },
-    notEmpty: {
-      errorMessage: 'No page provided',
-    },
-  },
-}), async (req, res) => {
-  const errors = validationResult(req)
-
-  if (!errors.isEmpty()) {
-    return res.json({
-      errors: errors.array(),
-    })
-  }
-
-  const commissions = await Controller.list(req.body)
+router.post('/getAll', async (req, res) => {
+  const commissions = await Controller.getAll(req.body)
 
   return res.json(commissions)
 })

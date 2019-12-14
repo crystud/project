@@ -1,7 +1,5 @@
 import Commissions from '../../models/commissions'
 
-import config from '../../configs/commissions'
-
 export default class CommissionsController {
   static async create(commission) {
     const { name } = commission
@@ -46,24 +44,13 @@ export default class CommissionsController {
     }
   }
 
-  static async list({ page }) {
-    const { itemsOnPage: limit } = config
-
+  static async getAll() {
     try {
       const commissions = await Commissions.findAll({
         order: [['name']],
-        limit,
-        offset: page * limit,
       })
 
-      const hasNextPage = await Commissions.findOne({
-        offset: (page + 1) * limit,
-      })
-
-      return {
-        commissions,
-        hasNextPage: !!hasNextPage,
-      }
+      return { commissions }
     } catch (e) {
       console.error(e)
 
