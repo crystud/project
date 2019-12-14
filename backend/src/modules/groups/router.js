@@ -181,15 +181,15 @@ router.post('/statistics', checkSchema({
   return res.json(result)
 })
 
-router.post('/list', checkRoles(['admin', 'teacher', 'student']), checkSchema({
-  page: {
+router.post('/getAll', checkRoles(['admin', 'teacher', 'student']), checkSchema({
+  specialtyID: {
     in: 'body',
     isInt: {
-      errorMessage: 'Invalid page provided',
+      errorMessage: 'Invalid specialty id provided',
       options: { min: 0 },
     },
     notEmpty: {
-      errorMessage: 'No page provided',
+      errorMessage: 'No specialty id provided',
     },
   },
 }), async (req, res) => {
@@ -201,7 +201,7 @@ router.post('/list', checkRoles(['admin', 'teacher', 'student']), checkSchema({
     })
   }
 
-  const groups = await Controller.list(req.body)
+  const groups = await Controller.getAll(req.body)
 
   return res.json(groups)
 })

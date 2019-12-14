@@ -4,8 +4,6 @@ import Students from '../../models/students'
 import Marks from '../../models/marks'
 import Lessons from '../../models/lessons'
 
-import config from '../../configs/groups'
-
 export default class GroupsController {
   static async create(data) {
     const errors = []
@@ -205,15 +203,11 @@ export default class GroupsController {
     }
   }
 
-  static async list({ page }) {
-    const { itemsOnPage: limit } = config
-    const order = [['symbol'], ['number']]
-
+  static async getAll({ specialtyID }) {
     try {
       const groups = await Groups.findAll({
-        order,
-        limit,
-        offset: page * limit,
+        order: [['symbol'], ['number']],
+        where: { specialtyID },
         include: {
           attributes: ['id'],
           model: Students,
@@ -221,15 +215,7 @@ export default class GroupsController {
         },
       })
 
-      const hasNextPage = await Groups.findOne({
-        limit,
-        offset: (page + 1) * limit,
-      })
-
-      return {
-        hasNextPage: !!hasNextPage,
-        groups,
-      }
+      return { groups }
     } catch (e) {
       console.error(e)
 
