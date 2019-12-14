@@ -82,7 +82,7 @@ router.post('/edit', verifyUser, checkRoles(['admin']), checkSchema({
   return res.json(result)
 })
 
-router.post('/classes', checkRoles(['admin', 'teacher', 'student']), checkSchema({
+router.post('/classes', verifyUser, checkRoles(['admin', 'teacher', 'student']), checkSchema({
   id: {
     in: 'body',
     notEmpty: {
@@ -104,17 +104,14 @@ router.post('/classes', checkRoles(['admin', 'teacher', 'student']), checkSchema
   return res.json(result)
 })
 
-router.post('/list', checkRoles(['admin', 'teacher', 'student']), checkSchema({
-  page: {
+router.post('/get', verifyUser, checkRoles(['admin', 'teacher', 'student']), checkSchema({
+  id: {
     in: 'body',
-    isInt: {
-      errorMessage: 'Invalid page provided',
-      options: {
-        min: 0,
-      },
-    },
     notEmpty: {
-      errorMessage: 'No page provided',
+      errors: 'id shouldn`t be empty',
+    },
+    isNumeric: {
+      errorMessage: 'id must be numeric',
     },
   },
 }), async (req, res) => {
@@ -124,9 +121,16 @@ router.post('/list', checkRoles(['admin', 'teacher', 'student']), checkSchema({
     return res.json({ errors: errors.array() })
   }
 
-  const result = await Controller.getList(req.body)
+  const result = await Controller.get(req.body)
 
   return res.json(result)
 })
+
+router.post('/getAll', verifyUser, checkRoles(['admin', 'teacher', 'student']),
+  async (req, res) => {
+    const result = await Controller.getAll(req.body)
+
+    return res.json(result)
+  })
 
 export default router

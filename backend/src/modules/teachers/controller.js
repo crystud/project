@@ -4,8 +4,7 @@ import Teachers from '../../models/teachers'
 import Users from '../../models/users'
 import Classes from '../../models/classes'
 import Students from '../../models/students'
-
-import config from '../../configs/teachers'
+import Commissions from '../../models/commissions'
 
 export default class TeachersController {
   static async create(teacher) {
@@ -125,31 +124,34 @@ export default class TeachersController {
     return classes
   }
 
-  static async getList({ page }) {
-    const { itemsOnPage: limit } = config
-    const order = [['name']]
+  static async get(teacher) {
+    const { id } = teacher
 
-    try {
-      const teachers = await Teachers.findAll({
-        limit,
-        order,
-        offset: page * limit,
-      })
+    const result = await Teachers.findOne({
+      where: { id },
+      include: {
+        model: Commissions,
+        as: 'commission',
+      },
+    })
 
-      const hasNextPage = await Teachers.findOne({
-        limit,
-        order,
-        offset: (page + 1) * limit,
-      })
+    return {
+      fetched: !!result,
+      teacher: result || null,
+    }
+  }
 
-      return {
-        teachers,
-        hasNextPage: !!hasNextPage,
-      }
-    } catch (e) {
-      console.error(e)
+  static async getAll() {
+    const result = await Teachers.findAll({
+      include: {
+        model: Commissions,
+        as: 'commission',
+      },
+    })
 
-      return { fetched: false }
+    return {
+      fetched: !!result,
+      teacher: result || null,
     }
   }
 }

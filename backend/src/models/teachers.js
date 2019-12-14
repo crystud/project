@@ -37,4 +37,9 @@ Users.belongsTo(Teachers, {
   as: 'teacher',
 })
 
+Teachers.belongsTo(Commissions, {
+  foreignKey: 'commissionID',
+  as: 'commission',
+})
+
 export default Teachers
