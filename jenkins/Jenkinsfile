@@ -5,8 +5,6 @@ pipeline {
         HOME = "."
         REGISTRY_HOST = "localhost"
         REGISTRY_PORT = "5000"
-
-        API_URL = "http://${env.BRANCH_NAME == "master" ? "develop." : ""}crystud.kirashchuk.ga:4000/"
     }
 
     stages {
@@ -47,7 +45,7 @@ pipeline {
                                         sh "docker stop ${RUNNING_CONTAINER_ID}"
                                     }
 
-                                    sh "docker run -d -p ${PORT}:80 -e VUE_APP_API_URL='${API_URL}' --rm --name frontend-${GIT_BRANCH} ${REGISTRY_VERSION_TAG}"
+                                    sh "docker run -d -p ${PORT}:80 --rm --name frontend-${GIT_BRANCH} ${REGISTRY_VERSION_TAG}"
                                 }
                             }
                         }
