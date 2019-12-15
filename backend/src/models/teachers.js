@@ -47,4 +47,9 @@ Users.hasOne(Teachers, {
   as: 'teacher',
 })
 
+Users.hasOne(Teachers, {
+  foreignKey: 'userID',
+  as: 'teacher',
+})
+
 export default Teachers
