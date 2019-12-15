@@ -137,4 +137,19 @@ export default class RoomController {
       return { fetched: false }
     }
   }
+
+  static async getAll({ floor }) {
+    try {
+      const rooms = await Rooms.findAll({
+        where: { floor },
+        order: [['name']],
+      })
+
+      return { rooms }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
 }
