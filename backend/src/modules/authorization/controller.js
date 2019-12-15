@@ -56,26 +56,36 @@ export default class AuthorizationController {
   static async signIn({ email, password }) {
     const errors = []
 
-    const { dataValues: { id: userID, password: passwordHash } } = await Users.findOne({
-      attributes: ['id', 'password'],
-      where: {
-        email,
-      },
-    })
-
-    const passwordIsCorrectly = await bcrypt.compare(password, passwordHash)
-
-    if (!passwordIsCorrectly) {
-      errors.push({
-        msg: 'Password is incorrect',
-        param: 'password',
-        location: 'body',
+    try {
+      const { dataValues: { id: userID, password: passwordHash } } = await Users.findOne({
+        attributes: ['id', 'password'],
+        where: {
+          email,
+        },
       })
 
-      return { errors }
-    }
+      const passwordIsCorrectly = await bcrypt.compare(password, passwordHash)
 
-    return this.generateToken(userID)
+      if (!passwordIsCorrectly) {
+        errors.push({
+          msg: 'Password is incorrect',
+          param: 'password',
+          location: 'body',
+        })
+
+        return { errors }
+      }
+
+      return this.generateToken(userID)
+    } catch {
+      return {
+        errors: [{
+          msg: 'User not found',
+          param: 'email',
+          location: 'body',
+        }],
+      }
+    }
   }
 
   static async signUp(user) {
@@ -83,14 +93,14 @@ export default class AuthorizationController {
 
     const errors = []
 
-    const emailIsFree = await Users.findAll({
+    const emailIsFree = await Users.findOne({
       attributes: ['id'],
       where: {
         email,
       },
     })
 
-    if (emailIsFree.length) {
+    if (emailIsFree) {
       errors.push({
         msg: 'Email is used',
         param: 'email',
