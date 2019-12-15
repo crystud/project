@@ -15,6 +15,8 @@ import semester from './modules/semester'
 import teacher from './modules/teachers'
 import rooms from './modules/rooms'
 import classes from './modules/classes'
+import subgroups from './modules/subgroups'
+import student from './modules/student'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -43,4 +45,7 @@ semester(app)
 teacher(app)
 rooms(app)
 classes(app)
+subgroups(app)
+student(app)
+
 app.listen(port)
