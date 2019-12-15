@@ -27,6 +27,8 @@ export default class SpecialtysController {
         specialty: create || null,
       }
     } catch (e) {
+      console.error(e)
+
       return { created: false }
     }
   }
@@ -78,6 +80,21 @@ export default class SpecialtysController {
       }
 
       return { specialty }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async list({ departmentID }) {
+    try {
+      const specialtys = await Specialty.findAll({
+        order: [['name']],
+        where: { departmentID },
+      })
+
+      return { specialtys }
     } catch (e) {
       console.error(e)
 

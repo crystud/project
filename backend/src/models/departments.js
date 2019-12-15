@@ -24,4 +24,9 @@ Departments.init({
   modelName: 'departments',
 })
 
+Departments.hasOne(Teachers, {
+  foreignKey: 'id',
+  as: 'leader',
+})
+
 export default Departments

@@ -16,10 +16,16 @@ Subgroups.init({
       key: 'id',
     },
   },
+  name: DataTypes.TEXT,
 },
 {
   sequelize,
   modelName: 'subgroups',
+})
+
+Subgroups.hasOne(Groups, {
+  foreignKey: 'id',
+  as: 'group',
 })
 
 export default Subgroups
