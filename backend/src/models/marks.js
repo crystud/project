@@ -32,4 +32,14 @@ Marks.init({
   modelName: 'marks',
 })
 
+Students.hasMany(Marks, {
+  as: 'marks',
+  foreignKey: 'studentID',
+})
+
+Marks.belongsTo(Lessons, {
+  as: 'lesson',
+  foreignKey: 'lessonID',
+})
+
 export default Marks

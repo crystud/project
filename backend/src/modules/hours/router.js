@@ -2,11 +2,14 @@ import { Router } from 'express'
 import { validationResult, checkSchema } from 'express-validator'
 
 import Controller from './controller'
+
+import checkRoles from '../../middlewares/checkRoles'
 import verifyUser from '../../middlewares/verifyUser'
 
 const router = Router()
 
 router.use(verifyUser)
+router.use(checkRoles(['admin']))
 
 router.post('/create', checkSchema({
   subjectID: {

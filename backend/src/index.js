@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 
 import database from './database'
 
@@ -12,11 +13,14 @@ import commissions from './modules/commissions'
 import department from './modules/department'
 import semester from './modules/semester'
 import teacher from './modules/teachers'
+import rooms from './modules/rooms'
+import classes from './modules/classes'
 
 const app = express()
 const port = process.env.PORT || 3000
 
 app.use(express.json())
+app.use(cors())
 
 database
   .authenticate()
@@ -37,5 +41,6 @@ commissions(app)
 department(app)
 semester(app)
 teacher(app)
-
+rooms(app)
+classes(app)
 app.listen(port)
