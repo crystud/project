@@ -18,7 +18,6 @@ Groups.init({
       key: 'id',
     },
   },
-  symbol: DataTypes.STRING,
   number: DataTypes.INTEGER,
 },
 {
