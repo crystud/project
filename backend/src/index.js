@@ -15,6 +15,7 @@ import semester from './modules/semester'
 import teacher from './modules/teachers'
 import rooms from './modules/rooms'
 import classes from './modules/classes'
+import users from './modules/users'
 import subgroups from './modules/subgroups'
 import student from './modules/student'
 
@@ -45,6 +46,7 @@ semester(app)
 teacher(app)
 rooms(app)
 classes(app)
+users(app)
 subgroups(app)
 student(app)
 
