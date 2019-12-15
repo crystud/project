@@ -31,9 +31,15 @@ Teachers.init({
   modelName: 'teachers',
 })
 
-Teachers.belongsTo(Users, {
+Users.belongsTo(Teachers, {
   foreignKey: 'id',
-  as: 'user',
+  targetKey: 'userID',
+  as: 'teacher',
+})
+
+Teachers.belongsTo(Commissions, {
+  foreignKey: 'commissionID',
+  as: 'commission',
 })
 
 export default Teachers

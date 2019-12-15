@@ -12,6 +12,7 @@ import hours from './modules/hours'
 import commissions from './modules/commissions'
 import department from './modules/department'
 import semester from './modules/semester'
+import teacher from './modules/teachers'
 import rooms from './modules/rooms'
 import classes from './modules/classes'
 
@@ -39,6 +40,7 @@ hours(app)
 commissions(app)
 department(app)
 semester(app)
+teacher(app)
 rooms(app)
 classes(app)
 app.listen(port)
