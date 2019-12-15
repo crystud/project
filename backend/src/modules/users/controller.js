@@ -47,4 +47,70 @@ export default class UsersController {
       return { fetched: false }
     }
   }
+
+  static async isStudent({ userID }) {
+    try {
+      const isStudent = await Students.findOne({
+        attributes: ['id'],
+        where: { userID },
+      })
+
+      return {
+        isStudent: !!isStudent,
+      }
+    } catch (e) {
+      console.error(e)
+
+      return {
+        errors: [
+          { msg: 'Unexpected error' },
+        ],
+      }
+    }
+  }
+
+  static async isTeacher({ userID }) {
+    try {
+      const isTeacher = await Teachers.findOne({
+        attributes: ['id'],
+        where: { userID },
+      })
+
+      return {
+        isTeacher: !!isTeacher,
+      }
+    } catch (e) {
+      console.error(e)
+
+      return {
+        errors: [
+          { msg: 'Unexpected error' },
+        ],
+      }
+    }
+  }
+
+  static async isAdmin({ userID: id }) {
+    try {
+      const isAdmin = await Users.findOne({
+        attributes: ['id'],
+        where: {
+          id,
+          isAdmin: true,
+        },
+      })
+
+      return {
+        isAdmin: !!isAdmin,
+      }
+    } catch (e) {
+      console.error(e)
+
+      return {
+        errors: [
+          { msg: 'Unexpected error' },
+        ],
+      }
+    }
+  }
 }
