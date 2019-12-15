@@ -52,4 +52,10 @@ Groups.hasMany(Students, {
   foreignKey: 'groupID',
 })
 
+Users.belongsTo(Students, {
+  foreignKey: 'id',
+  targetKey: 'userID',
+  as: 'student',
+})
+
 export default Students
