@@ -42,9 +42,7 @@ export default {
         studentID: state.studentID,
       }).then(({ data: { stats } }) => {
         commit('setMonthStatistics', stats)
-      }).catch(() => {
-        console.log('kak')
-      })
+      }).catch(() => {})
     },
   },
 }
