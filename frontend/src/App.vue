@@ -26,9 +26,13 @@ body {
   --color-bg-light: #2C3339;
 
   --color-accent-orange: #FC7136;
+  --color-accent-blue: #0E8DEA;
+  --color-accent-red: #FF1E1E;
+  --color-accent-green: #1fe361;
 
   --color-font-main: #ffffff;
   --color-font-dark: #656D78;
+  --color-font-gray: #55636E;
 }
 
 #app {
