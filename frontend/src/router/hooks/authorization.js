@@ -1,8 +1,12 @@
 import store from '../../store'
 
-export default (to, from, next) => {
+export default async (to, from, next) => {
   if (to.matched.some(route => route.meta && route.meta.requiredAuth)) {
     if (store.getters['authorization/authorized']) {
+      if (!store.getters['profile/userID']) {
+        await store.dispatch('profile/load')
+      }
+
       next()
     } else {
       next({ name: 'Authorization' })
@@ -11,7 +15,7 @@ export default (to, from, next) => {
     if (!store.getters['authorization/authorized']) {
       next()
     } else {
-      next({ name: 'Home' })
+      next({ name: 'home' })
     }
   } else {
     next({ name: 'Authorization' })

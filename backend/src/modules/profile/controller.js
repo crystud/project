@@ -6,7 +6,7 @@ import Students from '../../models/students'
 import { password } from '../../configs/authorization'
 
 export default class ProfileController {
-  static async getInformation({ userId: id }) {
+  static async getInformation({ userID: id }) {
     const errors = []
 
     const user = await Users.findOne({
