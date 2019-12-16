@@ -2,20 +2,23 @@ import { Router } from 'express'
 import { checkSchema, validationResult } from 'express-validator'
 
 import Controller from './controller'
+
 import checkRoles from '../../middlewares/checkRoles'
+import verifyUser from '../../middlewares/verifyUser'
 
 const router = Router()
 
-router.use(checkRoles(['teacher']))
+router.use(verifyUser)
+router.use(checkRoles(['teacher', 'admin']))
 
 router.post('/create', checkSchema({
   classID: {
     in: 'body',
     isNumeric: {
-      errorMessage: 'ClassID should be numeric',
+      errorMessage: 'Invalid class id provided',
     },
     notEmpty: {
-      errorMessage: 'ClassID shouldn`t be empty',
+      errorMessage: 'No class id provided',
     },
   },
   date: {
@@ -24,7 +27,7 @@ router.post('/create', checkSchema({
       errorMessage: 'Invalid date',
     },
     notEmpty: {
-      errorMessage: 'Date shouldn`t be empty',
+      errorMessage: 'No date provided',
     },
   },
   topic: {
@@ -33,16 +36,7 @@ router.post('/create', checkSchema({
       errorMessage: 'Invalid topic',
     },
     notEmpty: {
-      errorMessage: 'Topic shouldn`t be empty',
-    },
-  },
-  home_work: {
-    in: 'body',
-    isString: {
-      errorMessage: 'Invalid homework',
-    },
-    notEmpty: {
-      errorMessage: 'Homework shouldn`t be empty',
+      errorMessage: 'No topic provided',
     },
   },
 }), async (req, res) => {
@@ -54,7 +48,11 @@ router.post('/create', checkSchema({
     })
   }
 
-  const created = await Controller.create(req.body)
+  const created = await Controller.create({
+    data: req.body,
+    user: req.user,
+  })
+
   return res.json(created)
 })
 
@@ -65,7 +63,7 @@ router.post('/setTopic', checkSchema({
       errorMessage: 'Invalid lesson id',
     },
     notEmpty: {
-      errorMessage: 'Lesson id shouldn`t be empty',
+      errorMessage: 'No lesson id provided',
     },
   },
   topic: {
@@ -74,7 +72,7 @@ router.post('/setTopic', checkSchema({
       errorMessage: 'Invalid topic',
     },
     notEmpty: {
-      errorMessage: 'Topic shouldn`t be empty',
+      errorMessage: 'No topic provided',
     },
   },
 }), async (req, res) => {
@@ -84,7 +82,10 @@ router.post('/setTopic', checkSchema({
     return res.json({ errors: errors.array() })
   }
 
-  const edited = Controller.setHomeWork(req.body)
+  const edited = await Controller.setHomeWork({
+    data: req.body,
+    user: req.user,
+  })
 
   return res.json(edited)
 })
@@ -115,7 +116,10 @@ router.post('/setHomeWork', checkSchema({
     return res.json({ errors: errors.array() })
   }
 
-  const edited = Controller.setHomeWork(req.body)
+  const edited = await Controller.setHomeWork({
+    data: req.body,
+    user: req.user,
+  })
 
   return res.json(edited)
 })
