@@ -3,14 +3,22 @@ import Specialty from '../../models/specialty'
 import Students from '../../models/students'
 import Marks from '../../models/marks'
 import Lessons from '../../models/lessons'
+import Classes from '../../models/classes'
+import Subjects from '../../models/subjects'
+import Hours from '../../models/hours'
 
 export default class GroupsController {
   static async create(data) {
     const errors = []
 
+    const { specialtyID, number } = data
+
     try {
       const exists = await Groups.count({
-        where: data,
+        where: {
+          specialtyID,
+          number,
+        },
       })
 
       if (exists) {
@@ -57,7 +65,6 @@ export default class GroupsController {
       graduation,
       specialtyID,
       number,
-      symbol,
     } = data
 
     const groupData = {
@@ -65,7 +72,6 @@ export default class GroupsController {
       graduation,
       specialtyID,
       number,
-      symbol,
     }
 
     try {
@@ -82,6 +88,30 @@ export default class GroupsController {
     }
   }
 
+  static getGroupName(data) {
+    const {
+      number,
+      entry,
+      symbol,
+      graduation,
+    } = data
+
+    const graduationTime = new Date(graduation)
+    const entryTime = new Date(entry)
+    const currentTime = new Date()
+
+    if (currentTime > graduation) {
+      return null
+    }
+
+    entryTime.setDate(graduationTime.getDate())
+    entryTime.setMonth(graduationTime.getMonth())
+
+    const groupYears = Math.ceil(((currentTime - entryTime) / 1000) / 60 / 60 / 24 / 365)
+
+    return `${symbol}-${groupYears}${number}`
+  }
+
   static async get({ groupID: id }) {
     const errors = []
 
@@ -92,6 +122,7 @@ export default class GroupsController {
           {
             model: Specialty,
             as: 'specialty',
+            required: true,
           },
           {
             model: Students,
@@ -110,7 +141,26 @@ export default class GroupsController {
         return { errors }
       }
 
-      return { group }
+      const {
+        entry,
+        number,
+        graduation,
+        specialty: {
+          symbol,
+        },
+      } = group
+
+      const name = this.getGroupName({
+        entry,
+        number,
+        graduation,
+        symbol,
+      })
+
+      return {
+        ...group.dataValues,
+        name,
+      }
     } catch (e) {
       console.error(e)
 
@@ -118,7 +168,7 @@ export default class GroupsController {
     }
   }
 
-  static async getStatistics({ groupID }) {
+  static async getStatistics({ groupID, semesterID }) {
     const errors = []
 
     try {
@@ -144,10 +194,40 @@ export default class GroupsController {
           model: Marks,
           as: 'marks',
           attributes: ['type', 'mark', 'lessonID'],
-          include: {
-            model: Lessons,
-            as: 'lesson',
-            attributes: ['date'],
+          include: [
+            {
+              model: Lessons,
+              as: 'lesson',
+              attributes: ['date', 'classID'],
+              required: true,
+              include: {
+                attributes: ['subjectID'],
+                model: Classes,
+                as: 'class',
+                required: true,
+                include: {
+                  attributes: ['id'],
+                  model: Subjects,
+                  as: 'subject',
+                  required: true,
+                  include: {
+                    model: Hours,
+                    as: 'hours',
+                    where: { semesterID },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      })
+
+      const lessonsCount = await Lessons.count({
+        include: {
+          model: Classes,
+          as: 'class',
+          where: {
+            groupID,
           },
         },
       })
@@ -157,6 +237,8 @@ export default class GroupsController {
         groupAVG: 0,
         marksValuesCount: 0,
         marksCount: 0,
+        groupMissingsCount: 0,
+        lessonsCount,
       }
 
       students.forEach((student) => {
@@ -165,6 +247,7 @@ export default class GroupsController {
         const studyProgress = {
           avg: 0,
           marksValuesCount: 0,
+          marksCount: 0,
         }
 
         if (!student.marks.length) {
@@ -176,14 +259,20 @@ export default class GroupsController {
           return
         }
 
-        student.marks.forEach(({ mark }) => {
-          studyProgress.marksValuesCount += mark
-          info.marksValuesCount += mark
+        student.marks.forEach(({ mark, type }) => {
+          if (type !== 'miss') {
+            studyProgress.marksValuesCount += mark
+            studyProgress.marksCount += 1
 
-          info.marksCount += 1
+            info.marksValuesCount += mark
+
+            info.marksCount += 1
+          } else {
+            info.groupMissingsCount += 1
+          }
         })
 
-        studyProgress.avg = studyProgress.marksValuesCount / student.marks.length
+        studyProgress.avg = studyProgress.marksValuesCount / studyProgress.marksCount
 
         info.students.push({
           ...studyProgress,
@@ -204,15 +293,57 @@ export default class GroupsController {
   }
 
   static async getAll({ specialtyID }) {
+    const errors = []
+
     try {
-      const groups = await Groups.findAll({
-        order: [['symbol'], ['number']],
+      const specialty = await Specialty.findOne({
+        where: {
+          id: specialtyID,
+        },
+      })
+
+      if (!specialty) {
+        errors.push({
+          msg: 'Such specialty does not exist',
+          param: 'specialtyID',
+          location: 'body',
+        })
+
+        return { errors }
+      }
+
+      const { symbol } = specialty
+
+      const groupsRaw = await Groups.findAll({
+        order: [['specialtyID'], ['number']],
         where: { specialtyID },
         include: {
           attributes: ['id'],
           model: Students,
           as: 'students',
         },
+      })
+
+      const groups = []
+
+      groupsRaw.forEach((group) => {
+        const {
+          entry,
+          number,
+          graduation,
+        } = group
+
+        const name = this.getGroupName({
+          entry,
+          number,
+          graduation,
+          symbol,
+        })
+
+        groups.push({
+          ...group.dataValues,
+          name,
+        })
       })
 
       return { groups }

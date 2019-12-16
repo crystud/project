@@ -19,7 +19,6 @@ Groups.init({
     },
   },
   number: DataTypes.INTEGER,
-  symbol: DataTypes.TEXT,
 },
 {
   sequelize,

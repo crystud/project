@@ -38,12 +38,6 @@ router.post('/create', checkSchema({
       errorMessage: 'No specialty id provided',
     },
   },
-  symbol: {
-    in: 'body',
-    notEmpty: {
-      errorMessage: 'No group symbol provided',
-    },
-  },
   number: {
     in: 'body',
     isNumeric: {
@@ -102,12 +96,6 @@ router.post('/edit', checkRoles(['admin']), checkSchema({
     },
     notEmpty: {
       errorMessage: 'No specialty id provided',
-    },
-  },
-  symbol: {
-    in: 'body',
-    notEmpty: {
-      errorMessage: 'No group symbol provided',
     },
   },
   number: {

@@ -31,4 +31,9 @@ Hours.init({
   modelName: 'hours',
 })
 
+Subjects.belongsTo(Hours, {
+  foreignKey: 'id',
+  as: 'hours',
+})
+
 export default Hours
