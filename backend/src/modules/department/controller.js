@@ -13,6 +13,7 @@ export default class DepartmentsController {
         name,
       },
     })
+
     if (nameIsFree.length) {
       errors.push({
         msg: 'This department exists',
@@ -42,34 +43,47 @@ export default class DepartmentsController {
 
     const created = await Departments.create(department)
 
-    if (!created) {
-      return { created: false }
-    }
-
     return {
-      created: true,
-      department,
+      created: !!created,
+      department: created,
     }
   }
 
   static async edit(department) {
     const {
-      id, name, description, leaderID,
+      id,
+      name,
+      description,
+      leaderID,
     } = department
 
-    const updated = await Departments.update({ name, description, leaderID }, {
+    const [updated] = await Departments.update({ name, description, leaderID }, {
       where: {
         id,
       },
     })
 
-    if (!updated) {
-      return { updated: false }
-    }
-
     return {
-      updated: true,
+      updated: !!updated,
       department,
+    }
+  }
+
+  static async getAll() {
+    try {
+      const departments = await Departments.findAll({
+        order: [['name']],
+        include: {
+          model: Teachers,
+          as: 'leader',
+        },
+      })
+
+      return { departments }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
     }
   }
 }

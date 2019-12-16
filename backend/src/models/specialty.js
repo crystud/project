@@ -17,6 +17,7 @@ Specialty.init({
     },
   },
   name: DataTypes.TEXT,
+  symbol: DataTypes.INTEGER,
 },
 {
   sequelize,
