@@ -10,7 +10,7 @@ const router = Router()
 
 router.use(verifyUser)
 
-router.post('/create', checkRoles(['admin']), checkSchema({
+router.post('/create', checkSchema({
   name: {
     in: 'body',
     notEmpty: {
@@ -131,6 +131,12 @@ router.post('/get', checkRoles(['admin', 'teacher']), checkSchema({
   const student = await Controller.get(req.body)
 
   return res.json(student)
+})
+
+router.post('/getAll', async (req, res) => {
+  const list = await Controller.getAll(req.body)
+
+  return res.json(list)
 })
 
 router.post('/statistics/week', checkSchema({

@@ -18,6 +18,7 @@ Groups.init({
       key: 'id',
     },
   },
+  number: DataTypes.INTEGER,
 },
 {
   sequelize,
