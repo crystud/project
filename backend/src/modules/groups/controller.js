@@ -98,10 +98,15 @@ export default class GroupsController {
 
     const graduationTime = new Date(graduation)
     const entryTime = new Date(entry)
-    const currentTime = new Date()
+    const currentTime = new Date(2021, 7, 3)
 
-    if (currentTime > graduation) {
-      return null
+    if (currentTime > graduationTime) {
+      const stringEntryTime = `${entryTime.getUTCDate()}/${entryTime.getUTCMonth()}/${entryTime.getFullYear()}`
+      const stringGraduationTime = `${graduationTime.getUTCDate()}/${graduationTime.getUTCMonth()}/${graduationTime.getFullYear()}`
+
+      const lastGroupStudyYear = graduationTime.getFullYear() - entryTime.getFullYear()
+
+      return `[${stringEntryTime} - ${stringGraduationTime}] ${symbol}-${lastGroupStudyYear}${number}`
     }
 
     entryTime.setDate(graduationTime.getDate())
