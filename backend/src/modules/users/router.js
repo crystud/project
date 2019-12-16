@@ -35,76 +35,22 @@ router.post('/list', checkRoles(['admin']), checkSchema({
   return res.json(users)
 })
 
-router.post('/isStudent', checkSchema({
-  userID: {
-    in: 'body',
-    isNumeric: {
-      errorMessage: 'Invalid user id provided',
-    },
-    notEmpty: {
-      errorMessage: 'No user id provided',
-    },
-  },
-}), async (req, res) => {
-  const errors = validationResult(req)
+router.post('/notStudents', async (req, res) => {
+  const notStudents = await Controller.getNotStudents()
 
-  if (!errors.isEmpty()) {
-    return res.json({
-      errors: errors.array(),
-    })
-  }
-
-  const isStudent = await Controller.isStudent(req.body)
-
-  return res.json(isStudent)
+  return res.json(notStudents)
 })
 
-router.post('/isTeacher', checkSchema({
-  userID: {
-    in: 'body',
-    isNumeric: {
-      errorMessage: 'Invalid user id provided',
-    },
-    notEmpty: {
-      errorMessage: 'No user id provided',
-    },
-  },
-}), async (req, res) => {
-  const errors = validationResult(req)
+router.post('/notTeachers', async (req, res) => {
+  const notTeachers = await Controller.getNotTeachers()
 
-  if (!errors.isEmpty()) {
-    return res.json({
-      errors: errors.array(),
-    })
-  }
-
-  const isTeacher = await Controller.isTeacher(req.body)
-
-  return res.json(isTeacher)
+  return res.json(notTeachers)
 })
 
-router.post('/isAdmin', checkSchema({
-  userID: {
-    in: 'body',
-    isNumeric: {
-      errorMessage: 'Invalid user id provided',
-    },
-    notEmpty: {
-      errorMessage: 'No user id provided',
-    },
-  },
-}), async (req, res) => {
-  const errors = validationResult(req)
+router.post('/notAdmins', async (req, res) => {
+  const notAdmins = await Controller.getNotAdmins()
 
-  if (!errors.isEmpty()) {
-    return res.json({
-      errors: errors.array(),
-    })
-  }
-
-  const isAdmin = await Controller.isAdmin(req.body)
-
-  return res.json(isAdmin)
+  return res.json(notAdmins)
 })
 
 export default router

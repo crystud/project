@@ -2,6 +2,8 @@ import Users from '../../models/users'
 import Students from '../../models/students'
 import Teachers from '../../models/teachers'
 
+import sequelize from '../../database'
+
 import config from '../../configs/users'
 
 export default class UsersController {
@@ -48,16 +50,17 @@ export default class UsersController {
     }
   }
 
-  static async isStudent({ userID }) {
+  static async getNotStudents() {
     try {
-      const isStudent = await Students.findOne({
-        attributes: ['id'],
-        where: { userID },
+      const notStudents = await sequelize.query(`SELECT user.id, user.name, user.email, user.address
+      FROM users user
+          LEFT JOIN students student ON user.id = student.userID
+      WHERE student.userID IS NULL`, {
+        model: Users,
+        type: sequelize.QueryTypes.SELECT,
       })
 
-      return {
-        isStudent: !!isStudent,
-      }
+      return { notStudents }
     } catch (e) {
       console.error(e)
 
@@ -69,16 +72,17 @@ export default class UsersController {
     }
   }
 
-  static async isTeacher({ userID }) {
+  static async getNotTeachers() {
     try {
-      const isTeacher = await Teachers.findOne({
-        attributes: ['id'],
-        where: { userID },
+      const notTeachers = await sequelize.query(`SELECT user.id, user.name, user.email, user.address
+      FROM users user
+          LEFT JOIN teachers teacher ON user.id = teacher.userID
+      WHERE teacher.userID IS NULL`, {
+        model: Users,
+        type: sequelize.QueryTypes.SELECT,
       })
 
-      return {
-        isTeacher: !!isTeacher,
-      }
+      return { notTeachers }
     } catch (e) {
       console.error(e)
 
@@ -90,19 +94,18 @@ export default class UsersController {
     }
   }
 
-  static async isAdmin({ userID: id }) {
+  static async getNotAdmins() {
     try {
-      const isAdmin = await Users.findOne({
-        attributes: ['id'],
+      const notAdmins = await Users.findAll({
+        attributes: {
+          exclude: ['password'],
+        },
         where: {
-          id,
-          isAdmin: true,
+          isAdmin: false,
         },
       })
 
-      return {
-        isAdmin: !!isAdmin,
-      }
+      return { notAdmins }
     } catch (e) {
       console.error(e)
 
