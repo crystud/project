@@ -6,11 +6,9 @@ export default class SpecialtysController {
     const errors = []
 
     try {
-      const exists = await Specialty.findAll({
-        where: data,
-      })
+      const exists = await Specialty.findOne({ where: data })
 
-      if (exists.length) {
+      if (exists) {
         errors.push({
           msg: 'Specialty with such data already exist',
           location: 'body',
@@ -34,16 +32,39 @@ export default class SpecialtysController {
   }
 
   static async editSpecialty(data) {
+    const errors = []
+
     const {
       name,
       departmentID,
+      symbol,
       specialtyID: id,
     } = data
 
     try {
+      const exists = await Specialty.findOne({
+        attributes: ['id'],
+        where: {
+          name,
+          departmentID,
+          symbol,
+        },
+      })
+
+      if (exists) {
+        errors.push({
+          msg: 'Specialty with such data already exist',
+          param: ['name', 'departmentID', 'symbol'],
+          location: 'body',
+        })
+
+        return { errors }
+      }
+
       const [update] = await Specialty.update({
         name,
         departmentID,
+        symbol,
       }, {
         where: { id },
       })
