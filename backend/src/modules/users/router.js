@@ -35,19 +35,19 @@ router.post('/list', checkRoles(['admin']), checkSchema({
   return res.json(users)
 })
 
-router.post('/notStudents', async (req, res) => {
+router.post('/notStudents', checkRoles(['admin']), async (req, res) => {
   const notStudents = await Controller.getNotStudents()
 
   return res.json(notStudents)
 })
 
-router.post('/notTeachers', async (req, res) => {
+router.post('/notTeachers', checkRoles(['admin']), async (req, res) => {
   const notTeachers = await Controller.getNotTeachers()
 
   return res.json(notTeachers)
 })
 
-router.post('/notAdmins', async (req, res) => {
+router.post('/notAdmins', checkRoles(['admin']), async (req, res) => {
   const notAdmins = await Controller.getNotAdmins()
 
   return res.json(notAdmins)
