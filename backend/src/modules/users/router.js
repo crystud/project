@@ -9,9 +9,8 @@ import checkRoles from '../../middlewares/checkRoles'
 const router = Router()
 
 router.use(verifyUser)
-router.use(checkRoles(['admin']))
 
-router.post('/list', checkSchema({
+router.post('/list', checkRoles(['admin']), checkSchema({
   page: {
     in: 'body',
     isInt: {
@@ -34,6 +33,24 @@ router.post('/list', checkSchema({
   const users = await Controller.list(req.body)
 
   return res.json(users)
+})
+
+router.post('/notStudents', checkRoles(['admin']), async (req, res) => {
+  const notStudents = await Controller.getNotStudents()
+
+  return res.json(notStudents)
+})
+
+router.post('/notTeachers', checkRoles(['admin']), async (req, res) => {
+  const notTeachers = await Controller.getNotTeachers()
+
+  return res.json(notTeachers)
+})
+
+router.post('/notAdmins', checkRoles(['admin']), async (req, res) => {
+  const notAdmins = await Controller.getNotAdmins()
+
+  return res.json(notAdmins)
 })
 
 export default router
