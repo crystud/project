@@ -40,11 +40,27 @@ const routes = [
   },
   {
     path: '/',
-    name: 'Home',
     component: () => import('../views/Home'),
     meta: {
       requiredAuth: true,
     },
+    children: [
+      {
+        path: '/',
+        name: 'home',
+        component: () => import('../views/home/HomeUser'),
+      },
+      {
+        path: '/student',
+        name: 'homeStudent',
+        component: () => import('../views/home/HomeStudent'),
+      },
+      {
+        path: '/teacher',
+        name: 'homeTeacher',
+        component: () => import('../views/home/HomeTeacher'),
+      },
+    ],
   },
 ]
 

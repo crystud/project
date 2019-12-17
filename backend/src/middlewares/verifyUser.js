@@ -6,7 +6,7 @@ export default async (req, res, next) => {
   const { authorization } = req.headers
 
   if (!authorization) {
-    return res.status({
+    return res.status(401).json({
       errors: [{
         msg: 'No access token provided',
         location: 'header',

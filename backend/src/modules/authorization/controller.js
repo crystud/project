@@ -13,7 +13,7 @@ import RefreshTokens from '../../models/refresh_tokens'
 export default class AuthorizationController {
   static async generateToken(userID) {
     const refreshToken = uuid()
-    const roles = []
+    const roles = ['user']
 
     await RefreshTokens.create({
       userID,
