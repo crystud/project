@@ -163,8 +163,10 @@ export default class GroupsController {
       })
 
       return {
-        ...group.dataValues,
-        name,
+        group: {
+          ...group.dataValues,
+          name,
+        },
       }
     } catch (e) {
       console.error(e)
