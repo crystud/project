@@ -98,7 +98,7 @@ export default class GroupsController {
 
     const graduationTime = new Date(graduation)
     const entryTime = new Date(entry)
-    const currentTime = new Date(2021, 7, 3)
+    const currentTime = new Date()
 
     if (currentTime > graduationTime) {
       const stringEntryTime = `${entryTime.getUTCDate()}/${entryTime.getUTCMonth()}/${entryTime.getFullYear()}`
