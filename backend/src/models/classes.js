@@ -58,7 +58,7 @@ Classes.belongsTo(Subgroups, {
 })
 
 Subgroups.hasOne(Classes, {
-  foreignKey: 'subgroupID',
+  foreignKey: 'id',
   as: 'class',
 })
 

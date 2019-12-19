@@ -9,6 +9,7 @@ import Teachers from '../../models/teachers'
 import Classes from '../../models/classes'
 import SubgroupsStudents from '../../models/subgroups_students'
 import Subgroups from '../../models/subgroups'
+import Subjects from '../../models/subjects'
 
 export default class StudentController {
   static async create(data) {
@@ -265,14 +266,20 @@ export default class StudentController {
           attributes: ['id'],
           include: [
             {
-              attributes: ['id'],
               model: Subgroups,
               as: 'subgroup',
+              attributes: ['id'],
               include: [
                 {
                   model: Classes,
                   as: 'class',
+                  attributes: ['teacherID', 'subjectID'],
                   include: [
+                    {
+                      model: Subjects,
+                      as: 'subject',
+                      attributes: ['name'],
+                    },
                     {
                       model: Teachers,
                       as: 'teacher',
