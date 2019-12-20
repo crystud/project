@@ -9,5 +9,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.home-teacher {
+  .app-card {
+    padding: 20px;
+    color: #fff;
+  }
+}
 </style>

@@ -1,9 +1,9 @@
 module.exports = {
   development: {
     username: process.env.DEV_DB_USERNAME || 'root',
-    password: process.env.DEV_DB_PASSWORD || '',
-    database: process.env.DEV_DB_NAME || 'crystud',
-    host: process.env.DEV_DB_HOSTNAME || 'localhost',
+    password: process.env.DEV_DB_PASSWORD || 'root',
+    database: process.env.DEV_DB_NAME || 'crystud_dev',
+    host: process.env.DEV_DB_HOSTNAME || 'crystud.kirashchuk.ga',
     dialect: 'mariadb',
   },
   production: {

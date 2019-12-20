@@ -6,7 +6,7 @@ module.exports = {
   token: {
     access: {
       secret: process.env.TOKEN_SECRET || 'tokenSecret',
-      time: process.env.TOKEN_TIME || 20,
+      time: process.env.TOKEN_TIME || 86400,
     },
   },
 }

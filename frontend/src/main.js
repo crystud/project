@@ -3,7 +3,7 @@ import Vue from 'vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
-  faChartLine, faCheck, faHome, faTimes, faBars, faColumns,
+  faChartLine, faCheck, faHome, faTimes, faBars, faColumns, faPlus,
 } from '@fortawesome/free-solid-svg-icons'
 
 import App from './App.vue'
@@ -24,6 +24,7 @@ library.add(faHome)
 library.add(faTimes)
 library.add(faBars)
 library.add(faColumns)
+library.add(faPlus)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

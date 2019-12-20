@@ -60,6 +60,16 @@ const routes = [
         name: 'homeTeacher',
         component: () => import('../views/home/HomeTeacher'),
       },
+      {
+        path: '/departments',
+        name: 'departments',
+        component: () => import('../views/departments/Departments'),
+      },
+      {
+        path: '/departments/:id',
+        name: 'department',
+        component: () => import('../views/departments/Department'),
+      },
     ],
   },
 ]
