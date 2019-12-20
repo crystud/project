@@ -5,15 +5,20 @@ export default {
 
   state: {
     list: [],
+    department: {},
   },
 
   getters: {
     list: state => state.list,
+    department: state => state.department,
   },
 
   mutations: {
     setDepartments(state, departments) {
       state.list = departments
+    },
+    setDepartment(state, department) {
+      state.department = department
     },
   },
 
@@ -24,6 +29,15 @@ export default {
 
         return Promise.resolve()
       }).catch(() => {})
+    },
+    async loadDepartment({ commit }, departmentID) {
+      axios.post('/department/get', {
+        departmentID,
+      }).then(({ data: { department } }) => {
+        console.log(department)
+
+        commit('setDepartment', department)
+      })
     },
   },
 }

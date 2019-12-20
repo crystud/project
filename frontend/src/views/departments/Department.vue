@@ -1,32 +1,18 @@
 <template>
-  <div>
-    <app-card>
-      {{ $route.params }}
-    </app-card>
-  </div>
+  <app-department style="width:100%"></app-department>
 </template>
 
 <script>
-import AppCard from '../../components/AppCard.vue'
-
-// import { mapGetters } from 'vuex'
+import AppDepartment from '../../components/AppDepartment.vue'
 
 export default {
-  name: 'department',
-  // computed: {
-  //   ...mapGetters({
-  //     department: 'department/',
-  //   }),
-  // },
+  name: 'departments',
   components: {
-    AppCard,
+    AppDepartment,
   },
 }
 </script>
 
 <style>
-.app-card {
-  padding: 10px;
-  color: #fff;
-}
+
 </style>
