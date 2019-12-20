@@ -2,6 +2,7 @@ import Departments from '../../models/departments'
 import Teachers from '../../models/teachers'
 import Specialty from '../../models/specialty'
 import Groups from '../../models/groups'
+import Students from '../../models/students'
 
 export default class DepartmentsController {
   static async create(department) {
@@ -115,6 +116,11 @@ export default class DepartmentsController {
             include: {
               model: Groups,
               as: 'groups',
+              include: {
+                model: Students,
+                as: 'students',
+                attributes: ['id'],
+              },
             },
           },
         ],
