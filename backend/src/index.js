@@ -14,14 +14,13 @@ import department from './modules/department'
 import semester from './modules/semester'
 import teacher from './modules/teachers'
 import rooms from './modules/rooms'
-import student from './modules/student'
 import classes from './modules/classes'
 import students from './modules/student'
 import users from './modules/users'
 import subgroups from './modules/subgroups'
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 4000
 
 app.use(express.json())
 app.use(cors())
@@ -50,5 +49,6 @@ classes(app)
 students(app)
 users(app)
 subgroups(app)
+department(app)
 
 app.listen(port)
