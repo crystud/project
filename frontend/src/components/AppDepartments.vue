@@ -4,7 +4,7 @@
 
     <app-card class="departments-list">
       <app-department-item
-        v-for="(data, index) in departments"
+        v-for="(data, index) in list"
         v-bind:key="index"
         :id="data.id"
         :name="data.name"
@@ -12,19 +12,17 @@
         :specialtysCount="data.specialtys.length"
       ></app-department-item>
 
-      <app-add-department></app-add-department>
+      <app-add-department @onAdded="loadDepartments"></app-add-department>
     </app-card>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 import AppCard from './AppCard.vue'
 import AppDepartmentItem from './AppDepartmentItem.vue'
 import AppAddDepartment from './AppAddDepartment.vue'
-
-import store from '../store'
 
 export default {
   name: 'departments',
@@ -35,11 +33,16 @@ export default {
   },
   computed: {
     ...mapGetters({
-      departments: 'departments/list',
+      list: 'departments/list',
+    }),
+  },
+  methods: {
+    ...mapActions({
+      loadDepartments: 'departments/loadDepartments',
     }),
   },
   created() {
-    store.dispatch('departments/loadDepartments')
+    this.loadDepartments()
   },
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="manage-department">
-    <app-card class="pagename">123</app-card>
+    <app-card class="pagename">Department</app-card>
 
     <app-card class="content">
       <div class="header">
@@ -17,6 +17,18 @@
           Кількість спеціальностей: {{department.specialtys ? department.specialtys.length : ''}}
         </div>
       </div>
+
+      <div class="specialtys-list" v-if="department && department.specialtys">
+        <app-specialty-item
+          v-for="({ id, name, groups, symbol }, index) in department.specialtys"
+          v-bind:key="index"
+          :name="name"
+          :symbol="symbol"
+          :department="department"
+          :groups="groups"
+          :id="id"
+        ></app-specialty-item>
+      </div>
     </app-card>
   </div>
 </template>
@@ -24,12 +36,14 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
+import AppSpecialtyItem from './AppSpecialtyItem.vue'
 import AppCard from './AppCard.vue'
 
 export default {
   name: 'Department',
   components: {
     AppCard,
+    AppSpecialtyItem,
   },
   computed: {
     ...mapGetters({
@@ -81,11 +95,14 @@ export default {
     border-radius: 8px;
 
     .btn-back {
-      padding: 10px 15px;
-      font-size: 1.2em;
+      padding: 0 15px;
+      font-size: 1.5em;
+
       cursor: pointer;
 
       background: #EBAC2D;
+      color: #fff;
+
       border: 0;
       border-radius: 8px;
     }
@@ -103,6 +120,16 @@ export default {
         font-weight: 300;
       }
     }
+  }
+
+  .specialtys-list {
+    margin-top: 10px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+
+    margin-top: 30px;
   }
 }
 </style>

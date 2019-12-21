@@ -1,5 +1,5 @@
 <template>
-  <app-department style="width:100%"></app-department>
+  <app-department></app-department>
 </template>
 
 <script>

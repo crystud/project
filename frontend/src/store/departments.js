@@ -20,9 +20,21 @@ export default {
     setDepartment(state, department) {
       state.department = department
     },
+    addDepartment(state, department) {
+      state.list.unshift(department)
+    },
   },
 
   actions: {
+    async createDepartment(_, data) {
+      axios.post('/department/create', data).then(({ data: { errors, created } }) => {
+        if (!errors && created) {
+          return Promise.resolve()
+        }
+
+        return Promise.reject()
+      })
+    },
     async loadDepartments({ commit }) {
       axios.post('/department/getAll').then(({ data: { departments } }) => {
         commit('setDepartments', departments)
@@ -31,12 +43,10 @@ export default {
       }).catch(() => {})
     },
     async loadDepartment({ commit }, departmentID) {
-      axios.post('/department/get', {
-        departmentID,
-      }).then(({ data: { department } }) => {
-        console.log(department)
-
+      axios.post('/department/get', { departmentID }).then(({ data: { department } }) => {
         commit('setDepartment', department)
+
+        return Promise.resolve()
       })
     },
   },
