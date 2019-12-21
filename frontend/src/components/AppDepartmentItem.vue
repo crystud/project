@@ -1,7 +1,7 @@
 <template>
-  <div class="department">
-    <router-link :to="`/departments/${id}`" class="name">{{name}}</router-link>
-    <router-link :to="`/teacher/${leader.id}`" class="leader-name">{{leader.name}}</router-link>
+  <div class="department" @click="$router.push(`/departments/${id}`)">
+    <div class="name">{{name}}</div>
+    <div :to="`/teacher/${leader.id}`" class="leader-name">{{leader.name}}</div>
 
     <div class="specialtys-count">Кількість спеціальностей: {{specialtysCount}}</div>
   </div>
@@ -36,6 +36,8 @@ export default {
   padding: 25px;
   background: #1E2329;
   border-radius: 8px;
+
+  cursor: pointer;
 
   display: grid;
   grid-template-rows: 1fr 1fr 3fr;

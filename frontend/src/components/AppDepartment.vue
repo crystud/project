@@ -10,7 +10,12 @@
 
         <div class="header-info">
           <div class="name">{{department.name}}</div>
-          <div class="leader">{{department.leader ? department.leader.name : ''}}</div>
+          <router-link
+            :to="`/teacher/${department.leader.id}`"
+            class="leader"
+          >
+            {{department.leader ? department.leader.name : ''}}
+          </router-link>
         </div>
 
         <div class="specialtys-count">

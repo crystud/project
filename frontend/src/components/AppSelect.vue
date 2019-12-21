@@ -8,7 +8,7 @@
       <option
         v-for="(item, index) in options"
         v-bind:key="index"
-        :selected="option(item).value === option(defaultValue).value"
+        :selected="defaultValue && option(item).value === option(defaultValue).value"
         :value="option(item).value"
       >{{option(item).label}}</option>
     </select>

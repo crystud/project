@@ -9,7 +9,7 @@
       <div v-if="isAdding">
         <app-input
           class="name"
-          name="Назва нового відділення"
+          name="Назва..."
           @input="(departmentName) => name = departmentName"
         ></app-input>
 

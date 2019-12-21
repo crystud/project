@@ -1,6 +1,6 @@
 <template>
   <div class="departments">
-    <app-card class="header">Departments</app-card>
+    <app-card class="header">Відділення</app-card>
 
     <app-card class="departments-list">
       <app-department-item
