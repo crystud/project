@@ -20,7 +20,7 @@ export default class AuthorizationController {
       value: refreshToken,
     })
 
-    const [isStudent, isTeacher] = await Promise.all([
+    const [isStudent, isTeacher, isAdmin] = await Promise.all([
       Students.findOne({
         attributes: ['id'],
         where: {
@@ -34,10 +34,19 @@ export default class AuthorizationController {
           userID,
         },
       }),
+
+      Users.findOne({
+        attributes: ['id'],
+        where: {
+          id: userID,
+          isAdmin: true,
+        },
+      }),
     ])
 
     if (isStudent) roles.push('student')
     if (isTeacher) roles.push('teacher')
+    if (isAdmin) roles.push('admin')
 
     const accessToken = await jwt.sign({
       userID,
