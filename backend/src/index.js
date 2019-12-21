@@ -20,7 +20,7 @@ import users from './modules/users'
 import subgroups from './modules/subgroups'
 
 const app = express()
-const port = process.env.PORT || 4000
+const port = process.env.PORT || 3000
 
 app.use(express.json())
 app.use(cors())
