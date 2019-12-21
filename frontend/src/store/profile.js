@@ -41,6 +41,9 @@ export default {
     setAddress(state, address) {
       state.address = address
     },
+    setTeacher() {
+
+    },
   },
 
   actions: {
@@ -55,6 +58,7 @@ export default {
         }) => {
           const token = rootGetters['authorization/accessToken']
           const { roles: rolesList } = jwtDecode(token)
+
           commit('setRoles', rolesList)
 
           commit('setUserID', id)

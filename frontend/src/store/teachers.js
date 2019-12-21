@@ -24,7 +24,11 @@ export default {
 
   actions: {
     async loadTeachers({ commit }) {
-      axios.post('/teacher/getAll').then(({ data: { teacher } }) => {
+      axios.post('/teacher/getAll').then(({ data: { teacher, errors } }) => {
+        if (errors) {
+          return Promise.reject(errors)
+        }
+
         commit('setTeachers', teacher)
 
         return Promise.resolve()
@@ -33,7 +37,11 @@ export default {
     async loadTeacher({ commit }, teacherID) {
       axios.post('/teachers/get', {
         teacherID,
-      }).then(({ data: { teacher } }) => {
+      }).then(({ data: { teacher, errors } }) => {
+        if (errors) {
+          return Promise.reject(errors)
+        }
+
         commit('setDepartment', teacher)
 
         return Promise.resolve()

@@ -24,16 +24,20 @@ export default {
 
   actions: {
     async create(_, data) {
-      axios.post('/specialty/create', data).then(({ data: { errors, created } }) => {
-        if (!errors && created) {
-          return Promise.resolve()
-        }
+      const { data: { errors, created } } = await axios.post('/specialty/create', data)
 
-        return Promise.reject()
-      })
+      if (!errors && created) {
+        return Promise.resolve()
+      }
+
+      return Promise.reject(errors)
     },
     async loadSpecialtys({ commit }, departmentID) {
-      axios.post('/specialty/getAll', { departmentID }).then(({ data: { specialtys } }) => {
+      axios.post('/specialty/getAll', { departmentID }).then(({ data: { errors, specialtys } }) => {
+        if (errors) {
+          return Promise.reject(errors)
+        }
+
         commit('setSpecialtys', specialtys)
 
         return Promise.resolve()
@@ -45,7 +49,7 @@ export default {
           return Promise.resolve()
         }
 
-        return Promise.reject()
+        return Promise.reject(errors)
       })
     },
   },

@@ -67,6 +67,7 @@ export default {
   methods: {
     ...mapActions({
       createSpecialty: 'specialty/create',
+      load: 'departments/loadDepartment',
     }),
     create() {
       const {
@@ -80,6 +81,7 @@ export default {
         symbol,
         departmentID,
       }).then(() => {
+        this.load(this.$route.params.id)
         this.isCreating = false
       })
     },

@@ -12,7 +12,7 @@
         :specialtysCount="data.specialtys.length"
       ></app-department-item>
 
-      <app-add-department></app-add-department>
+      <app-add-department @onAdded="updateDepartments"></app-add-department>
     </app-card>
   </div>
 </template>
@@ -40,6 +40,9 @@ export default {
     ...mapActions({
       loadDepartments: 'departments/loadDepartments',
     }),
+    updateDepartments() {
+      this.loadDepartments()
+    },
   },
   created() {
     this.loadDepartments()
