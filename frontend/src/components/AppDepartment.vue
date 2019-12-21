@@ -25,8 +25,8 @@
 
       <div class="specialtys-list" v-if="department && department.specialtys">
         <app-specialty-item
-          v-for="({ id, name, groups, symbol }, index) in department.specialtys"
-          v-bind:key="index"
+          v-for="({ id, name, groups, symbol }) in department.specialtys"
+          v-bind:key="name"
           :name="name"
           :symbol="symbol"
           :department="department"

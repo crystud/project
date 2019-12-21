@@ -5,7 +5,7 @@
     <app-card class="departments-list">
       <app-department-item
         v-for="(data) in list"
-        v-bind:key="data.id"
+        v-bind:key="data.name"
         :id="data.id"
         :name="data.name"
         :leader="data.leader"
