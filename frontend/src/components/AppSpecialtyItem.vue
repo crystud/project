@@ -138,8 +138,6 @@ export default {
     save() {
       const { edited, id: specialtyID } = this
 
-      console.log(edited, specialtyID)
-
       this.editSpecialty({
         ...edited,
         specialtyID,

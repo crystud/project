@@ -4,15 +4,15 @@
 
     <app-card class="departments-list">
       <app-department-item
-        v-for="(data, index) in list"
-        v-bind:key="index"
+        v-for="(data) in list"
+        v-bind:key="data.id"
         :id="data.id"
         :name="data.name"
         :leader="data.leader"
         :specialtysCount="data.specialtys.length"
       ></app-department-item>
 
-      <app-add-department @onAdded="loadDepartments"></app-add-department>
+      <app-add-department></app-add-department>
     </app-card>
   </div>
 </template>

@@ -11,7 +11,7 @@
         <div class="header-info">
           <div class="name">{{department.name}}</div>
           <router-link
-            :to="`/teacher/${department.leader.id}`"
+            :to="`/teacher/${department.leader ? department.leader.id : ''}`"
             class="leader"
           >
             {{department.leader ? department.leader.name : ''}}
@@ -33,6 +33,11 @@
           :groups="groups"
           :id="id"
         ></app-specialty-item>
+
+        <app-create-specialty
+          :departmentName="department.name"
+          :departmentID="department.id"
+        ></app-create-specialty>
       </div>
     </app-card>
   </div>
@@ -43,12 +48,14 @@ import { mapGetters, mapActions } from 'vuex'
 
 import AppSpecialtyItem from './AppSpecialtyItem.vue'
 import AppCard from './AppCard.vue'
+import AppCreateSpecialty from './AppCreateSpecialty.vue'
 
 export default {
   name: 'Department',
   components: {
     AppCard,
     AppSpecialtyItem,
+    AppCreateSpecialty,
   },
   computed: {
     ...mapGetters({
@@ -132,6 +139,7 @@ export default {
 
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-auto-rows: minmax(220px, auto);
     grid-gap: 20px;
 
     margin-top: 30px;

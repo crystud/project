@@ -23,6 +23,15 @@ export default {
   },
 
   actions: {
+    async create(_, data) {
+      axios.post('/specialty/create', data).then(({ data: { errors, created } }) => {
+        if (!errors && created) {
+          return Promise.resolve()
+        }
+
+        return Promise.reject()
+      })
+    },
     async loadSpecialtys({ commit }, departmentID) {
       axios.post('/specialty/getAll', { departmentID }).then(({ data: { specialtys } }) => {
         commit('setSpecialtys', specialtys)
