@@ -1,7 +1,7 @@
 <template>
-  <div class="department add-department">
+  <div class="department add-department" @click="isAdding = true">
     <div class="button-content">
-      <div v-if="!isAdding" @click="isAdding = true">
+      <div v-if="!isAdding">
         <font-awesome-icon class="icon" icon="plus"></font-awesome-icon>
         <div class="label">Створити нове відділення</div>
       </div>
