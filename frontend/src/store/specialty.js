@@ -44,13 +44,13 @@ export default {
       }).catch(() => {})
     },
     async edit(_, data) {
-      axios.post('/specialty/edit', data).then(({ data: { updated, errors } }) => {
-        if (updated && !errors) {
-          return Promise.resolve()
-        }
+      const { data: { updated, errors } } = await axios.post('/specialty/edit', data)
 
-        return Promise.reject(errors)
-      })
+      if (updated && !errors) {
+        return Promise.resolve()
+      }
+
+      return Promise.reject(errors)
     },
   },
 }

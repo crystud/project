@@ -142,6 +142,8 @@ export default {
         ...edited,
         specialtyID,
       }).then(() => {
+        this.loadDepartment(this.$route.params.id)
+
         this.isEditing = false
       })
     },
