@@ -47,5 +47,27 @@ export default {
         return Promise.resolve()
       })
     },
+    async create(_, teacherData) {
+      try {
+        const {
+          data: {
+            created,
+            errors,
+          },
+        } = await axios.post('/teacher/create', teacherData)
+
+        console.log(errors, created)
+
+        if (created && !errors) {
+          return Promise.resolve()
+        }
+
+        return Promise.reject()
+      } catch (e) {
+        console.error(e)
+
+        return Promise.reject(e)
+      }
+    },
   },
 }

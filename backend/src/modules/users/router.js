@@ -41,6 +41,12 @@ router.post('/notStudents', checkRoles(['admin']), async (req, res) => {
   return res.json(notStudents)
 })
 
+router.post('/noRoleUsers', checkRoles(['admin']), async (req, res) => {
+  const noRoleUsers = await Controller.getNoRoleUsers()
+
+  return res.json(noRoleUsers)
+})
+
 router.post('/notTeachers', checkRoles(['admin']), async (req, res) => {
   const notTeachers = await Controller.getNotTeachers()
 

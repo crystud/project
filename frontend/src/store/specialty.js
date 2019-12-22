@@ -33,6 +33,8 @@ export default {
       return Promise.reject(errors)
     },
     async loadSpecialtys({ commit }, departmentID) {
+      console.log(departmentID)
+
       axios.post('/specialty/getAll', { departmentID }).then(({ data: { errors, specialtys } }) => {
         if (errors) {
           return Promise.reject(errors)
@@ -41,7 +43,9 @@ export default {
         commit('setSpecialtys', specialtys)
 
         return Promise.resolve()
-      }).catch(() => {})
+      }).catch(() => {
+        commit('setSpecialtys', [])
+      })
     },
     async edit(_, data) {
       const { data: { updated, errors } } = await axios.post('/specialty/edit', data)
@@ -51,6 +55,9 @@ export default {
       }
 
       return Promise.reject(errors)
+    },
+    setNoSpecialtys({ commit }) {
+      commit('setSpecialtys', [])
     },
   },
 }

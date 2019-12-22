@@ -50,7 +50,6 @@ classes(app)
 students(app)
 users(app)
 subgroups(app)
-
 groups(app)
 
 app.listen(port)

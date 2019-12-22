@@ -29,7 +29,7 @@ export default {
             groups,
             errors,
           },
-        } = await axios.post('/group/getAll', { specialtyID })
+        } = await axios.post('/groups/getAll', { specialtyID })
 
         console.log(errors, groups)
 
@@ -39,12 +39,15 @@ export default {
           return Promise.resolve()
         }
 
+        commit('setGroupsList', [])
+
         return Promise.reject()
       } catch (e) {
-        console.error(e)
-
         return Promise.reject(e)
       }
+    },
+    setNoGroups({ commit }) {
+      commit('setGroupsList', [])
     },
   },
 }

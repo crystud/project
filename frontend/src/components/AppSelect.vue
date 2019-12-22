@@ -2,8 +2,13 @@
   <div class="select">
     <span class="placeholder">{{placeholder}}</span>
 
-    <select ref="select" class="select-input" @change="$emit('change', $event.target.value)">
-      <option v-if="!defaultValue">Обрати...</option>
+    <select
+      ref="select"
+      class="select-input"
+      @change="onChange"
+      :class="selected ? 'success-border' : 'fail-border'"
+    >
+      <option :value="notSelectedValue" v-if="!defaultValue">Обрати...</option>
 
       <option
         v-for="(item, index) in options"
@@ -18,6 +23,24 @@
 <script>
 export default {
   name: 'AppSelect',
+  methods: {
+    onChange(ev) {
+      const { value } = ev.target
+      const { notSelectedValue } = this
+
+      if (notSelectedValue && value === notSelectedValue.toString()) {
+        this.value = 0
+        this.selected = false
+
+        this.$emit('change', 0)
+      } else {
+        this.value = value
+        this.selected = true
+
+        this.$emit('change', value)
+      }
+    },
+  },
   props: {
     option: {
       type: Function,
@@ -39,8 +62,12 @@ export default {
       default: () => {},
     },
   },
-  update() {
-    this.$emit('change', this.$refs.select.value)
+  data() {
+    return {
+      notSelectedValue: Math.random(),
+      value: 0,
+      selected: false,
+    }
   },
 }
 </script>
@@ -54,7 +81,7 @@ export default {
     display: flex;
     justify-content: left;
 
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 
   .select-input {
@@ -67,6 +94,17 @@ export default {
     border: 0;
 
     color: var(--color-font-main);
+
+    border-bottom: 2px solid transparent;
+    transition: all .3s;
+  }
+
+  .fail-border {
+    border-color: #d43f3e;
+  }
+
+  .success-border {
+    border-color: #00ff87;
   }
 }
 </style>

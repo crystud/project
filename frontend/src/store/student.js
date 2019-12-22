@@ -44,5 +44,19 @@ export default {
         commit('setMonthStatistics', stats)
       }).catch(() => {})
     },
+    async createStudent(_, studentData) {
+      const {
+        data: {
+          errors,
+          created,
+        },
+      } = await axios.post('/student/create', studentData)
+
+      if (!errors && created) {
+        return Promise.resolve()
+      }
+
+      return Promise.reject(errors)
+    },
   },
 }

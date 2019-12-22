@@ -15,6 +15,15 @@
           @change="(val) => teacherName = val"
         ></app-custom-input>
 
+        <app-custom-input
+          type="text"
+          placeholder="Адреса вчителя"
+          class="form-input-mg"
+          :value="teacherAddress"
+          :isSuccess="!!teacherAddress"
+          @change="(val) => teacherAddress = val"
+        ></app-custom-input>
+
         <app-select
           class="form-input"
           :options="commissions"
@@ -22,6 +31,11 @@
           @change="(val) => teacherCommission = val"
           placeholder="Комісія"
         ></app-select>
+
+        <button
+          class="btn btn-cancel"
+          @click="setNoCreating"
+        >Скасувати</button>
 
         <button
           class="btn btn-teacher"
@@ -32,11 +46,20 @@
       <div v-if="isStudentCreating">
         <app-custom-input
           type="text"
-          placeholder="ПІБ вчителя"
+          placeholder="ПІБ студента"
           class="form-input-mg"
           :value="name"
           :isSuccess="!!studentName"
           @change="(val) => teacherName = val"
+        ></app-custom-input>
+
+        <app-custom-input
+          type="text"
+          placeholder="Адреса студента"
+          class="form-input-mg"
+          :value="address"
+          :isSuccess="!!address"
+          @change="(val) => studentAddress = val"
         ></app-custom-input>
 
         <app-select
@@ -44,7 +67,7 @@
           class="form-input"
           :options="departments"
           :option="({ id, name }) => ({ label: name, value: id })"
-          @change="(val) => this.loadSpecialtys(val)"
+          @change="loadSpecialtysList"
           placeholder="Відділення"
         ></app-select>
 
@@ -53,7 +76,7 @@
           v-if="specialtys.length"
           :options="specialtys"
           :option="({ id, name }) => ({ label: name, value: id })"
-          @change="(val) => this.loadGroups(val)"
+          @change="loadGroupsList"
           placeholder="Спеціальність"
         ></app-select>
 
@@ -62,13 +85,18 @@
           v-if="groups.length"
           :options="groups"
           :option="({ id, name }) => ({ label: name, value: id })"
-          @change="(val) => this.loadGroups(val)"
-          placeholder="Спеціальність"
+          @change="(val) => studentGroupID = val"
+          placeholder="Група"
         ></app-select>
 
         <button
+          class="btn btn-cancel"
+          @click="setNoCreating"
+        >Скасувати</button>
+
+        <button
           class="btn btn-student"
-          @click="createTeacher"
+          @click="createStudent"
         >Створити студента</button>
       </div>
 
@@ -113,7 +141,10 @@ export default {
       isStudentCreating: false,
       teacherName: this.name,
       teacherCommission: 0,
-      studentName: '',
+      teacherAddress: this.address,
+      studentName: this.name,
+      studentAddress: this.address,
+      studentGroupID: 0,
     }
   },
   methods: {
@@ -123,24 +154,67 @@ export default {
       loadDepartments: 'departments/loadDepartments',
       loadSpecialtys: 'specialty/loadSpecialtys',
       loadGroups: 'group/loadGroups',
+      setNoGroups: 'group/setNoGroups',
+      setNoSpecialtys: 'specialty/setNoSpecialtys',
+      createStudentAction: 'student/createStudent',
     }),
+    setNoCreating() {
+      this.isCreating = false
+      this.isTeacherCreating = false
+      this.isStudentCreating = false
+    },
+    loadGroupsList(specialtyID) {
+      this.loadGroups(specialtyID).catch(() => {})
+    },
+    loadSpecialtysList(departmentID) {
+      this.loadSpecialtys(departmentID).then(() => {
+        this.setNoGroups()
+      }).catch(() => {
+        this.setNoSpecialtys()
+      })
+    },
     async switchTeacherCreating() {
       this.loadCommissions().then(() => {
         this.isCreating = true
         this.isTeacherCreating = true
       }).catch(() => {})
     },
+    createStudent() {
+      const {
+        studentName: name,
+        studentGroupID: groupID,
+        userID,
+        address,
+      } = this
+
+      this.createStudentAction({
+        name, groupID, userID, address,
+      }).then(() => {
+        this.isCreating = false
+        this.isStudentCreating = false
+
+        this.$emit('updated')
+      })
+    },
     createTeacher() {
       const {
         teacherName: name,
         teacherCommission: commissionID,
+        teacherAddress: address,
         userID,
       } = this
 
-      this.createTeacherAction({ name, commissionID, userID }).then(() => {
+      this.createTeacherAction({
+        name,
+        commissionID,
+        userID,
+        address,
+      }).then(() => {
         this.isCreating = false
         this.isTeacherCreating = false
-      }).catch(console.error)
+
+        this.$emit('updated')
+      }).catch(() => {})
     },
     switchStudentCreating() {
       this.loadDepartments().then(() => {
@@ -224,6 +298,10 @@ export default {
 
     .btn-student {
       background: #f97035;
+    }
+
+    .btn-cancel {
+      background: #f44;
     }
 
     .name {
