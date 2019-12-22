@@ -18,6 +18,7 @@ import classes from './modules/classes'
 import students from './modules/student'
 import users from './modules/users'
 import subgroups from './modules/subgroups'
+import groups from './modules/groups'
 
 const app = express()
 const port = process.env.PORT || 4000
@@ -49,5 +50,7 @@ classes(app)
 students(app)
 users(app)
 subgroups(app)
+
+groups(app)
 
 app.listen(port)
