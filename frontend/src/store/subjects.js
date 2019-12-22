@@ -24,7 +24,7 @@ export default {
 
   actions: {
     async load({ commit }) {
-      axios.post('/subjects/getAll').then(({ data: { subjects, errors } }) => {
+      axios.post('/subject/getAll').then(({ data: { subjects, errors } }) => {
         if (errors) {
           return Promise.reject(errors)
         }
@@ -41,9 +41,26 @@ export default {
             created,
             errors,
           },
-        } = await axios.post('/subjects/create', subjectData)
+        } = await axios.post('/subject/create', subjectData)
 
         if (created && !errors) {
+          return Promise.resolve()
+        }
+
+        return Promise.reject()
+      } catch (e) {
+        console.error(e)
+
+        return Promise.reject(e)
+      }
+    },
+    async edit(_, subjectData) {
+      try {
+        const {
+          data: { errors },
+        } = await axios.post('/subject/edit', subjectData)
+
+        if (!errors) {
           return Promise.resolve()
         }
 

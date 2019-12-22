@@ -32,15 +32,17 @@
           placeholder="Комісія"
         ></app-select>
 
-        <button
-          class="btn btn-cancel"
-          @click="setNoCreating"
-        >Скасувати</button>
+        <div class="accept-btns">
+          <button
+            class="btn btn-cancel"
+            @click="setNoCreating"
+          >Скасувати</button>
 
-        <button
-          class="btn btn-teacher"
-          @click="createTeacher"
-        >Створити вчителя</button>
+          <button
+            class="btn btn-teacher"
+            @click="createTeacher"
+          >Створити вчителя</button>
+        </div>
       </div>
 
       <div v-if="isStudentCreating">
@@ -89,15 +91,17 @@
           placeholder="Група"
         ></app-select>
 
-        <button
-          class="btn btn-cancel"
-          @click="setNoCreating"
-        >Скасувати</button>
+        <div class="accept-btns">
+          <button
+            class="btn btn-cancel"
+            @click="setNoCreating"
+          >Скасувати</button>
 
-        <button
-          class="btn btn-student"
-          @click="createStudent"
-        >Створити студента</button>
+          <button
+            class="btn btn-student"
+            @click="createStudent"
+          >Створити студента</button>
+        </div>
       </div>
 
       <div v-if="!isCreating">

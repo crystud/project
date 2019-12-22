@@ -78,7 +78,6 @@ export default {
 <style lang="less" scoped>
 .select {
   width: 100%;
-  margin: 10px 0;
 
   .placeholder {
     display: flex;
@@ -89,7 +88,7 @@ export default {
 
   .select-input {
     width: 100%;
-    padding: 15px 10px;
+    padding: 10px;
     font-size: 1em;
 
     border-radius: 8px;

@@ -11,6 +11,7 @@ import users from './users'
 import commissions from './commissions'
 import group from './groups'
 import subjects from './subjects'
+import subjectTypes from './subjectTypes'
 
 Vue.use(Vuex)
 
@@ -32,5 +33,6 @@ export default new Vuex.Store({
     commissions,
     group,
     subjects,
+    subjectTypes,
   },
 })

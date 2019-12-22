@@ -6,8 +6,8 @@
       :type="type"
       :placeholder="placeholder"
       :class="isSuccess ? 'success-border' : 'fail-border'"
-      :value="value"
-      @input="$emit('change', $event.target.value)"
+      :value="currentValue"
+      @input="updateField"
     >
   </div>
 </template>
@@ -15,6 +15,19 @@
 <script>
 export default {
   name: 'AppCustomInput',
+  data() {
+    return {
+      currentValue: this.value || '',
+    }
+  },
+  methods: {
+    updateField(event) {
+      const { value } = event.target
+
+      this.currentValue = value
+      this.$emit('change', value)
+    },
+  },
   props: {
     value: {
       type: String,
@@ -55,6 +68,7 @@ export default {
     color: #fff;
     border: 0;
     border-radius: 5px;
+    font-size: 1em;
 
     border-bottom: 2px solid transparent;
 

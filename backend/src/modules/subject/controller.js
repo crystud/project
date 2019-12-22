@@ -11,33 +11,15 @@ export default class SubjectController {
       name,
       commissionID,
       subjectTypeID: subjectType,
-      scoringSystemID,
     } = data
 
     const subjectData = {
       name,
       commissionID,
       subjectType,
-      scoringSystemID,
     }
 
     try {
-      const scoringSystemExists = await ScoringSystems.findOne({
-        where: {
-          id: scoringSystemID,
-        },
-      })
-
-      if (!scoringSystemExists) {
-        errors.push({
-          msg: 'Such scoring system does not exist',
-          param: 'scoringSystemID',
-          location: 'body',
-        })
-
-        return { errors }
-      }
-
       const exists = await Subject.findOne({
         where: subjectData,
       })
@@ -63,121 +45,6 @@ export default class SubjectController {
     }
   }
 
-  static async createScoringSystem(data) {
-    const errors = []
-
-    const {
-      minPossibleMark: min,
-      maxPossibleMark: max,
-      minPassingMark: minMark,
-      name,
-    } = data
-
-    try {
-      const exists = await ScoringSystems.findOne({
-        where: {
-          min,
-          max,
-          minMark,
-        },
-      })
-
-      if (exists) {
-        errors.push({
-          msg: 'Such scoring system already exists.',
-          param: ['name', 'minPossibleMark', 'maxPossibleMark', 'minPassingMark'],
-          location: 'body',
-        })
-
-        return { errors }
-      }
-
-      const create = await ScoringSystems.create({
-        name,
-        min,
-        max,
-        minMark,
-      })
-
-      return {
-        created: !!create,
-        scoringSystem: create || null,
-      }
-    } catch (e) {
-      console.error(e)
-
-      return { created: false }
-    }
-  }
-
-  static async editScoringSystem(data) {
-    const errors = []
-
-    const {
-      scoringSystemID,
-      minPossibleMark: min,
-      maxPossibleMark: max,
-      minPassingMark: minMark,
-      name,
-    } = data
-
-    try {
-      const existsForChanges = await ScoringSystems.findOne({
-        where: {
-          id: scoringSystemID,
-        },
-      })
-
-      if (!existsForChanges) {
-        errors.push({
-          msg: 'Such scoring system does not exists.',
-          location: 'body',
-          param: 'scoringSystemID',
-        })
-
-        return { errors }
-      }
-
-      const exists = await ScoringSystems.findOne({
-        where: {
-          min,
-          max,
-          minMark,
-        },
-      })
-
-      if (exists) {
-        errors.push({
-          msg: 'Such scoring system already exists.',
-          param: ['name', 'minPossibleMark', 'maxPossibleMark', 'minPassingMark'],
-          location: 'body',
-        })
-
-        return { errors }
-      }
-
-      const [update] = await ScoringSystems.update({
-        name,
-        min,
-        max,
-        minMark,
-      }, {
-        where: {
-          id: scoringSystemID,
-        },
-      })
-
-      return {
-        edited: !!update,
-        scoringSystem: update ? data : null,
-      }
-    } catch (e) {
-      console.error(e)
-
-      return { edited: false }
-    }
-  }
-
   static async editSubject(data) {
     const {
       subjectID: id,
@@ -196,12 +63,8 @@ export default class SubjectController {
       where: { id },
     })
 
-    if (!edit) {
-      return { edited: false }
-    }
-
     return {
-      edited: true,
+      edited: !!edit,
       subject: newData,
     }
   }
@@ -239,6 +102,36 @@ export default class SubjectController {
       }
 
       return { subject }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async getAll() {
+    try {
+      const subjects = await Subject.findAll({
+        order: [['id', 'DESC']],
+        include: [
+          {
+            model: Commissions,
+            as: 'commission',
+            required: true,
+          },
+          {
+            model: SubjectTypes,
+            as: 'subjectTypeData',
+            include: {
+              model: ScoringSystems,
+              as: 'scoring_system',
+            },
+            required: true,
+          },
+        ],
+      })
+
+      return { subjects }
     } catch (e) {
       console.error(e)
 
