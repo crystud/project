@@ -1,34 +1,44 @@
 <template>
   <div class="users">
-    <h1>Користувачі</h1>
+    <app-card class="header">
+      Користувачі
+    </app-card>
 
-    <div class="list">
-      <app-users-item
-        v-for="({ id, name, address, email }, index) in usersList.list"
-        v-bind:key="index"
-        :userID="id"
-        :name="name"
-        :address="address"
-        :email="email"
-        @updated="updateUsers"
-      ></app-users-item>
-    </div>
+    <app-card class="content">
+       <div v-if="!usersList.list.length" class="no-result">
+        <span>Користувачів не знайдено...</span>
+      </div>
 
-    <div v-if="usersList.hasNextPage" class="load-more">
-      <button class="btn-load-more">Загрузити ще...</button>
-    </div>
+      <div class="list">
+        <app-users-item
+          v-for="({ id, name, address, email }, index) in usersList.list"
+          v-bind:key="index"
+          :userID="id"
+          :name="name"
+          :address="address"
+          :email="email"
+          @updated="updateUsers"
+        ></app-users-item>
+      </div>
+
+      <div v-if="usersList.hasNextPage" class="load-more">
+        <button class="btn-load-more" @click="loadMore">Загрузити ще...</button>
+      </div>
+    </app-card>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
+import AppCard from './AppCard.vue'
 import AppUsersItem from './AppUsersItem.vue'
 
 export default {
   name: 'UsersPage',
   components: {
     AppUsersItem,
+    AppCard,
   },
   computed: {
     ...mapGetters({
@@ -69,6 +79,32 @@ export default {
   h1 {
     font-size: 1.5em;
     color: #fff;
+  }
+
+  .no-result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    height: 180px;
+    font-weight: 100;
+
+    color: var(--color-font-dark);
+  }
+
+  .app-card {
+    margin-bottom: 10px;
+    color: #fff;
+  }
+
+  .header {
+    display: inline-block;
+    font-size: 1.3em;
+    padding: 10px;
+  }
+
+  .content {
+    padding: 10px 20px;
   }
 
   .list {

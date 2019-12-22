@@ -141,17 +141,44 @@ export default class TeachersController {
     }
   }
 
-  static async getAll() {
+  static async getAllOnCommission({ commissionID }) {
     const result = await Teachers.findAll({
-      include: {
-        model: Commissions,
-        as: 'commission',
-      },
+      where: { commissionID },
+      order: [['name']],
+      include: [
+        {
+          model: Users,
+          as: 'user',
+          attributes: {
+            exclude: 'password',
+          },
+        },
+      ],
     })
 
     return {
       fetched: !!result,
-      teacher: result || null,
+      teachers: result || null,
+    }
+  }
+
+  static async getAll() {
+    const result = await Teachers.findAll({
+      order: [['name']],
+      include: [
+        {
+          model: Users,
+          as: 'user',
+          attributes: {
+            exclude: 'password',
+          },
+        },
+      ],
+    })
+
+    return {
+      fetched: !!result,
+      teachers: result || null,
     }
   }
 }

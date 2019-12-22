@@ -258,6 +258,7 @@ export default {
   align-items: center;
 
   border-radius: 8px;
+  border-left: 10px solid #0f8dea;
 
   .image {
     width: 100px;

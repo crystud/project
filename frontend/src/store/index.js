@@ -10,6 +10,7 @@ import specialty from './specialty'
 import users from './users'
 import commissions from './commissions'
 import group from './groups'
+import subjects from './subjects'
 
 Vue.use(Vuex)
 
@@ -30,5 +31,6 @@ export default new Vuex.Store({
     users,
     commissions,
     group,
+    subjects,
   },
 })

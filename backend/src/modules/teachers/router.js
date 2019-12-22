@@ -126,6 +126,30 @@ router.post('/get', verifyUser, checkRoles(['admin', 'teacher', 'student']), che
   return res.json(result)
 })
 
+router.post('/getAllOnCommission', verifyUser, checkRoles(['admin', 'teacher', 'student']), checkSchema({
+  commissionID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid commission id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No commission id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const result = await Controller.getAllOnCommission(req.body)
+
+  return res.json(result)
+})
+
 router.post('/getAll', verifyUser, checkRoles(['admin', 'teacher', 'student']),
   async (req, res) => {
     const result = await Controller.getAll(req.body)

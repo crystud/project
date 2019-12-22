@@ -71,11 +71,12 @@
             v-for="({ groups }, index) in sortedGroups"
             v-bind:key="index"
           >
-            <div
-              class="group"
-              v-for="({ name }, index) in groups"
-              v-bind:key="index"
-            >{{name}}</div>
+              <div
+                class="group"
+                v-for="({ name, id: groupID }, index) in groups"
+                v-bind:key="index"
+                @click="$router.push(`/group/${groupID}`)"
+              >{{name}}</div>
           </div>
         </div>
       </div>
@@ -281,6 +282,7 @@ export default {
       height: 50px;
 
       color: #fff;
+      cursor: pointer;
 
       display: flex;
       justify-content: center;

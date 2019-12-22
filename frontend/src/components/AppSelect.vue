@@ -62,6 +62,9 @@ export default {
       default: () => {},
     },
   },
+  created() {
+    this.selected = !!this.defaultValue
+  },
   data() {
     return {
       notSelectedValue: Math.random(),

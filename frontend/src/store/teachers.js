@@ -23,13 +23,24 @@ export default {
   },
 
   actions: {
-    async loadTeachers({ commit }) {
-      axios.post('/teacher/getAll').then(({ data: { teacher, errors } }) => {
+    async loadAllTeachers({ commit }) {
+      axios.post('/teacher/getAll').then(({ data: { teachers, errors } }) => {
         if (errors) {
           return Promise.reject(errors)
         }
 
-        commit('setTeachers', teacher)
+        commit('setTeachers', teachers)
+
+        return Promise.resolve()
+      }).catch(() => {})
+    },
+    async loadTeachers({ commit }, commissionID) {
+      axios.post('/teacher/getAllOnCommission', { commissionID }).then(({ data: { teachers, errors } }) => {
+        if (errors) {
+          return Promise.reject(errors)
+        }
+
+        commit('setTeachers', teachers)
 
         return Promise.resolve()
       }).catch(() => {})
@@ -55,8 +66,6 @@ export default {
             errors,
           },
         } = await axios.post('/teacher/create', teacherData)
-
-        console.log(errors, created)
 
         if (created && !errors) {
           return Promise.resolve()

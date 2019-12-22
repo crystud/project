@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      getTeachers: 'teachers/loadTeachers',
+      getTeachers: 'teachers/loadAllTeachers',
       createDepartment: 'departments/createDepartment',
     }),
     create() {
