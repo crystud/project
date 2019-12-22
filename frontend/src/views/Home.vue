@@ -60,6 +60,7 @@
       <app-home-link role="student" link="homeStudent">Домівка студента</app-home-link>
       <app-home-link role="teacher" link="homeTeacher">Домівка вчителя</app-home-link>
       <app-home-link role="admin" link="departments">Структура коледжу</app-home-link>
+      <app-home-link role="admin" link="users">Користувачі</app-home-link>
     </div>
   </div>
 

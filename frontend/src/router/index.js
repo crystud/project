@@ -61,6 +61,11 @@ const routes = [
         component: () => import('../views/home/HomeTeacher'),
       },
       {
+        path: '/users',
+        name: 'users',
+        component: () => import('../views/users/Users'),
+      },
+      {
         path: '/departments',
         name: 'departments',
         component: () => import('../views/departments/Departments'),
