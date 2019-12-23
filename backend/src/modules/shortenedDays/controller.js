@@ -95,4 +95,18 @@ export default class ShortenedDaysController {
       return { fetched: false }
     }
   }
+
+  static async getAll() {
+    try {
+      const shortenedDays = await ShortenedDays.findAll({
+        order: [['date']],
+      })
+
+      return { shortenedDays }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
 }

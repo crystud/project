@@ -21,6 +21,7 @@
           <div class="btn-create">
             <button
               :class="isoTime && reason ? 'active' : ''"
+              @click="createShortenedDay"
             >
               Добавити
             </button>
@@ -32,6 +33,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import AppCard from '../AppCard.vue'
 import AppDatepicker from '../AppDatepicker.vue'
 import AppShortenedDaysList from './AppShortenedDaysList.vue'
@@ -51,9 +54,31 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      create: 'shortenedDays/create',
+      load: 'shortenedDays/load',
+    }),
     setDate({ iso, normalTime }) {
       this.isoTime = iso
       this.normalTime = normalTime
+    },
+    createShortenedDay() {
+      const {
+        isoTime: date,
+        reason,
+      } = this
+
+      if (!date || !reason) {
+        return
+      }
+
+      this.create({ date, reason }).then(() => {
+        this.isoTime = ''
+        this.normalTime = ''
+        this.reason = ''
+
+        this.load()
+      }).catch(() => {})
     },
   },
 }
@@ -127,6 +152,7 @@ export default {
         &.active {
           background: #00ff87;
           opacity: 1;
+          cursor: pointer;
         }
       }
     }

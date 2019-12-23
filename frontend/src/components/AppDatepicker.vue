@@ -43,6 +43,11 @@
           [
             (currentDate === (i - daysOffset) ? 'green-day' : ''),
             (selected === (i - daysOffset) ? 'selected' : ''),
+            (
+              dates.includes(`${currentYear}/${currentMonth + 1}/${i - daysOffset}`)
+              ? 'gray-day' : ''),
+            (minDate.getTime() > new Date(currentYear, currentMonth, i - daysOffset).getTime()
+              ? 'disabled' : ''),
           ]
         "
         @click="() => selectDate(i - daysOffset)"
@@ -56,10 +61,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import AppCard from './AppCard.vue'
 
 export default {
   name: 'AppDatepicker',
+  computed: {
+    ...mapGetters({
+      dates: 'shortenedDays/dates',
+    }),
+  },
   data() {
     return {
       currentMonth: 4,
@@ -101,7 +113,19 @@ export default {
         currentMonth,
         months,
         days,
+        minDate,
+        daysOffset,
       } = this
+
+      const currentTimestamp = new Date(
+        currentYear,
+        currentMonth,
+        dateNumber - daysOffset,
+      ).getTime()
+
+      if (minDate.getTime() >= currentTimestamp) {
+        return
+      }
 
       if (this.selected === dateNumber) {
         this.selected = 0
@@ -109,8 +133,8 @@ export default {
         return
       }
 
-      const dateString = `${currentYear}-${currentMonth}-${dateNumber}`
-      const date = new Date(currentYear, currentMonth, dateNumber)
+      const dateString = `${currentYear}-${currentMonth + 1}-${dateNumber}`
+      const date = new Date(currentYear, currentMonth + 1, dateNumber)
 
       this.selected = dateNumber
 
@@ -187,6 +211,11 @@ export default {
 
       &.selected {
         background: #375ee1;
+      }
+
+      &.disabled {
+        opacity: .3;
+        cursor: default;
       }
 
       transition: all .3s;

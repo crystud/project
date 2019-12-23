@@ -15,11 +15,9 @@ import semester from './modules/semester'
 import teacher from './modules/teachers'
 import rooms from './modules/rooms'
 import classes from './modules/classes'
-import scoringSystems from './modules/scoringSystems'
-import students from './modules/student'
-import users from './modules/users'
 import subgroups from './modules/subgroups'
-import groups from './modules/groups'
+import shortenedDays from './modules/shortenedDays'
+import users from './modules/users'
 
 const app = express()
 const port = process.env.PORT || 4000
@@ -48,11 +46,8 @@ semester(app)
 teacher(app)
 rooms(app)
 classes(app)
-scoringSystems(app)
-
-students(app)
 users(app)
 subgroups(app)
-groups(app)
+shortenedDays(app)
 
 app.listen(port)

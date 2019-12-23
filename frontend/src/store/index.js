@@ -12,6 +12,7 @@ import commissions from './commissions'
 import group from './groups'
 import subjects from './subjects'
 import subjectTypes from './subjectTypes'
+import shortenedDays from './shortenedDays'
 
 Vue.use(Vuex)
 
@@ -34,5 +35,6 @@ export default new Vuex.Store({
     group,
     subjects,
     subjectTypes,
+    shortenedDays,
   },
 })
