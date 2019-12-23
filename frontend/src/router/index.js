@@ -90,6 +90,21 @@ const routes = [
         name: 'commissions',
         component: () => import('@/views/Commissions'),
       },
+      {
+        path: '/teacher/:id',
+        name: 'teacher',
+        component: () => import('@/views/Teacher'),
+      },
+      {
+        path: '/group/:id',
+        name: 'group',
+        component: () => import('@/views/Group'),
+      },
+      {
+        path: '/shortenedDays/',
+        name: 'shortenedDays',
+        component: () => import('../views/ShortenedDays'),
+      },
     ],
   },
 ]

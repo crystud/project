@@ -14,6 +14,14 @@ import {
   faEdit,
   faEllipsisH,
   faTrash,
+  faUsers,
+  faClock,
+  faLightbulb,
+  faMapMarker,
+  faUserTimes,
+  faUserTie,
+  faCalendarAlt,
+  faAngleRight,
 } from '@fortawesome/free-solid-svg-icons'
 
 import App from './App.vue'
@@ -39,6 +47,14 @@ library.add(faAngleLeft)
 library.add(faEdit)
 library.add(faEllipsisH)
 library.add(faTrash)
+library.add(faClock)
+library.add(faUsers)
+library.add(faLightbulb)
+library.add(faMapMarker)
+library.add(faUserTimes)
+library.add(faUserTie)
+library.add(faCalendarAlt)
+library.add(faAngleRight)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

@@ -29,4 +29,8 @@ Departments.belongsTo(Teachers, {
   as: 'leader',
 })
 
+Teachers.hasOne(Departments, {
+  foreignKey: 'id',
+})
+
 export default Departments

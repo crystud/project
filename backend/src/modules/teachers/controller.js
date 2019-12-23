@@ -5,6 +5,7 @@ import Users from '../../models/users'
 import Classes from '../../models/classes'
 import Students from '../../models/students'
 import Commissions from '../../models/commissions'
+import Departments from '../../models/departments'
 
 export default class TeachersController {
   static async create(teacher) {
@@ -129,10 +130,21 @@ export default class TeachersController {
 
     const result = await Teachers.findOne({
       where: { id },
-      include: {
-        model: Commissions,
-        as: 'commission',
-      },
+      include: [
+        {
+          model: Commissions,
+          as: 'commission',
+        },
+        {
+          model: Users,
+          as: 'user',
+          attributes: ['email'],
+        },
+        {
+          model: Departments,
+          as: 'department',
+        },
+      ],
     })
 
     return {

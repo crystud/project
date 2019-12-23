@@ -64,6 +64,7 @@
       <app-home-link role="admin" link="teachers">Вчителі</app-home-link>
       <app-home-link role="admin" link="subjects">Предмети</app-home-link>
       <app-home-link role="admin" link="commissions">Комісії</app-home-link>
+      <app-home-link role="admin" link="shortenedDays">Скорочені дні</app-home-link>
     </div>
   </div>
 
@@ -230,6 +231,7 @@ export default {
 
   .content {
     padding: 20px 45px;
+    position: relative;
   }
 }
 </style>

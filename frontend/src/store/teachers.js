@@ -5,7 +5,17 @@ export default {
 
   state: {
     teachers: [],
-    teacher: {},
+    teacher: {
+      name: '',
+      user: {
+        email: '',
+      },
+      commission: {
+        name: '',
+        id: 0,
+      },
+      department: {},
+    },
   },
 
   getters: {
@@ -46,14 +56,14 @@ export default {
       }).catch(() => {})
     },
     async loadTeacher({ commit }, teacherID) {
-      axios.post('/teachers/get', {
-        teacherID,
+      axios.post('/teacher/get', {
+        id: teacherID,
       }).then(({ data: { teacher, errors } }) => {
         if (errors) {
           return Promise.reject(errors)
         }
 
-        commit('setDepartment', teacher)
+        commit('setTeacher', teacher)
 
         return Promise.resolve()
       })
