@@ -22,7 +22,7 @@
   <app-input
       name="Адреса"
       v-model="address"
-      type="password"
+      type="text"
   ></app-input>
 
   <app-button class="signUp" @click="signUp">Зареєструватись</app-button>
