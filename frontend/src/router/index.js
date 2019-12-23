@@ -85,6 +85,11 @@ const routes = [
         name: 'subjects',
         component: () => import('@/views/subjects/Subjects'),
       },
+      {
+        path: '/commissions',
+        name: 'commissions',
+        component: () => import('@/views/Commissions'),
+      },
     ],
   },
 ]

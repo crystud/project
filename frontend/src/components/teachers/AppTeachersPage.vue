@@ -48,6 +48,8 @@ export default {
       loadTeachersAction: 'teachers/loadTeachers',
     }),
     loadTeachers(commissionID) {
+      this.currentCommissionID = commissionID
+
       this.loadTeachersAction(commissionID)
     },
   },

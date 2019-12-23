@@ -1,7 +1,7 @@
 <template>
   <div class="subjects">
     <app-card class="header">
-      subjects
+      Предмети
     </app-card>
 
     <app-card class="list">

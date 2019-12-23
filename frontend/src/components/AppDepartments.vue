@@ -52,6 +52,9 @@ export default {
 
 <style lang="less">
 .departments {
+  max-height: 100%;
+  overflow: auto;
+
   .app-card {
     margin-bottom: 10px;
     padding: 10px;

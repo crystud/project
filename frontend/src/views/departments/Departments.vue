@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <app-departments></app-departments>
-  </div>
+  <app-departments></app-departments>
 </template>
 
 <script>

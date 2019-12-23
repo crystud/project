@@ -54,10 +54,12 @@ export default {
 
 <style lang="less" scoped>
 .input {
-  .label {
-    color: #ffffff;
+  .placeholder {
+    width: 100%;
+    display: flex;
+    justify-content: left;
+
     margin-bottom: 5px;
-    display: block;
   }
 
   input {

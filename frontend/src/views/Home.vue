@@ -63,6 +63,7 @@
       <app-home-link role="admin" link="users">Користувачі</app-home-link>
       <app-home-link role="admin" link="teachers">Вчителі</app-home-link>
       <app-home-link role="admin" link="subjects">Предмети</app-home-link>
+      <app-home-link role="admin" link="commissions">Комісії</app-home-link>
     </div>
   </div>
 

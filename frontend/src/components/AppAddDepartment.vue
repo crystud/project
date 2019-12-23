@@ -7,11 +7,12 @@
       </div>
 
       <div v-if="isAdding">
-        <app-input
+        <app-custom-input
           class="name"
-          name="Назва..."
-          @input="(departmentName) => name = departmentName"
-        ></app-input>
+          placeholder="Назва..."
+          :isSuccess="!!name"
+          @change="(departmentName) => name = departmentName"
+        ></app-custom-input>
 
         <app-select
           class="leader-select"
@@ -33,13 +34,13 @@
 import { mapActions, mapGetters } from 'vuex'
 
 import AppSelect from './AppSelect.vue'
-import AppInput from './AppInput.vue'
+import AppCustomInput from './AppCustomInput.vue'
 import AppButton from './AppButton.vue'
 
 export default {
   name: 'AddDepartment',
   components: {
-    AppInput,
+    AppCustomInput,
     AppButton,
     AppSelect,
   },
@@ -98,10 +99,15 @@ export default {
   justify-content: center;
   align-items: center;
 
+  .name {
+    margin-bottom: 10px;
+  }
+
   .btn-create {
     background: var(--color-bg-light);
     color: var(--color-font-main);
     padding: 15px;
+    margin-top: 10px;
     font-size: 17px;
     cursor: pointer;
     width: 100%;

@@ -1,6 +1,6 @@
 <template>
   <div class="manage-department">
-    <app-card class="pagename">Department</app-card>
+    <app-card class="pagename">Інформація про відділення</app-card>
 
     <app-card class="content">
       <div class="header">
@@ -76,6 +76,9 @@ export default {
 <style lang="less" scoped>
 .manage-department {
   width: 100%;
+  max-height: 100%;
+  overflow: auto;
+
   display: block;
 
   .pagename {

@@ -82,15 +82,16 @@ export default {
         departmentID,
       }).then(() => {
         this.load(this.$route.params.id)
+
         this.isCreating = false
+        this.name = ''
+        this.symbol = ''
       })
     },
   },
   data() {
     return {
       name: '',
-      entry: '',
-      graduation: '',
       symbol: '',
       isCreating: false,
     }

@@ -17,12 +17,24 @@ export default {
     setList(state, list) {
       state.list = list
     },
-    setCommission() {
-
-    },
   },
 
   actions: {
+    async create(_, commissionData) {
+      try {
+        const {
+          data: { errors },
+        } = await axios.post('/commissions/create', commissionData)
+
+        if (!errors) {
+          return Promise.resolve()
+        }
+
+        return Promise.reject()
+      } catch (e) {
+        return Promise.reject(e)
+      }
+    },
     async loadCommissions({ commit }) {
       const {
         data: {
@@ -38,6 +50,21 @@ export default {
       }
 
       return Promise.reject()
+    },
+    async editCommission(_, commissionData) {
+      try {
+        const {
+          data: { errors },
+        } = await axios.post('/commissions/edit', commissionData)
+
+        if (!errors) {
+          return Promise.resolve()
+        }
+
+        return Promise.reject()
+      } catch (e) {
+        return Promise.reject(e)
+      }
     },
   },
 }
