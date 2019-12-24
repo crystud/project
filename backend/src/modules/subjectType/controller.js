@@ -1,4 +1,5 @@
 import SubjectType from '../../models/subject_types'
+import ScoringSystems from '../../models/scoring_systems'
 
 export default class SubjectTypeController {
   static async createSubjectType({ name, coefficient }) {
@@ -26,13 +27,9 @@ export default class SubjectTypeController {
 
       const create = await SubjectType.create(subjectTypeData)
 
-      if (!create.dataValues) {
-        return { created: false }
-      }
-
       return {
-        created: true,
-        subjectType: create.dataValues,
+        created: !!create,
+        subjectType: create || null,
       }
     } catch (e) {
       return { created: false }
@@ -53,16 +50,12 @@ export default class SubjectTypeController {
       where: { id },
     })
 
-    if (!edit) {
-      return { edited: false }
-    }
-
     return {
-      edited: true,
-      subjectType: {
+      edited: !!edit,
+      subjectType: edit ? {
         name,
         coefficient,
-      },
+      } : null,
     }
   }
 
@@ -85,6 +78,24 @@ export default class SubjectTypeController {
       }
 
       return { subjectType }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async getAll() {
+    try {
+      const subjectTypes = await SubjectType.findAll({
+        order: [['name']],
+        include: {
+          model: ScoringSystems,
+          as: 'scoring_system',
+        },
+      })
+
+      return { subjectTypes }
     } catch (e) {
       console.error(e)
 

@@ -152,6 +152,7 @@ module.exports = {
         autoIncrement: true,
       },
       groupID: Sequelize.INTEGER,
+      name: Sequelize.TEXT,
     }, { transaction: t }),
 
     queryInterface.createTable('subgroups_students', {

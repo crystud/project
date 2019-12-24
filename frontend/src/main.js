@@ -1,7 +1,31 @@
 import Vue from 'vue'
+
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import {
+  faChartLine, faCheck, faHome, faTimes, faBars, faColumns,
+} from '@fortawesome/free-solid-svg-icons'
+
 import App from './App.vue'
 import router from './router'
 import store from './store'
+
+
+import axios from './tools/axios'
+import accessTokenExpired from './tools/accessTokenExpired'
+import accessTokenHeader from './tools/accessTokenHeader'
+
+accessTokenExpired(axios, store)
+accessTokenHeader(axios, store)
+
+library.add(faChartLine)
+library.add(faCheck)
+library.add(faHome)
+library.add(faTimes)
+library.add(faBars)
+library.add(faColumns)
+
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
 

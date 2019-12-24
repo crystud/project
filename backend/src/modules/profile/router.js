@@ -10,26 +10,8 @@ const router = Router()
 
 router.use(verifyUser)
 
-router.post('/getInformation', checkSchema({
-  userId: {
-    in: 'body',
-    isNumeric: {
-      errorMessage: 'User id is incorrect',
-    },
-    notEmpty: {
-      errorMessage: 'User id was not specified',
-    },
-  },
-}), async (req, res) => {
-  const errors = validationResult(req)
-
-  if (!errors.isEmpty()) {
-    return res.json({
-      errors: errors.array(),
-    })
-  }
-
-  const result = await Controller.getInformation(req.body)
+router.post('/getInformation', async (req, res) => {
+  const result = await Controller.getInformation(req.user)
 
   return res.json(result)
 })
