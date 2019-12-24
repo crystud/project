@@ -10,23 +10,23 @@ const router = Router()
 
 router.use(verifyUser)
 
-router.post('/create', checkRoles(['admin']), checkSchema({
-  subjectTypeID: {
+router.post('/createScoringSystem', checkRoles(['admin']), checkSchema({
+  minPossibleMark: {
     in: 'body',
-    isNumeric: {
-      errorMessage: 'Subject type id is invalid',
-    },
     notEmpty: {
-      errorMessage: 'No subject type id provided',
+      errorMessage: 'No minimal possible mark provided',
     },
   },
-  commissionID: {
+  maxPossibleMark: {
     in: 'body',
-    isNumeric: {
-      errorMessage: 'Commission id is invalid',
-    },
     notEmpty: {
-      errorMessage: 'No commission id provided',
+      errorMessage: 'No maximal possible mark provided',
+    },
+  },
+  minPassingMark: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No minimal passing mark provided',
     },
   },
   name: {
@@ -44,37 +44,40 @@ router.post('/create', checkRoles(['admin']), checkSchema({
     })
   }
 
-  const create = await Controller.createSubject(req.body)
+  const create = await Controller.createScoringSystem(req.body)
 
   return res.json(create)
 })
 
-router.post('/edit', checkRoles(['admin']), checkSchema({
-  subjectID: {
+router.post('/editScoringSystem', checkRoles(['admin']), checkSchema({
+  scoringSystemID: {
     in: 'body',
-    isNumeric: {
-      errorMessage: 'Subject type id is invalid',
+    isInt: {
+      errorMessage: 'Invalid scoring system id provided',
+      options: {
+        min: 1,
+      },
     },
     notEmpty: {
-      errorMessage: 'No subject type id provided',
+      errorMessage: 'No scoring system id provided',
     },
   },
-  subjectTypeID: {
+  minPossibleMark: {
     in: 'body',
-    isNumeric: {
-      errorMessage: 'Subject type id is invalid',
-    },
     notEmpty: {
-      errorMessage: 'No subject type id provided',
+      errorMessage: 'No minimal possible mark provided',
     },
   },
-  commissionID: {
+  maxPossibleMark: {
     in: 'body',
-    isNumeric: {
-      errorMessage: 'Commission id is invalid',
-    },
     notEmpty: {
-      errorMessage: 'No commission id provided',
+      errorMessage: 'No maximal possible mark provided',
+    },
+  },
+  minPassingMark: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No minimal passing mark provided',
     },
   },
   name: {
@@ -92,19 +95,22 @@ router.post('/edit', checkRoles(['admin']), checkSchema({
     })
   }
 
-  const edit = await Controller.editSubject(req.body)
+  const create = await Controller.editScoringSystem(req.body)
 
-  return res.json(edit)
+  return res.json(create)
 })
 
-router.post('/get', checkSchema({
-  subjectID: {
+router.post('/list', checkRoles(['admin', 'teacher', 'student']), checkSchema({
+  page: {
     in: 'body',
-    isNumeric: {
-      errorMessage: 'Invalid subject id',
+    isInt: {
+      errorMessage: 'Invalid page provided',
+      options: {
+        min: 0,
+      },
     },
     notEmpty: {
-      errorMessage: 'No subject id provided',
+      errorMessage: 'No page provided',
     },
   },
 }), async (req, res) => {
@@ -116,13 +122,7 @@ router.post('/get', checkSchema({
     })
   }
 
-  const subject = await Controller.get(req.body)
-
-  return res.json(subject)
-})
-
-router.post('/getAll', checkRoles(['admin', 'teacher', 'student']), async (req, res) => {
-  const list = await Controller.getAll()
+  const list = await Controller.list(req.body)
 
   return res.json(list)
 })

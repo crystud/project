@@ -16,7 +16,7 @@ import teacher from './modules/teachers'
 import rooms from './modules/rooms'
 import student from './modules/student'
 import classes from './modules/classes'
-import students from './modules/student'
+import scoringSystems from './modules/scoringSystems'
 import users from './modules/users'
 import subgroups from './modules/subgroups'
 
@@ -47,7 +47,7 @@ semester(app)
 teacher(app)
 rooms(app)
 classes(app)
-students(app)
+scoringSystems(app)
 users(app)
 subgroups(app)
 
