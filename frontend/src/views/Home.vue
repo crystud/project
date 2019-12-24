@@ -65,6 +65,7 @@
       <app-home-link role="admin" link="subjects">Предмети</app-home-link>
       <app-home-link role="admin" link="commissions">Комісії</app-home-link>
       <app-home-link role="admin" link="shortenedDays">Скорочені дні</app-home-link>
+      <app-home-link role="admin" link="schedule">Розклад</app-home-link>
     </div>
   </div>
 

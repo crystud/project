@@ -16,7 +16,6 @@ Subgroups.init({
       key: 'id',
     },
   },
-  name: DataTypes.TEXT,
 },
 {
   sequelize,

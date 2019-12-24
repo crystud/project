@@ -57,17 +57,20 @@ router.post('/edit', verifyUser, checkRoles(['admin']), checkSchema({
   },
   name: {
     in: 'body',
+    notEmpty: {
+      errors: 'name shouldn`t be empty',
+    },
+    isString: {
+      errorMessage: 'name must be string',
+    },
   },
   commissionID: {
     in: 'body',
-    custom: {
-      in: 'body',
-      notEmpty: {
-        errors: 'Commission shouldn`t be empty',
-      },
-      isNumeric: {
-        errorMessage: 'Commission id must be numeric',
-      },
+    notEmpty: {
+      errors: 'Commission shouldn`t be empty',
+    },
+    isNumeric: {
+      errorMessage: 'Commission id must be numeric',
     },
   },
 }), async (req, res) => {

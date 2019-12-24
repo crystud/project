@@ -22,6 +22,8 @@ import {
   faUserTie,
   faCalendarAlt,
   faAngleRight,
+  faAngleDoubleLeft,
+  faAngleDoubleRight,
 } from '@fortawesome/free-solid-svg-icons'
 
 import App from './App.vue'
@@ -55,6 +57,8 @@ library.add(faUserTimes)
 library.add(faUserTie)
 library.add(faCalendarAlt)
 library.add(faAngleRight)
+library.add(faAngleDoubleLeft)
+library.add(faAngleDoubleRight)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

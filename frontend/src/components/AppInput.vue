@@ -1,10 +1,10 @@
 <template>
 <div class="app-input">
   <input
-      :type="type"
-      :placeholder="name"
-      :value="value"
-      @input="$emit('input', $event.target.value)"
+    :type="type"
+    :placeholder="name"
+    :value="value"
+    @input="$emit('input', $event.target.value)"
   >
 
   <div class="icon">R</div>

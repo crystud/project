@@ -101,9 +101,14 @@ const routes = [
         component: () => import('@/views/Group'),
       },
       {
-        path: '/shortenedDays/',
+        path: '/shortenedDays',
         name: 'shortenedDays',
         component: () => import('../views/ShortenedDays'),
+      },
+      {
+        path: '/schedule',
+        name: 'schedule',
+        component: () => import('../views/Schedule'),
       },
     ],
   },

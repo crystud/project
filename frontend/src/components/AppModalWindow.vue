@@ -6,11 +6,12 @@
           <slot name="header"></slot>
         </div>
 
-        <font-awesome-icon
-          icon="times"
-          class="close-icon"
-          @click="$emit('close')"
-        ></font-awesome-icon>
+        <div class="close" @click="$emit('close')">
+          <font-awesome-icon
+            icon="times"
+            class="icon"
+          ></font-awesome-icon>
+        </div>
       </div>
 
       <div class="content">
@@ -71,9 +72,25 @@ export default {
       justify-content: space-between;
       align-items: center;
 
-      .close-icon {
+      .close {
+        width: 50px;
+        height: 50px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background: rgba(0, 0, 0, 0);
+        border-radius: 50%;
+
         font-size: 1.3em;
         cursor: pointer;
+
+        transition: all .3s;
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.3);
+        }
       }
     }
 

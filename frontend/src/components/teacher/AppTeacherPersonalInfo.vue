@@ -3,7 +3,10 @@
     <div class="personal-info">
       <div class="user-basic-info">
         <div class="profile-image">
-          <div class="edit">
+          <div
+            class="edit"
+            @click="$emit('onEdit')"
+          >
             <font-awesome-icon icon="edit"></font-awesome-icon>
           </div>
         </div>
@@ -117,6 +120,7 @@ export default {
     .user-name {
       color: #c8c9ca;
       font-size: 1.4em;
+      padding: 0 20px;
     }
 
     .user-email {

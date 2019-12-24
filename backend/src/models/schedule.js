@@ -56,6 +56,11 @@ Schedule.belongsTo(Classes, {
   as: 'class',
 })
 
+Schedule.belongsTo(Rooms, {
+  foreignKey: 'roomID',
+  as: 'room',
+})
+
 Rooms.hasMany(Schedule, {
   foreignKey: 'roomID',
   as: 'schedules',

@@ -91,13 +91,13 @@ export default {
     padding: 10px;
     font-size: 1em;
 
-    border-radius: 8px;
+    border-radius: 5px;
     background: var(--color-bg-light);
     border: 0;
 
     color: var(--color-font-main);
 
-    border-bottom: 2px solid transparent;
+    border-bottom: 4px solid transparent;
     transition: all .3s;
   }
 

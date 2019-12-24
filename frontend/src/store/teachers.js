@@ -88,5 +88,26 @@ export default {
         return Promise.reject(e)
       }
     },
+    async edit(_, teacherData) {
+      try {
+        const {
+          data: {
+            errors,
+          },
+        } = await axios.post('/teacher/edit', teacherData)
+
+        console.log(errors)
+
+        if (!errors) {
+          return Promise.resolve()
+        }
+
+        return Promise.reject()
+      } catch (e) {
+        console.error(e)
+
+        return Promise.reject(e)
+      }
+    },
   },
 }
