@@ -22,15 +22,58 @@ export default class StudentController {
     } = data
 
     try {
-      const exists = await Students.findAll({
+      const studentExists = await Students.findOne({
+        attributes: ['id'],
         where: { userID },
       })
 
-      if (exists.length) {
+      if (studentExists) {
         errors.push({
           location: 'body',
           param: 'name',
-          msg: 'Student with such name id already exist',
+          msg: 'Student with such id already exist',
+        })
+
+        return { errors }
+      }
+
+      const groupsExists = await Groups.count({
+        where: { id: groupID },
+      })
+
+      if (!groupsExists) {
+        errors.push({
+          msg: 'Such group does not exist',
+          param: 'groupID',
+          location: 'body',
+        })
+      }
+
+      const userData = await Users.findOne({
+        where: { id: userID },
+        attributes: ['id'],
+        include: {
+          model: Teachers,
+          as: 'teacher',
+          attributes: ['id'],
+        },
+      })
+
+      if (!userData) {
+        errors.push({
+          msg: 'Such user does not exist',
+          location: 'body',
+          param: 'userID',
+        })
+
+        return { errors }
+      }
+
+      if (userData.teacher) {
+        errors.push({
+          msg: 'Teacher cannot be a student',
+          location: 'body',
+          param: 'userID',
         })
 
         return { errors }
@@ -43,13 +86,9 @@ export default class StudentController {
         userID,
       })
 
-      if (!create.dataValues) {
-        return { created: false }
-      }
-
       return {
-        created: true,
-        student: create.dataValues,
+        created: !!create,
+        student: create,
       }
     } catch (e) {
       return { created: false }
@@ -77,12 +116,8 @@ export default class StudentController {
         where: { id },
       })
 
-      if (!update) {
-        return { edited: false }
-      }
-
       return {
-        edited: true,
+        edited: !!update,
         student: {
           updateData,
           ...id,
@@ -121,7 +156,7 @@ export default class StudentController {
         return { errors }
       }
 
-      return student
+      return { student }
     } catch (e) {
       console.error(e)
 
@@ -218,6 +253,11 @@ export default class StudentController {
               as: 'class',
               where: { groupID },
             },
+            {
+              model: Users,
+              as: 'user',
+              attributes: ['email'],
+            },
           ],
         }),
         SubgroupsStudents.findAll({
@@ -254,6 +294,24 @@ export default class StudentController {
         simpleClassTeachers,
         subgroupsTeachers,
       }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async getAll({ groupID }) {
+    try {
+      const students = await Students.findAll({
+        attributes: {
+          exclude: ['groupID'],
+        },
+        order: [['id', 'DESC']],
+        where: { groupID },
+      })
+
+      return { students }
     } catch (e) {
       console.error(e)
 

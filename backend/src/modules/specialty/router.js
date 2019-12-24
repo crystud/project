@@ -109,4 +109,31 @@ router.post('/get', checkRoles(['admin', 'teacher', 'student']), checkSchema({
   return res.json(specialty)
 })
 
+router.post('/getAll', checkRoles(['admin', 'teacher', 'student']), checkSchema({
+  departmentID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid department id provided',
+      options: {
+        min: 0,
+      },
+    },
+    notEmpty: {
+      errorMessage: 'No department id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const list = await Controller.list(req.body)
+
+  return res.json(list)
+})
+
 export default router

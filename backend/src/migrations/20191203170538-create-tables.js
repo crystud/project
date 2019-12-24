@@ -152,6 +152,7 @@ module.exports = {
         autoIncrement: true,
       },
       groupID: Sequelize.INTEGER,
+      name: Sequelize.TEXT,
     }, { transaction: t }),
 
     queryInterface.createTable('subgroups_students', {
@@ -172,6 +173,7 @@ module.exports = {
       },
       name: Sequelize.TEXT,
       coefficient: Sequelize.FLOAT,
+      scoringSystemID: Sequelize.SMALLINT,
     }, { transaction: t }),
 
     queryInterface.createTable('subjects', {

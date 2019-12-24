@@ -121,94 +121,10 @@ router.post('/get', checkSchema({
   return res.json(subject)
 })
 
-router.post('/createScoringSystem', checkSchema({
-  minPossibleMark: {
-    in: 'body',
-    notEmpty: {
-      errorMessage: 'No minimal possible mark provided',
-    },
-  },
-  maxPossibleMark: {
-    in: 'body',
-    notEmpty: {
-      errorMessage: 'No maximal possible mark provided',
-    },
-  },
-  minPassingMark: {
-    in: 'body',
-    notEmpty: {
-      errorMessage: 'No minimal passing mark provided',
-    },
-  },
-  name: {
-    in: 'body',
-    notEmpty: {
-      errorMessage: 'No name provided',
-    },
-  },
-}), async (req, res) => {
-  const errors = validationResult(req)
+router.post('/getAll', checkRoles(['admin', 'teacher', 'student']), async (req, res) => {
+  const list = await Controller.getAll()
 
-  if (!errors.isEmpty()) {
-    return res.json({
-      errors: errors.array(),
-    })
-  }
-
-  const create = await Controller.createScoringSystem(req.body)
-
-  return res.json(create)
-})
-
-router.post('/editScoringSystem', checkSchema({
-  scoringSystemID: {
-    in: 'body',
-    isInt: {
-      errorMessage: 'Invalid scoring system id provided',
-      options: {
-        min: 1,
-      },
-    },
-    notEmpty: {
-      errorMessage: 'No scoring system id provided',
-    },
-  },
-  minPossibleMark: {
-    in: 'body',
-    notEmpty: {
-      errorMessage: 'No minimal possible mark provided',
-    },
-  },
-  maxPossibleMark: {
-    in: 'body',
-    notEmpty: {
-      errorMessage: 'No maximal possible mark provided',
-    },
-  },
-  minPassingMark: {
-    in: 'body',
-    notEmpty: {
-      errorMessage: 'No minimal passing mark provided',
-    },
-  },
-  name: {
-    in: 'body',
-    notEmpty: {
-      errorMessage: 'No name provided',
-    },
-  },
-}), async (req, res) => {
-  const errors = validationResult(req)
-
-  if (!errors.isEmpty()) {
-    return res.json({
-      errors: errors.array(),
-    })
-  }
-
-  const create = await Controller.editScoringSystem(req.body)
-
-  return res.json(create)
+  return res.json(list)
 })
 
 export default router

@@ -4,7 +4,7 @@ import Students from '../../models/students'
 import SubgroupsStudents from '../../models/subgroups_students'
 
 export default class SubgroupsController {
-  static async create({ groupID }) {
+  static async create({ groupID, name }) {
     const errors = []
 
     try {
@@ -22,7 +22,7 @@ export default class SubgroupsController {
         return { errors }
       }
 
-      const create = await Subgroups.create({ groupID })
+      const create = await Subgroups.create({ groupID, name })
 
       return {
         created: !!create,
@@ -124,6 +124,11 @@ export default class SubgroupsController {
         where: { id },
         include: [
           {
+            model: Groups,
+            as: 'group',
+            required: true,
+          },
+          {
             model: SubgroupsStudents,
             as: 'students',
             include: [
@@ -150,6 +155,28 @@ export default class SubgroupsController {
         fetched: !!subgroup,
         subgroup,
       }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async getOnGroup({ groupID }) {
+    try {
+      const subgroups = await Subgroups.findAll({
+        where: { groupID },
+        order: [['name']],
+        include: [
+          {
+            attributes: ['id'],
+            model: SubgroupsStudents,
+            as: 'students',
+          },
+        ],
+      })
+
+      return { subgroups }
     } catch (e) {
       console.error(e)
 

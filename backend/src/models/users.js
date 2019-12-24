@@ -15,6 +15,7 @@ Users.init({
     unique: true,
   },
   password: DataTypes.TEXT,
+  isAdmin: DataTypes.BOOLEAN,
 },
 {
   sequelize,
