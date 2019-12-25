@@ -30,4 +30,9 @@ Specialty.belongsTo(Departments, {
   as: 'department',
 })
 
+Departments.hasMany(Specialty, {
+  foreignKey: 'departmentID',
+  as: 'specialtys',
+})
+
 export default Specialty
