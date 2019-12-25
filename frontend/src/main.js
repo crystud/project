@@ -24,7 +24,10 @@ import {
   faAngleRight,
   faAngleDoubleLeft,
   faAngleDoubleRight,
+  faUser,
 } from '@fortawesome/free-solid-svg-icons'
+
+import VueTruncate from 'vue-truncate-filter'
 
 import App from './App.vue'
 import router from './router'
@@ -59,8 +62,11 @@ library.add(faCalendarAlt)
 library.add(faAngleRight)
 library.add(faAngleDoubleLeft)
 library.add(faAngleDoubleRight)
+library.add(faUser)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+
+Vue.use(VueTruncate)
 
 Vue.config.productionTip = false
 

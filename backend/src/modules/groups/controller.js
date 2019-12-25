@@ -9,6 +9,8 @@ import Hours from '../../models/hours'
 import Schedule from '../../models/schedule'
 import Rooms from '../../models/rooms'
 import Timetable from '../../models/timetable'
+import Teachers from '../../models/teachers'
+import SubjectTypes from '../../models/subject_types'
 
 export default class GroupsController {
   static async create(data) {
@@ -135,6 +137,20 @@ export default class GroupsController {
           {
             model: Students,
             as: 'students',
+            required: true,
+          },
+          {
+            model: Classes,
+            as: 'classes',
+            attributes: ['subjectID'],
+            include: [{
+              model: Subjects,
+              as: 'subject',
+              include: {
+                model: SubjectTypes,
+                as: 'subjectTypeData',
+              },
+            }],
           },
         ],
       })
@@ -477,6 +493,10 @@ export default class GroupsController {
                 {
                   model: Subjects,
                   as: 'subject',
+                },
+                {
+                  model: Teachers,
+                  as: 'teacher',
                 },
               ],
             },

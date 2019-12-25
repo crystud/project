@@ -1,17 +1,19 @@
 <template>
   <div class="teacher">
-    <app-card class="header">Група {{show}}</app-card>
+    <app-card class="header">Група</app-card>
 
-    <div class="sections">
-      <app-teacher-personal-info
-        :name="teacher.name"
-        :commission="teacher.commission.name"
-        :email="teacher.user.email"
-        :department="teacher.department"
+    <div class="sections" v-if="loaded">
+      <app-group-personal-info
         @onEdit="show = true"
-      ></app-teacher-personal-info>
+        :name="group.name"
+        :specialty="group.specialty.name"
+        :students="group.students"
+      ></app-group-personal-info>
 
-      <app-teacher-classes-info></app-teacher-classes-info>
+      <app-group-classes-info
+        :schedule="group.schedule.list"
+        :classesList="group.classes"
+      ></app-group-classes-info>
     </div>
 
     <app-modal-window :show="show" @close="show = false">
@@ -64,8 +66,8 @@ import { mapActions, mapGetters } from 'vuex'
 
 import AppCard from '../AppCard.vue'
 
-import AppTeacherClassesInfo from './AppGroupClassesInfo.vue'
-import AppTeacherPersonalInfo from './AppGroupInfo.vue'
+import AppGroupClassesInfo from './AppGroupClassesInfo.vue'
+import AppGroupPersonalInfo from './AppGroupInfo.vue'
 import AppModalWindow from '../AppModalWindow.vue'
 
 import AppInput from '../AppInput.vue'
@@ -76,32 +78,33 @@ export default {
   name: 'AppTeacherPage',
   computed: {
     ...mapGetters({
-      teacher: 'teachers/teacher',
+      group: 'group/group',
     }),
   },
   methods: {
     ...mapActions({
-      loadTeacher: 'teachers/loadTeacher',
+      get: 'group/get',
     }),
   },
   data() {
     return {
       show: false,
+      loaded: false,
     }
   },
   components: {
     AppCard,
-    AppTeacherPersonalInfo,
-    AppTeacherClassesInfo,
+    AppGroupClassesInfo,
+    AppGroupPersonalInfo,
     AppModalWindow,
     AppSelect,
     AppInput,
     AppDatepicker,
   },
   created() {
-    // this.loadTeacher(this.$route.params.id).then(() => {
-    //   console.log(this.teacher)
-    // })
+    this.get(this.$route.params.id).then(() => {
+      this.loaded = true
+    })
   },
 }
 </script>

@@ -3,7 +3,7 @@
     <div class="personal-info">
       <div class="user-basic-info">
         <div class="group-info">
-          <span class="name">П-42</span>
+          <span class="name">{{name}}</span>
 
           <div class="additional-info">
             <span>7 предметів</span>
@@ -24,7 +24,7 @@
 
         <div class="item">
           <font-awesome-icon icon="user-tie" class="icon"></font-awesome-icon>
-          <span class="text">Інженерія програмного забезпечення</span>
+          <span class="text">{{specialty}}</span>
         </div>
 
         <div class="item">
@@ -39,14 +39,18 @@
       </div>
 
       <div class="students">
-        <div class="student" v-for="i in 5" v-bind:key="i">
+        <div
+          class="student"
+          v-for="(data, i) in students"
+          v-bind:key="i"
+        >
           <div class="image-wrap">
-            <div class="image" :class="Math.random() > 0.5 ? 'good' : 'bad'"></div>
+            <div class="image good"></div>
           </div>
 
           <div class="info">
-            <div class="name">Безфамільна Анжеліка...</div>
-            <div class="success-data">
+            <div class="name">{{data.name}}</div>
+            <div class="success-data" v-show="false">
               <span>Сер. бал 3.43</span>
               <span>Проп. 13</span>
             </div>
@@ -60,6 +64,20 @@
 <script>
 export default {
   name: 'AppGroupInfo',
+  props: {
+    name: {
+      type: String,
+      required: true,
+    },
+    specialty: {
+      type: String,
+      required: true,
+    },
+    students: {
+      type: Array,
+      required: true,
+    },
+  },
 }
 </script>
 

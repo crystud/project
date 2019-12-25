@@ -48,9 +48,13 @@ Classes.init({
   modelName: 'classes',
 })
 
-Classes.belongsTo(Groups, {
+Groups.hasMany(Classes, {
   foreignKey: 'groupID',
-  as: 'group',
+  as: 'classes',
+})
+
+Classes.hasOne(Groups, {
+  foreignKey: 'id',
 })
 
 Classes.belongsTo(Subgroups, {
