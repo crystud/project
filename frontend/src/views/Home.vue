@@ -11,6 +11,8 @@
       <div class="name">{{ name }}</div>
     </div>
 
+    <button @click="exit">Покинути це недороблене місце</button>
+
     <div class="roles">
       <div
           v-for="(role, index) in roles"
@@ -103,7 +105,12 @@ export default {
     }),
   },
   methods: {
+    exit() {
+      localStorage.removeItem('refreshToken')
+      localStorage.removeItem('accessToken')
 
+      document.location.href = '/'
+    },
   },
   components: {
     AppScreen,

@@ -91,6 +91,8 @@ export default class StudentController {
         student: create,
       }
     } catch (e) {
+      console.error(e)
+
       return { created: false }
     }
   }

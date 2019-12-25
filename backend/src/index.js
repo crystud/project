@@ -18,6 +18,8 @@ import classes from './modules/classes'
 import subgroups from './modules/subgroups'
 import shortenedDays from './modules/shortenedDays'
 import users from './modules/users'
+import groups from './modules/groups'
+import student from './modules/student'
 
 const app = express()
 const port = process.env.PORT || 4000
@@ -49,5 +51,7 @@ classes(app)
 users(app)
 subgroups(app)
 shortenedDays(app)
+groups(app)
+student(app)
 
 app.listen(port)
