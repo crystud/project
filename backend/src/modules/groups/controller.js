@@ -137,7 +137,6 @@ export default class GroupsController {
           {
             model: Students,
             as: 'students',
-            required: true,
           },
           {
             model: Classes,

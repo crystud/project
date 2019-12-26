@@ -161,7 +161,7 @@ export default class DepartmentsController {
           {
             model: Specialty,
             as: 'specialtys',
-            attributes: ['id'],
+            attributes: ['id', 'name'],
           },
         ],
       })

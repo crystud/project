@@ -33,7 +33,13 @@ Hours.init({
 
 Subjects.belongsTo(Hours, {
   foreignKey: 'id',
+  targetKey: 'subjectID',
   as: 'hours',
+})
+
+Hours.belongsTo(Semesters, {
+  foreignKey: 'semesterID',
+  targetKey: 'id',
 })
 
 export default Hours

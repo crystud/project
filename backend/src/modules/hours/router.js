@@ -104,4 +104,37 @@ router.post('/edit', checkSchema({
   return res.json(create)
 })
 
+router.post('/calculate', checkSchema({
+  groupID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid group id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No group id provided',
+    },
+  },
+  semesterID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid semester id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No semester id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const calculation = await Controller.calculate(req.body)
+
+  return res.json(calculation)
+})
+
 export default router

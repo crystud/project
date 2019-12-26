@@ -32,7 +32,7 @@
         </div>
 
         <div class="value">
-          <div class="number">{{studentStatistics.avgMark}}</div>
+          <div class="number">{{studentStatistics.avgMark || '-'}}</div>
           <div class="title">Рейтинг</div>
         </div>
       </div>
@@ -68,6 +68,7 @@
       <app-home-link role="admin" link="commissions">Комісії</app-home-link>
       <app-home-link role="admin" link="shortenedDays">Скорочені дні</app-home-link>
       <app-home-link role="admin" link="schedule">Розклад</app-home-link>
+      <app-home-link role="admin" link="semesters">Семестри</app-home-link>
     </div>
   </div>
 

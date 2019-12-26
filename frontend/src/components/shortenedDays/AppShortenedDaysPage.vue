@@ -91,10 +91,16 @@ export default {
 
   .sections {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
     grid-gap: 20px;
 
     margin-top: 20px;
+  }
+
+  @media screen and (max-width: 1500px) {
+    .sections {
+      grid-template-columns: 1fr;
+    }
   }
 
   .app-card {

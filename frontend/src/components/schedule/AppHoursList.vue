@@ -29,7 +29,16 @@ export default {
   color: #fff;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-column-gap: 15px;
+  grid-gap: 15px;
+
+  @media screen and (max-width: 1400px) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 0 10px;
+  }
+
+  @media screen and (max-width: 1250px) {
+    grid-template-columns: 1fr;
+  }
 
   .hour {
     display: flex;

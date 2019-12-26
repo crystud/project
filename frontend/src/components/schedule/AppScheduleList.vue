@@ -47,12 +47,22 @@ export default {
 .schedule-list {
   .label {
     color: #707070;
+    margin-bottom: 10px;
   }
 
   .list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 20px;
+
+    @media screen and (max-width: 1400px) {
+      grid-template-columns: repeat(2, 1fr);
+      grid-column-gap: 10px;
+    }
+
+    @media screen and (max-width: 1250px) {
+      grid-template-columns: 1fr;
+    }
 
     .day {
       background: var(--color-bg-dark);

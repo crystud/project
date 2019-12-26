@@ -39,6 +39,11 @@
       </div>
 
       <div class="students">
+        <div class="item no-students" v-if="!students.length">
+          <font-awesome-icon icon="user-times" class="icon"></font-awesome-icon>
+          <span class="text">В групі немає студентів...</span>
+        </div>
+
         <div
           class="student"
           v-for="(data, i) in students"
@@ -88,6 +93,10 @@ export default {
 
   background: var(--color-bg-dark);
   border-radius: 4px;
+
+  .no-students {
+    margin-bottom: 15px;
+  }
 
   .user-basic-info {
     width: 100%;
@@ -143,19 +152,19 @@ export default {
     color: #2d3740;
     font-size: 1.1em;
     font-weight: 400;
+  }
 
-    .item {
-      display: flex;
-      align-items: center;
+  .item {
+    display: flex;
+    align-items: center;
 
-      margin-bottom: 15px;
+    margin-bottom: 15px;
 
-      .icon {
-        margin-right: 10px;
-        font-size: 1.4em;
+    .icon {
+      margin-right: 10px;
+      font-size: 1.4em;
 
-        width: 50px;
-      }
+      width: 50px;
     }
   }
 
@@ -165,6 +174,13 @@ export default {
     color: #2d3740;
     font-size: 1.1em;
     font-weight: 400;
+
+    display: grid;
+    grid-template-columns: 1fr;
+
+    @media screen and (max-width: 1500px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
 
     .student {
       display: flex;

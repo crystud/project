@@ -1,5 +1,8 @@
 import Semesters from '../../models/semesters'
 import Specialties from '../../models/specialty'
+import Subjects from '../../models/subjects'
+import Commissions from '../../models/commissions'
+import Hours from '../../models/hours'
 
 export default class SemestersController {
   static async create(semester) {
@@ -44,13 +47,9 @@ export default class SemestersController {
 
     const created = await Semesters.create(semester)
 
-    if (!created) {
-      return { created: false }
-    }
-
     return {
-      created: true,
-      semester,
+      created: !!created,
+      semester: created,
     }
   }
 
@@ -109,6 +108,77 @@ export default class SemestersController {
     return {
       updated: true,
       semester,
+    }
+  }
+
+  static async getAll({ specialtyID }) {
+    try {
+      const semesters = await Semesters.findAll({
+        where: {
+          specialtyID,
+        },
+        order: [['number']],
+      })
+
+      return { semesters }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async get({ semesterID: id }) {
+    const errors = []
+
+    try {
+      const semester = await Semesters.findOne({
+        where: { id },
+        include: {
+          model: Specialties,
+          as: 'specialty',
+        },
+      })
+
+      if (!semester) {
+        errors.push({
+          msg: 'Such semester does not exist',
+          location: 'body',
+          param: 'semesterID',
+        })
+
+        return { errors }
+      }
+
+      const commissions = await Commissions.findAll({
+        include: {
+          model: Subjects,
+          required: true,
+          include: [
+            {
+              model: Hours,
+              as: 'hours',
+              include: {
+                model: Semesters,
+                where: {
+                  id,
+                },
+              },
+            },
+          ],
+        },
+      })
+
+      return {
+        semester: {
+          ...semester.toJSON(),
+          commissions,
+        },
+      }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
     }
   }
 }

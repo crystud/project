@@ -33,8 +33,6 @@ export default {
       return Promise.reject(errors)
     },
     async loadSpecialtys({ commit }, departmentID) {
-      console.log(departmentID)
-
       axios.post('/specialty/getAll', { departmentID }).then(({ data: { errors, specialtys } }) => {
         if (errors) {
           return Promise.reject(errors)

@@ -56,8 +56,8 @@ export default {
     }
 
     .groups {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      display: flex;
+      flex-wrap: wrap;
 
       .year {
         margin-right: 15px;

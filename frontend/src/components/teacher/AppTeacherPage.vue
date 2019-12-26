@@ -23,7 +23,7 @@
 
       <template v-slot:content>
         <div>
-          <span class="edit-title">Редагування вчителя</span>
+          <span class="edit-title">Редагування вчителя {{teacherCommission}}</span>
 
           <app-input
             name="ПІБ вчителя"

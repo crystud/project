@@ -125,6 +125,13 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+
+    .icon-block,
+    .name {
+      display: inline-block;
+      margin: 5px;
+    }
 
     .icon-block {
       margin-right: 20px;

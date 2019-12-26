@@ -110,4 +110,52 @@ router.post('/edit', checkSchema({
   return res.json(result)
 })
 
+router.post('/get', checkSchema({
+  semesterID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid semester id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No semester id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const semester = await Controller.get(req.body)
+
+  return res.json(semester)
+})
+
+router.post('/getAll', checkSchema({
+  specialtyID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid specialty id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No specialty id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const semesters = await Controller.getAll(req.body)
+
+  return res.json(semesters)
+})
+
 export default router

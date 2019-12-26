@@ -41,7 +41,7 @@ Schedule.init({
   tableName: 'schedule',
 })
 
-Classes.belongsTo(Schedule, {
+Classes.hasMany(Schedule, {
   foreignKey: 'id',
   as: 'schedule',
 })

@@ -15,7 +15,7 @@
 export default {
   name: 'AppInput',
   props: {
-    value: String,
+    value: {},
     type: {
       type: String,
       default: 'text',

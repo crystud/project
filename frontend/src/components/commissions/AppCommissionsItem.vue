@@ -96,8 +96,6 @@ export default {
         this.isEditing = false
         this.inActions = false
 
-        console.log('done')
-
         this.loadCommissions()
       }).catch(console.error)
     },

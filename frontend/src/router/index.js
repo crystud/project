@@ -110,6 +110,11 @@ const routes = [
         name: 'schedule',
         component: () => import('../views/Schedule'),
       },
+      {
+        path: '/semesters',
+        name: 'semesters',
+        component: () => import('../views/Semesters'),
+      },
     ],
   },
 ]

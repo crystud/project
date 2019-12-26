@@ -24,4 +24,8 @@ Semesters.init({
   modelName: 'semesters',
 })
 
+Semesters.hasOne(Specialty, {
+  foreignKey: 'id',
+})
+
 export default Semesters

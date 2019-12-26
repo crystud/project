@@ -36,6 +36,10 @@ Subjects.belongsTo(Commissions, {
   as: 'commission',
 })
 
+Commissions.hasMany(Subjects, {
+  foreignKey: 'commissionID',
+})
+
 Subjects.belongsTo(SubjectTypes, {
   foreignKey: 'subjectType',
   as: 'subjectTypeData',

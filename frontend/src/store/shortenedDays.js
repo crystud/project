@@ -32,8 +32,6 @@ export default {
           },
         } = await axios.post('/shortenedDays/getAll')
 
-        console.log(errors, shortenedDays)
-
         if (!errors && shortenedDays) {
           const dates = []
 

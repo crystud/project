@@ -78,9 +78,6 @@ export default {
 
 <style scoped lang="less">
 .teachers {
-  max-height: 100%;
-  overflow: auto;
-
   .app-card {
     margin-bottom: 10px;
     color: #fff;
@@ -120,6 +117,14 @@ export default {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 10px 20px;
+
+    @media screen and (max-width: 1500px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media screen and (max-width: 1110px) {
+      grid-template-columns: 1fr;
+    }
   }
 }
 </style>

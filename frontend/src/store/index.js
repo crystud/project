@@ -13,6 +13,8 @@ import group from './groups'
 import subjects from './subjects'
 import subjectTypes from './subjectTypes'
 import shortenedDays from './shortenedDays'
+import semesters from './semesters'
+import hours from './hours'
 
 Vue.use(Vuex)
 
@@ -36,5 +38,7 @@ export default new Vuex.Store({
     subjects,
     subjectTypes,
     shortenedDays,
+    semesters,
+    hours,
   },
 })

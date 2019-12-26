@@ -52,8 +52,6 @@ export default {
         },
       } = await axios.post('/student/create', studentData)
 
-      console.log(errors, created)
-
       if (!errors && created) {
         return Promise.resolve()
       }

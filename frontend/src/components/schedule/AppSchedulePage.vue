@@ -26,22 +26,21 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .schedule {
-  max-height: 100%;
-  overflow: auto;
-
   .sections {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-gap: 20px;
+
+    @media screen and (max-width: 1400px) {
+      grid-template-columns: 1fr;
+    }
 
     .right {
       display: grid;
       grid-template-rows: 2fr 1fr;
       grid-gap: 20px;
-
-      width: 80%;
-      margin-left: 20px;
 
       .row {
         border-radius: 5px;
@@ -50,7 +49,6 @@ export default {
   }
 
   .groups-select {
-    width: 20%;
     background: var(--color-bg-dark);
     border-radius: 5px;
     padding: 10px;

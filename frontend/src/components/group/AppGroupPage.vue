@@ -1,7 +1,5 @@
 <template>
   <div class="teacher">
-    <app-card class="header">Група</app-card>
-
     <div class="sections" v-if="loaded">
       <app-group-personal-info
         @onEdit="show = true"
@@ -64,8 +62,6 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
-import AppCard from '../AppCard.vue'
-
 import AppGroupClassesInfo from './AppGroupClassesInfo.vue'
 import AppGroupPersonalInfo from './AppGroupInfo.vue'
 import AppModalWindow from '../AppModalWindow.vue'
@@ -93,7 +89,6 @@ export default {
     }
   },
   components: {
-    AppCard,
     AppGroupClassesInfo,
     AppGroupPersonalInfo,
     AppModalWindow,
@@ -109,11 +104,8 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .teacher {
-  max-height: 100%;
-  overflow: auto;
-
   .header {
     color: #fff;
     padding: 10px;
@@ -169,16 +161,25 @@ export default {
 
   .sections {
     margin-top: 10px;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-gap: 20px;
 
     .classes-info {
       background: var(--color-bg-dark);
       border-radius: 4px;
+
+      width: 100%;
     }
 
-    .classes-info {
-      width: calc(100% - 300px);
+    .personal-info {
+      width: 100%;
+    }
+  }
+
+  @media screen and (max-width: 1500px) {
+    .sections {
+      grid-template-columns: 1fr;
     }
   }
 }

@@ -1,12 +1,14 @@
 <template>
   <div class="classes-info">
-    <div class="list-label">
-      Успішність студентів %
-    </div>
+    <div v-if="true">
+      <div class="list-label">
+        Успішність студентів %
+      </div>
 
-    <app-chart
-      :height="300"
-    ></app-chart>
+      <app-chart
+        :height="300"
+      ></app-chart>
+    </div>
 
     <div class="sections">
       <div class="schedule">
@@ -19,6 +21,13 @@
             v-bind:key="index"
           >
             <div class="list-label title">{{weekDays[index]}}</div>
+
+            <div
+              v-if="!classes.length"
+              class="no-items"
+            >
+              В цей день пар немає
+            </div>
 
             <app-schedule-item
               v-for="(classData, i) in classes"
@@ -33,7 +42,14 @@
       <div class="subjects">
         <div class="list-label">Предмети групи</div>
 
-        <div class="list">
+        <div
+            v-if="!classesList.length"
+            class="no-items"
+          >
+            В групи немає предметів
+          </div>
+
+        <div class="list" v-if="classesList">
           <app-teacher-subject
             v-for="({ subject: { name, subjectTypeData }, }, i) in classesList"
             v-bind:key="i"
@@ -90,6 +106,14 @@ export default {
     color: #576c80;
     padding: 10px;
     font-size: 1.25em;
+  }
+
+  .no-items {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 1.3em;
+    color: #475868;
+    font-weight: 300;
   }
 
   .sections {
