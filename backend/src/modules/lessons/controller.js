@@ -7,7 +7,7 @@ export default class lessonsController {
     const errors = []
 
     try {
-      if (!roles.includes('admin') && !roles.includes('teacher')) {
+      if (!roles.includes('admin') || !roles.includes('teacher')) {
         errors.push({
           msg: 'You are not a teacher',
           location: 'authorization',
