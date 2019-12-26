@@ -54,7 +54,7 @@
               <span class="name">{{subject.name}}</span>
 
               <span
-                class="hours"
+                class="hours hours-exists"
                 v-if="subject.hours"
               >{{subject.hours.hours}}</span>
 
@@ -363,6 +363,10 @@ export default {
           background: #1E2329;
           padding: 10px 15px;
           border-radius: 5px;
+
+          &.hours-exists {
+            background: #eaa941;
+          }
         }
 
         &.selected {
