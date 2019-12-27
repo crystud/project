@@ -64,8 +64,7 @@
       <app-home-link role="admin" link="departments">Структура коледжу</app-home-link>
       <app-home-link role="admin" link="users">Користувачі</app-home-link>
       <app-home-link role="admin" link="teachers">Вчителі</app-home-link>
-      <app-home-link role="admin" link="subjects">Предмети</app-home-link>
-      <app-home-link role="admin" link="commissions">Комісії</app-home-link>
+      <app-home-link role="admin" link="subjectsManaging">Керування предметами</app-home-link>
       <app-home-link role="admin" link="shortenedDays">Скорочені дні</app-home-link>
       <app-home-link role="admin" link="schedule">Розклад</app-home-link>
       <app-home-link role="admin" link="semesters">Семестри</app-home-link>

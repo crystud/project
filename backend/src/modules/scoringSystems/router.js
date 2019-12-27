@@ -100,20 +100,7 @@ router.post('/editScoringSystem', checkRoles(['admin']), checkSchema({
   return res.json(create)
 })
 
-router.post('/list', checkRoles(['admin', 'teacher', 'student']), checkSchema({
-  page: {
-    in: 'body',
-    isInt: {
-      errorMessage: 'Invalid page provided',
-      options: {
-        min: 0,
-      },
-    },
-    notEmpty: {
-      errorMessage: 'No page provided',
-    },
-  },
-}), async (req, res) => {
+router.post('/getAll', checkRoles(['admin', 'teacher', 'student']), async (req, res) => {
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {

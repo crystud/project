@@ -39,16 +39,18 @@
           @change="(val) => commissionID = val"
         ></app-select>
 
-        <button
-          class="btn btn-cancel"
-          @click="isCreating = false"
-        >Скасувати</button>
+        <div>
+          <app-button
+            :isOkay="false"
+            @click="isCreating = false"
+          >Скасувати</app-button>
 
-        <button
-          class="btn btn-create"
-          :class="commissionID && subjectType && subjectName ? 'create-able' : 'create-disable'"
-          @click="createSubject"
-        >Створити</button>
+          <app-button
+            class="btn-create"
+            :class="commissionID && subjectType && subjectName ? 'create-able' : 'create-disable'"
+            @click="createSubject"
+          >Створити</app-button>
+        </div>
       </div>
     </div>
   </div>
@@ -59,11 +61,13 @@ import { mapActions, mapGetters } from 'vuex'
 
 import AppCustomInput from '../AppCustomInput.vue'
 import AppSelect from '../AppSelect.vue'
+import AppButton from '../AppButtonCustom.vue'
 
 export default {
   name: 'AppSubjectsHeader',
   components: {
     AppCustomInput,
+    AppButton,
     AppSelect,
   },
   computed: {
@@ -146,36 +150,33 @@ export default {
     border-radius: 5px;
     font-size: 1em;
     color: #ffffff;
+    cursor: pointer;
 
     transition: all .3s;
   }
 
-  .btn-cancel {
-    background: #55636d;
-  }
-
   .btn-create {
-    background: #00ff87;
-
     &.create-able {
-      opacity: 1;
+      background: auto;
       cursor: pointer;
     }
 
     &.create-disable {
-      opacity: .5;
+      background: #777;
       cursor: not-allowed;
     }
   }
 
   .form-input {
     margin-right: 30px;
+    margin-bottom: 20px;
     width: auto;
   }
 
   .creating-fields {
     display: flex;
     justify-content: left;
+    flex-wrap: wrap;
 
     align-items: flex-end;
   }

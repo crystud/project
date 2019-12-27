@@ -6,11 +6,13 @@ export default {
   state: {
     list: [],
     subjectType: {},
+    editingItem: {},
   },
 
   getters: {
     list: state => state.list,
     subject: state => state.subject,
+    editingItem: state => state.editingItem,
   },
 
   mutations: {
@@ -19,6 +21,9 @@ export default {
     },
     setSubjectType(state, subjectType) {
       state.subjectType = subjectType
+    },
+    setEditingItem(state, value) {
+      state.editingItem = value
     },
   },
 
@@ -33,6 +38,30 @@ export default {
 
         return Promise.resolve()
       }).catch(() => {})
+    },
+    async edit(_, updateData) {
+      const {
+        data: { errors },
+      } = await axios.post('/subjectType/edit', updateData)
+
+      if (errors) {
+        return Promise.reject(errors)
+      }
+
+      return Promise.resolve()
+    },
+    async create(_, createData) {
+      const {
+        data: { errors },
+      } = await axios.post('/subjectType/create', createData)
+
+      console.log(errors)
+
+      if (errors) {
+        return Promise.reject(errors)
+      }
+
+      return Promise.resolve()
     },
   },
 }

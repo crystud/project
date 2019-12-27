@@ -19,12 +19,10 @@
           ></textarea>
 
           <div class="btn-create">
-            <button
-              :class="isoTime && reason ? 'active' : ''"
+            <app-button
+              :isOkay="(!!isoTime && !!reason)"
               @click="createShortenedDay"
-            >
-              Добавити
-            </button>
+            >Добавити</app-button>
           </div>
         </app-card>
       </div>
@@ -36,13 +34,16 @@
 import { mapActions } from 'vuex'
 
 import AppCard from '../AppCard.vue'
+import AppButton from '../AppButtonCustom.vue'
 import AppDatepicker from '../AppDatepicker.vue'
 import AppShortenedDaysList from './AppShortenedDaysList.vue'
+
 
 export default {
   name: 'AppShortenedDaysPage',
   components: {
     AppCard,
+    AppButton,
     AppDatepicker,
     AppShortenedDaysList,
   },
@@ -143,24 +144,6 @@ export default {
       justify-content: flex-end;
 
       margin-top: 20px;
-
-      button {
-        padding: 10px 30px;
-        border-radius: 8px;
-        border: 0;
-        color: #fff;
-        font-size: 1em;
-        background: #55636e;
-        opacity: 0.4;
-
-        transition: all .3s;
-
-        &.active {
-          background: #00ff87;
-          opacity: 1;
-          cursor: pointer;
-        }
-      }
     }
   }
 }

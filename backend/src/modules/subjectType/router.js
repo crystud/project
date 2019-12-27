@@ -25,6 +25,14 @@ router.post('/create', checkRoles(['admin']), checkSchema({
       errorMessage: 'No coefficient specified',
     },
   },
+  scoringSystemID: {
+    isNumeric: {
+      errorMessage: 'Invalid scorind system id specified',
+    },
+    notEmpty: {
+      errorMessage: 'No scorind system id specified',
+    },
+  },
 }), async (req, res) => {
   const errors = validationResult(req)
 
@@ -61,6 +69,14 @@ router.post('/edit', checkRoles(['admin']), checkSchema({
     },
     notEmpty: {
       errorMessage: 'No coefficient specified',
+    },
+  },
+  scoringSystemID: {
+    isNumeric: {
+      errorMessage: 'Invalid scorind system id specified',
+    },
+    notEmpty: {
+      errorMessage: 'No scorind system id specified',
     },
   },
 }), async (req, res) => {

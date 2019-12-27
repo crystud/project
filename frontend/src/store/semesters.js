@@ -5,7 +5,12 @@ export default {
 
   state: {
     list: [],
-    semester: {},
+    semester: {
+      weeks: 0,
+      specialtyID: 0,
+      specialty: {},
+      number: 0,
+    },
   },
 
   getters: {
@@ -24,29 +29,34 @@ export default {
 
   actions: {
     setNoSemester({ commit }) {
-      commit('setSemester', {})
+      commit('setSemester', {
+        weeks: 0,
+        specialtyID: 0,
+        specialty: {},
+        number: 0,
+      })
     },
     async loadSemesters({ commit }, specialtyID) {
-      axios.post('/semester/getAll', { specialtyID }).then(({ data: { semesters, errors } }) => {
-        if (errors) {
-          return Promise.reject(errors)
-        }
+      const { data: { semesters, errors } } = await axios.post('/semester/getAll', { specialtyID })
 
-        commit('setSemesters', semesters)
+      if (errors) {
+        return Promise.reject(errors)
+      }
 
-        return Promise.resolve()
-      }).catch(() => {})
+      commit('setSemesters', semesters)
+
+      return Promise.resolve()
     },
     async loadSemester({ commit }, semesterID) {
-      axios.post('/semester/get', { semesterID }).then(({ data: { semester, errors } }) => {
-        if (errors) {
-          return Promise.reject(errors)
-        }
+      const { data: { semester, errors } } = await axios.post('/semester/get', { semesterID })
 
-        commit('setSemester', semester)
+      if (errors) {
+        return Promise.reject(errors)
+      }
 
-        return Promise.resolve()
-      }).catch(() => {})
+      commit('setSemester', semester)
+
+      return Promise.resolve()
     },
     async create({ dispatch }, semesterData) {
       try {
@@ -71,11 +81,13 @@ export default {
         return Promise.reject(e)
       }
     },
-    async edit(_, subjectData) {
+    async edit(_, editData) {
       try {
         const {
           data: { errors },
-        } = await axios.post('/subject/edit', subjectData)
+        } = await axios.post('/semester/edit', editData)
+
+        console.log(errors)
 
         if (!errors) {
           return Promise.resolve()

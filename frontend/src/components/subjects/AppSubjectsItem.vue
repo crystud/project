@@ -9,32 +9,19 @@
         {{commissionName}}
       </span>
 
-      <span class="coefficient">
-        {{coefficient}}
-      </span>
-
       <span class="subject-type-name">
         {{subjectTypeName}}
       </span>
-
-      <span class="scoring-system-name">
-        {{scoringSystemName}}
-      </span>
     </div>
 
-    <span class="actions" v-if="!isEditing" @click="inActions = true">
-      <span v-if="inActions">
+    <span class="actions" v-if="!isEditing">
+      <span>
         <font-awesome-icon
           icon="edit"
           class="icon edit"
           @click="switchToEdit"
         ></font-awesome-icon>
       </span>
-
-      <font-awesome-icon
-        v-if="!inActions"
-        icon="ellipsis-h"
-      ></font-awesome-icon>
     </span>
 
     <div class="editing" v-if="isEditing">
@@ -78,22 +65,21 @@
             :defaultValue="{ id: this.subjectTypeID }"
         ></app-select>
       </span>
+
+      <span class="edit-actions" v-if="isEditing">
+        <app-button
+          class="btn"
+          :isOkay="false"
+          @click="isEditing = false"
+          >Скасувати</app-button>
+
+          <app-button
+            class="btn"
+            :isOkay="true"
+            @click="saveChanges"
+          >Зберегти зміни</app-button>
+      </span>
     </div>
-
-    <span class="edit-actions" v-if="isEditing">
-      <button
-        class="btn btn-cancel"
-        @click="
-          isEditing = false;
-          inActions = false;
-        "
-        >Скасувати</button>
-
-        <button
-          class="btn btn-save"
-          @click="saveChanges"
-        >Зберегти зміни</button>
-    </span>
   </div>
 </template>
 
@@ -102,12 +88,12 @@ import { mapActions, mapGetters } from 'vuex'
 
 import AppCustomInput from '../AppCustomInput.vue'
 import AppSelect from '../AppSelect.vue'
+import AppButton from '../AppButtonCustom.vue'
 
 export default {
   name: 'AppSubjectsItem',
   data() {
     return {
-      inActions: false,
       isEditing: false,
       subjectName: this.name,
       commission: this.commissionID,
@@ -117,6 +103,7 @@ export default {
   components: {
     AppCustomInput,
     AppSelect,
+    AppButton,
   },
   computed: {
     ...mapGetters({
@@ -210,44 +197,33 @@ export default {
 
   .labels {
     display: grid;
-    grid-template-columns: 1.5fr 1.3fr 0.7fr 1fr 1.3fr;
+    grid-template-columns: 2fr 2fr 1fr;
     margin-left: 10px;
 
     width: 70%;
   }
 
   .btn {
-    padding: 10px;
-    font-size: .9em;
-    border: 0;
-    border-radius: 4px;
-    margin-left: 10px;
-    color: #fff;
-    cursor: pointer;
-  }
-
-  .btn-save {
-    background: var(--color-accent-green);
-  }
-
-  .btn-cancel {
-    background: var(--color-accent-red);
+    margin: 10px 10px 0 0;
   }
 
   .edit-actions {
     margin-right: 10px;
+    display: block;
   }
 
   .editing {
     display: flex;
     justify-content: left;
-    align-items: center;
+    align-items: flex-end;
+    flex-wrap: wrap;
 
     margin-left: 10px;
   }
 
   .edit-field {
     margin-right: 15px;
+    margin-top: 10px;
   }
 
   .actions {

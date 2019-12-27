@@ -44,15 +44,9 @@ export default class HoursController {
     const {
       hoursID: id,
       hours,
-      semesterID,
-      subjectID,
     } = data
 
-    const newData = {
-      hours,
-      semesterID,
-      subjectID,
-    }
+    const newData = { hours }
 
     try {
       const [edit] = await Hours.update(newData, {
@@ -65,6 +59,20 @@ export default class HoursController {
       }
     } catch (e) {
       return { edited: false }
+    }
+  }
+
+  static async delete({ hoursID: id }) {
+    try {
+      const deleted = await Hours.destroy({
+        where: { id },
+      })
+
+      console.log('deleted')
+
+      return { deleted: !!deleted }
+    } catch (e) {
+      return { deleted: false }
     }
   }
 

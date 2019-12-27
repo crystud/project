@@ -24,5 +24,35 @@ export default {
 
       return Promise.resolve()
     },
+    async edit(_, hoursData) {
+      const {
+        data: {
+          errors,
+        },
+      } = await axios.post('/hours/edit', hoursData)
+
+      console.log(errors)
+
+      if (errors) {
+        return Promise.reject(errors)
+      }
+
+      return Promise.resolve()
+    },
+    async delete(_, hoursData) {
+      const {
+        data: {
+          errors,
+        },
+      } = await axios.post('/hours/delete', hoursData)
+
+      console.log(errors)
+
+      if (errors) {
+        return Promise.reject(errors)
+      }
+
+      return Promise.resolve()
+    },
   },
 }

@@ -81,16 +81,6 @@ const routes = [
         component: () => import('../views/teachers/Teachers'),
       },
       {
-        path: '/subjects',
-        name: 'subjects',
-        component: () => import('@/views/subjects/Subjects'),
-      },
-      {
-        path: '/commissions',
-        name: 'commissions',
-        component: () => import('@/views/Commissions'),
-      },
-      {
         path: '/teacher/:id',
         name: 'teacher',
         component: () => import('@/views/Teacher'),
@@ -114,6 +104,11 @@ const routes = [
         path: '/semesters',
         name: 'semesters',
         component: () => import('../views/Semesters'),
+      },
+      {
+        path: '/subjectsManaging',
+        name: 'subjectsManaging',
+        component: () => import('@/views/SubjectsManaging'),
       },
     ],
   },

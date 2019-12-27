@@ -1,3 +1,5 @@
+import { Op } from 'sequelize'
+
 import Semesters from '../../models/semesters'
 import Specialties from '../../models/specialty'
 import Subjects from '../../models/subjects'
@@ -65,6 +67,9 @@ export default class SemestersController {
       where: {
         number,
         specialtyID,
+        id: {
+          [Op.ne]: id,
+        },
       },
     })
 
@@ -78,16 +83,16 @@ export default class SemestersController {
       return { errors }
     }
 
-    const noRecord = await Semesters.findOne({
+    const semesterExist = await Semesters.findOne({
       attributes: ['id'],
       where: {
         id,
       },
     })
 
-    if (!noRecord) {
+    if (!semesterExist) {
       errors.push({
-        msg: 'The record doesn`t exist',
+        msg: 'Such semester does not exist',
         param: 'id',
         location: 'body',
       })
@@ -95,18 +100,14 @@ export default class SemestersController {
       return { errors }
     }
 
-    const updated = await Semesters.update({ number, weeks, specialtyID }, {
+    const [updated] = await Semesters.update({ number, weeks }, {
       where: {
         id,
       },
     })
 
-    if (!updated) {
-      return { updated: false }
-    }
-
     return {
-      updated: true,
+      updated: !!updated,
       semester,
     }
   }

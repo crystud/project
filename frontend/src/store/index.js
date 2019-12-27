@@ -15,6 +15,7 @@ import subjectTypes from './subjectTypes'
 import shortenedDays from './shortenedDays'
 import semesters from './semesters'
 import hours from './hours'
+import scoringSystems from './scoringSystems'
 
 Vue.use(Vuex)
 
@@ -40,5 +41,6 @@ export default new Vuex.Store({
     shortenedDays,
     semesters,
     hours,
+    scoringSystems,
   },
 })

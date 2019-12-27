@@ -29,6 +29,7 @@ export default {
   color: #fff;
   cursor: pointer;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  transition: all .3s;
 
   &.btn-change {
     background: #3242d5;

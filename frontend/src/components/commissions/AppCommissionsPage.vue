@@ -1,10 +1,7 @@
 <template>
   <div class="commissions">
-    <app-card class="header">
-      Комісії
-    </app-card>
 
-    <app-card class="list">
+    <div class="list">
       <app-commissions-header></app-commissions-header>
       <app-commissions-create></app-commissions-create>
 
@@ -15,14 +12,13 @@
         :id="id"
         :teachersCount="teachers.length"
       ></app-commissions-item>
-    </app-card>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
-import AppCard from '../AppCard.vue'
 import AppCommissionsItem from './AppCommissionsItem.vue'
 import AppCommissionsHeader from './AppCommissionsHeader.vue'
 import AppCommissionsCreate from './AppCommissionsCreate.vue'
@@ -30,7 +26,6 @@ import AppCommissionsCreate from './AppCommissionsCreate.vue'
 export default {
   name: 'AppSubjectsPage',
   components: {
-    AppCard,
     AppCommissionsItem,
     AppCommissionsHeader,
     AppCommissionsCreate,
@@ -53,19 +48,7 @@ export default {
 
 <style lang="less" scoped>
 .commissions {
-  max-height: 100%;
-  overflow: auto;
-
-  .header {
-    display: inline-block;
-    font-size: 1.3em;
-    margin-bottom: 10px;
-  }
-
-  .app-card {
-    padding: 10px;
-    color: #fff;
-  }
+  color: #fff;
 
   .list {
     display: grid;

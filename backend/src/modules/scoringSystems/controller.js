@@ -1,7 +1,5 @@
 import ScoringSystems from '../../models/scoring_systems'
 
-import config from '../../configs/scoringSystems'
-
 export default class ScoringSystemsController {
   static async createScoringSystem(data) {
     const errors = []
@@ -83,6 +81,7 @@ export default class ScoringSystemsController {
           min,
           max,
           minMark,
+          name,
         },
       })
 
@@ -118,26 +117,15 @@ export default class ScoringSystemsController {
     }
   }
 
-  static async list({ page }) {
-    const { itemsOnPage: limit } = config
+  static async list() {
     const order = [['id', 'DESC']]
 
     try {
       const scoringSystems = await ScoringSystems.findAll({
         order,
-        limit,
-        offset: page * limit,
       })
 
-      const hasNextPage = await ScoringSystems.findOne({
-        limit,
-        offset: (page + 1) * limit,
-      })
-
-      return {
-        hasNextPage: !!hasNextPage,
-        scoringSystems,
-      }
+      return { scoringSystems }
     } catch (e) {
       console.error(e)
 

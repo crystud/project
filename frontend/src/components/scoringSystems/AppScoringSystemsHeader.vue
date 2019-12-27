@@ -1,16 +1,20 @@
 <template>
   <div class="subject">
     <div class="labels">
-      <span class="name">
-        Назва предмету
+      <span>
+        Назва
       </span>
 
-      <span class="commission-name">
-        Комісія
+      <span>
+        Мін. оцінка
       </span>
 
-      <span class="subject-type-name">
-        Тип предмету
+      <span>
+        Макс. оцінка
+      </span>
+
+      <span>
+        Мін. прохідний бал
       </span>
     </div>
   </div>
@@ -33,7 +37,7 @@ export default {
 
   .labels {
     display: grid;
-    grid-template-columns: 2fr 2fr 1fr;
+    grid-template-columns: 4fr 3fr 3fr 4fr;
     margin-left: 10px;
 
     width: 70%;

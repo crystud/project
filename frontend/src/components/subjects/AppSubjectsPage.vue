@@ -1,10 +1,6 @@
 <template>
   <div class="subjects">
-    <app-card class="header">
-      Предмети
-    </app-card>
-
-    <app-card class="list">
+    <div class="list">
       <app-subjects-header></app-subjects-header>
       <app-subjects-create></app-subjects-create>
 
@@ -20,14 +16,13 @@
         :commissionID="data.commissionID"
         :subjectTypeID="data.subjectType"
       ></app-subjects-item>
-    </app-card>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
-import AppCard from '../AppCard.vue'
 import AppSubjectsItem from './AppSubjectsItem.vue'
 import AppSubjectsHeader from './AppSubjectsHeader.vue'
 import AppSubjectsCreate from './AppSubjectsCreate.vue'
@@ -35,7 +30,6 @@ import AppSubjectsCreate from './AppSubjectsCreate.vue'
 export default {
   name: 'AppSubjectsPage',
   components: {
-    AppCard,
     AppSubjectsItem,
     AppSubjectsHeader,
     AppSubjectsCreate,
@@ -58,18 +52,13 @@ export default {
 
 <style lang="less" scoped>
 .subjects {
-  max-height: 100%;
-  overflow: auto;
+  padding: 10px;
+  color: #fff;
 
   .header {
     display: inline-block;
     font-size: 1.3em;
     margin-bottom: 10px;
-  }
-
-  .app-card {
-    padding: 10px;
-    color: #fff;
   }
 
   .list {

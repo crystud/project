@@ -26,14 +26,33 @@
 
       <div v-if="semester.id && selectedSemester">
         <div class="weeks border-bottom">
+          <div class="label">Номер семестру</div>
+
+          <div class="value">
+            <app-input
+              name="Номер семестру"
+              type="text"
+              :value="semester.number"
+              @input="(val) => editSemesterNumber = val"
+            ></app-input>
+          </div>
+        </div>
+
+        <div class="weeks border-bottom">
           <div class="label">Кількість тижнів</div>
 
           <div class="value">
             <app-input
               name="Кількість тижнів"
-              type="number"
+              type="text"
               :value="semester.weeks"
+              @input="(val) => editSemesterWeeks = val"
             ></app-input>
+
+            <app-button
+              class="save-btn"
+              @click="updateSemester"
+            >Зберегти</app-button>
           </div>
         </div>
 
@@ -49,13 +68,13 @@
               class="subject"
               v-for="(subject) in subjects"
               v-bind:key="subject.id"
-              @click="selected = subject.id"
             >
               <span class="name">{{subject.name}}</span>
 
               <span
                 class="hours hours-exists"
                 v-if="subject.hours"
+                @click="openEditHours(subject.hours)"
               >{{subject.hours.hours}}</span>
 
               <span
@@ -102,7 +121,6 @@
                 :isOkay="true"
                 @click="createHoursSubmit">Створити</app-button>
             </div>
-
           </div>
         </template>
       </app-modal-window>
@@ -148,6 +166,14 @@
           </div>
         </template>
       </app-modal-window>
+
+      <app-edit-hours
+        :show="showEditHours"
+        :hoursID="editHoursID"
+        :hoursValue="editHoursValue"
+        @close="showEditHours = false"
+        @updated="loadSemester(selectedSemester)"
+      ></app-edit-hours>
     </div>
   </div>
 </template>
@@ -159,12 +185,15 @@ import AppInput from '../AppInput.vue'
 import AppModalWindow from '../AppModalWindow.vue'
 import AppButton from '../AppButtonCustom.vue'
 
+import AppEditHours from './AppEditHours.vue'
+
 export default {
   name: 'AppSemesters',
   components: {
     AppInput,
     AppButton,
     AppModalWindow,
+    AppEditHours,
   },
   computed: {
     ...mapGetters({
@@ -180,13 +209,19 @@ export default {
       createHoursSubject: {},
       hoursValue: '',
       semesterNumber: '',
+      editSemesterNumber: '',
+      editSemesterWeeks: '',
       semesterWeeks: '',
+      editHoursID: 0,
+      editHoursValue: 0,
+      showEditHours: false,
     }
   },
   methods: {
     ...mapActions({
       loadSemester: 'semesters/loadSemester',
       createSemesterSubmit: 'semesters/create',
+      editSemester: 'semesters/edit',
       createHoursAction: 'hours/create',
     }),
     createHours(subject) {
@@ -196,6 +231,30 @@ export default {
     cancelCreateHours() {
       this.createHoursSubject = {}
       this.showCreateHours = false
+    },
+    openEditHours({ id, hours }) {
+      this.showEditHours = true
+
+      this.editHoursID = id
+      this.editHoursValue = hours
+    },
+    updateSemester() {
+      const {
+        editSemesterWeeks: weeks,
+        selectedSemester,
+        editSemesterNumber: number,
+        selectedSemester: id,
+        specialtyID,
+      } = this
+
+      this.editSemester({
+        weeks,
+        number,
+        id,
+        specialtyID,
+      }).then(() => {
+        this.loadSemester(selectedSemester)
+      })
     },
     createHoursSubmit() {
       const {
@@ -217,11 +276,15 @@ export default {
 
         this.createHoursSubject = {}
         this.showCreateHours = false
+        this.hoursValue = ''
       })
     },
-    setSemester(semesterID) {
-      this.loadSemester(semesterID)
+    async setSemester(semesterID) {
+      await this.loadSemester(semesterID)
+
       this.selectedSemester = semesterID
+      this.editSemesterNumber = this.semester.number
+      this.editSemesterWeeks = this.semester.weeks
     },
     async createSemester() {
       const {
@@ -236,9 +299,9 @@ export default {
         specialtyID,
       })
 
-      this.showCreateSemester = false
       this.semesterWeeks = ''
       this.semesterNumber = ''
+      this.showCreateSemester = false
     },
   },
   props: {
@@ -329,6 +392,11 @@ export default {
 
     .value {
       margin-left: 10px;
+      display: flex;
+
+      .save-btn {
+        margin-left: 10px;
+      }
     }
   }
 
