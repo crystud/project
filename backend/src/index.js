@@ -21,6 +21,7 @@ import users from './modules/users'
 import groups from './modules/groups'
 import student from './modules/student'
 import scoringSystems from './modules/scoringSystems'
+import schedule from './modules/schedule'
 
 const app = express()
 const port = process.env.PORT || 4000
@@ -55,5 +56,6 @@ shortenedDays(app)
 groups(app)
 student(app)
 scoringSystems(app)
+schedule(app)
 
 app.listen(port)
