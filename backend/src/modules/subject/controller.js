@@ -1,7 +1,14 @@
+import { Op } from 'sequelize'
+
 import Subject from '../../models/subjects'
 import Commissions from '../../models/commissions'
 import SubjectTypes from '../../models/subject_types'
 import ScoringSystems from '../../models/scoring_systems'
+import Hours from '../../models/hours'
+import Groups from '../../models/groups'
+import Semesters from '../../models/semesters'
+import Classes from '../../models/classes'
+import Subgroups from '../../models/subgroups'
 
 export default class SubjectController {
   static async createSubject(data) {
@@ -127,6 +134,86 @@ export default class SubjectController {
               as: 'scoring_system',
             },
             required: true,
+          },
+        ],
+      })
+
+      return { subjects }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async getSubjectsOnGroup({ groupID }) {
+    try {
+      const subgroupsList = await Subgroups.findAll({
+        where: { groupID },
+      })
+
+      const mapped = subgroupsList.map((subgroup) => subgroup.id)
+
+      const groupClasses = await Subject.findAll({
+        include: [
+          {
+            model: Classes,
+            as: 'class',
+            where: {
+              [Op.or]: {
+                groupID,
+                subgroupID: {
+                  [Op.or]: mapped,
+                },
+              },
+            },
+            required: true,
+          },
+        ],
+      })
+
+      return {
+        subjects: [
+          ...groupClasses,
+        ],
+      }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async getGroupAvailableSubjects({ groupID }) {
+    try {
+      const groupData = await Groups.findOne({
+        where: { id: groupID },
+      })
+
+      if (!groupData) {
+        return {
+          errors: [{
+            msg: 'Such group does not exist',
+            location: 'body',
+            param: 'groupID',
+          }],
+        }
+      }
+
+      const subjects = await Semesters.findAll({
+        where: {
+          specialtyID: groupData.specialtyID,
+        },
+        include: [
+          {
+            model: Hours,
+            as: 'hours',
+            required: true,
+            include: {
+              model: Subject,
+              as: 'subject',
+              required: true,
+            },
           },
         ],
       })

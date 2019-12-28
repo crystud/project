@@ -34,8 +34,8 @@
         ></app-select>
 
         <div class="confirm-btns">
-          <app-button class="btn btn-cancel" @click="isEditing = false">Скасувати</app-button>
-          <app-button class="btn btn-save" @click="save">Зберегти</app-button>
+          <app-button :isOkay="false" @click="isEditing = false">Скасувати</app-button>
+          <app-button @click="save">Зберегти</app-button>
         </div>
       </div>
 
@@ -78,9 +78,67 @@
                 @click="$router.push(`/group/${groupID}`)"
               >{{name}}</div>
           </div>
+
+          <div
+            class="group"
+            @click="openCreate"
+          >
+            <font-awesome-icon icon="plus"></font-awesome-icon>
+          </div>
         </div>
       </div>
     </div>
+
+    <app-modal-window :show="isCreating" @close="isCreating = false">
+      <div slot="header">
+        Створення групи
+      </div>
+
+      <div slot="content">
+        <span class="edit-title">Редагування групи</span>
+
+        <app-input
+          name="Номер групи"
+          type="number"
+          class="form-input"
+          @input="(val) => number = val"
+        ></app-input>
+
+        <app-datepicker
+          placeholder="Дата початку навчання"
+          class="form-input"
+          @change="(val) => entry = val"
+        ></app-datepicker>
+
+        <app-datepicker
+          placeholder="Дата закінчення навчання"
+          class="form-input"
+          @change="(val) => graduation = val"
+        ></app-datepicker>
+
+        <app-select
+          class="form-input"
+          placeholder="Спеціальність"
+          :options="specialtys"
+          :option="({ id: value, name: label }) => ({ label, value })"
+          :defaultValue="{ id }"
+          @change="(val) => specialtyID = val"
+        ></app-select>
+
+        <div class="submit-btns">
+          <app-button
+            :isOkay="false"
+            class="btn"
+            @click="isCreating = false"
+          >Скасувати</app-button>
+
+          <app-button
+            class="btn"
+            @click="createGroup"
+          >Створити групу</app-button>
+        </div>
+      </div>
+    </app-modal-window>
   </div>
 </template>
 
@@ -89,7 +147,9 @@ import { mapActions, mapGetters } from 'vuex'
 
 import AppInput from './AppInput.vue'
 import AppSelect from './AppSelect.vue'
-import AppButton from './AppButton.vue'
+import AppButton from './AppButtonCustom.vue'
+import AppDatepicker from './AppDatepickerCustom.vue'
+import AppModalWindow from './AppModalWindow.vue'
 
 export default {
   name: 'AppSpecialtyItem',
@@ -97,10 +157,13 @@ export default {
     AppInput,
     AppSelect,
     AppButton,
+    AppModalWindow,
+    AppDatepicker,
   },
   computed: {
     ...mapGetters({
       departments: 'departments/list',
+      specialtys: 'specialty/specialtys',
     }),
   },
   props: {
@@ -125,16 +188,52 @@ export default {
       required: true,
     },
   },
+  watch: {
+    groups() {
+      this.calculateData()
+    },
+  },
   methods: {
     ...mapActions({
       loadDepartments: 'departments/loadDepartments',
       loadDepartment: 'departments/loadDepartment',
       editSpecialty: 'specialty/edit',
+      loadSpecialtys: 'specialty/loadSpecialtys',
+      createGroupAction: 'group/create',
     }),
+    createGroup() {
+      const {
+        number,
+        entry,
+        graduation,
+        specialtyID,
+      } = this
+
+      if (!number || new Date(entry) >= new Date(graduation) || !specialtyID) {
+        return false
+      }
+
+      this.createGroupAction({
+        number,
+        entry,
+        graduation,
+        specialtyID,
+      }).then(() => {
+        this.loadDepartment(this.$route.params.id)
+
+        this.isCreating = false
+      })
+
+      return true
+    },
     switchEdit() {
       this.loadDepartments()
 
       this.isEditing = true
+    },
+    openCreate() {
+      this.loadSpecialtys(this.department.id)
+      this.isCreating = true
     },
     save() {
       const { edited, id: specialtyID } = this
@@ -148,6 +247,40 @@ export default {
         this.isEditing = false
       })
     },
+    calculateData() {
+      this.sortedGroups = []
+      this.studentsCount = 0
+
+      this.groups.forEach((group, index) => {
+        const { students, entry, graduation } = group
+
+        const entryTime = new Date(entry)
+        const entryYear = entryTime.getFullYear()
+
+        if (index === 0) {
+          this.studyYears = new Date(graduation).getFullYear() - entryYear
+        }
+
+        let exists = false
+
+        this.sortedGroups.forEach(({ entryYear: year }, groupIndex) => {
+          if (year === entryYear) {
+            this.sortedGroups[groupIndex].groups.unshift(group)
+
+            exists = true
+          }
+        })
+
+        if (!exists) {
+          this.sortedGroups.push({
+            entryYear: entryTime.getFullYear(),
+            groups: [group],
+          })
+        }
+
+        this.studentsCount += students.length || 0
+      })
+    },
   },
   data() {
     return {
@@ -155,6 +288,11 @@ export default {
       studentsCount: 0,
       sortedGroups: [],
       isEditing: false,
+      isCreating: false,
+      number: '',
+      entry: '',
+      graduation: '',
+      specialtyID: this.id,
       edited: {
         name: this.name,
         symbol: this.symbol,
@@ -163,35 +301,7 @@ export default {
     }
   },
   created() {
-    this.groups.forEach((group, index) => {
-      const { students, entry, graduation } = group
-
-      const entryTime = new Date(entry)
-      const entryYear = entryTime.getFullYear()
-
-      if (index === 0) {
-        this.studyYears = new Date(graduation).getFullYear() - entryYear
-      }
-
-      let exists = false
-
-      this.sortedGroups.forEach(({ entryYear: year }, groupIndex) => {
-        if (year === entryYear) {
-          this.sortedGroups[groupIndex].groups.unshift(group)
-
-          exists = true
-        }
-      })
-
-      if (!exists) {
-        this.sortedGroups.push({
-          entryYear: entryTime.getFullYear(),
-          groups: [group],
-        })
-      }
-
-      this.studentsCount += students.length || 0
-    })
+    this.calculateData()
   },
 }
 </script>
@@ -202,6 +312,16 @@ export default {
   border-radius: 5px;
 
   display: flex;
+
+  .form-input {
+    margin-bottom: 20px;
+  }
+
+  .submit-btns {
+    .btn {
+      margin-right: 10px;
+    }
+  }
 
   .line {
     width: 32px;
@@ -222,20 +342,7 @@ export default {
     justify-content: flex-end;
 
     .btn {
-      padding: 10px 15px;
-      background: var(--color-bg-light);
-      color: var(--color-font-main);
-      margin-right: 10px;
-
-      cursor: pointer;
-    }
-
-    .btn-save {
-      background: #2afe8e;
-    }
-
-    .btn-cancel {
-      background: #f76f40;
+      margin-left: 10px;
     }
   }
 

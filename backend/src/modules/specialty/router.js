@@ -136,4 +136,10 @@ router.post('/getAll', checkRoles(['admin', 'teacher', 'student']), checkSchema(
   return res.json(list)
 })
 
+router.post('/list', async (req, res) => {
+  const specialtys = await Controller.getAll()
+
+  return res.json(specialtys)
+})
+
 export default router

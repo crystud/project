@@ -73,7 +73,12 @@ Classes.belongsTo(Teachers, {
 
 Classes.belongsTo(Subjects, {
   foreignKey: 'subjectID',
-  as: 'subject',
+})
+
+Subjects.belongsTo(Classes, {
+  foreignKey: 'id',
+  targetKey: 'subjectID',
+  as: 'class',
 })
 
 Teachers.belongsTo(Classes, {

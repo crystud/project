@@ -1,7 +1,9 @@
 <template>
   <div class="schedule">
     <div class="sections">
-      <app-groups-select></app-groups-select>
+      <app-groups-select
+        @change="groupChange"
+      ></app-groups-select>
 
       <div class="right">
         <app-schedule-list class="row"></app-schedule-list>
@@ -12,6 +14,8 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 import AppGroupsSelect from './AppGroupsSelect.vue'
 import AppHoursList from './AppHoursList.vue'
 import AppScheduleList from './AppScheduleList.vue'
@@ -23,10 +27,23 @@ export default {
     AppScheduleList,
     AppHoursList,
   },
+  computed: {
+    ...mapGetters({
+      group: 'group/group',
+    }),
+  },
+  methods: {
+    ...mapActions({
+      loadGroup: 'group/get',
+    }),
+    groupChange(groupID) {
+      this.loadGroup(groupID)
+    },
+  },
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .schedule {
   .sections {
     display: grid;
@@ -46,12 +63,6 @@ export default {
         border-radius: 5px;
       }
     }
-  }
-
-  .groups-select {
-    background: var(--color-bg-dark);
-    border-radius: 5px;
-    padding: 10px;
   }
 }
 </style>

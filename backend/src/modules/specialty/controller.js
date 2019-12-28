@@ -1,5 +1,6 @@
 import Specialty from '../../models/specialty'
 import Departments from '../../models/departments'
+import Groups from '../../models/groups'
 
 export default class SpecialtysController {
   static async createSpecialty(data) {
@@ -92,6 +93,90 @@ export default class SpecialtysController {
       const specialtys = await Specialty.findAll({
         order: [['name']],
         where: { departmentID },
+      })
+
+      return { specialtys }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static getGroupName(data) {
+    const {
+      number,
+      entry,
+      symbol,
+      graduation,
+    } = data
+
+    const graduationTime = new Date(graduation)
+    const entryTime = new Date(entry)
+    const currentTime = new Date()
+
+    if (currentTime > graduationTime) {
+      const stringEntryTime = `${entryTime.getUTCDate()}/${entryTime.getUTCMonth()}/${entryTime.getFullYear()}`
+      const stringGraduationTime = `${graduationTime.getUTCDate()}/${graduationTime.getUTCMonth()}/${graduationTime.getFullYear()}`
+
+      const lastGroupStudyYear = graduationTime.getFullYear() - entryTime.getFullYear()
+
+      return `[${stringEntryTime} - ${stringGraduationTime}] ${symbol}-${lastGroupStudyYear}${number}`
+    }
+
+    entryTime.setDate(graduationTime.getDate())
+    entryTime.setMonth(graduationTime.getMonth())
+
+    const groupYears = Math.ceil(((currentTime - entryTime) / 1000) / 60 / 60 / 24 / 365)
+
+    return `${symbol}-${groupYears}${number}`
+  }
+
+  static async getAll() {
+    try {
+      const resultsRaw = await Specialty.findAll({
+        order: [['name']],
+        include: {
+          model: Groups,
+          as: 'groups',
+        },
+      })
+
+      const specialtys = []
+
+      resultsRaw.forEach((item) => {
+        const { groups, symbol } = item
+
+        const newGroups = []
+
+        groups.forEach((groupRaw) => {
+          const {
+            id,
+            entry,
+            graduation,
+            number,
+          } = groupRaw.toJSON()
+
+          const name = this.getGroupName({
+            entry,
+            graduation,
+            number,
+            symbol,
+          })
+
+          newGroups.push({
+            id,
+            entry,
+            graduation,
+            number,
+            name,
+          })
+        })
+
+        specialtys.push({
+          ...item.toJSON(),
+          groups: newGroups,
+        })
       })
 
       return { specialtys }

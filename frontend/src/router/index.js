@@ -110,6 +110,11 @@ const routes = [
         name: 'subjectsManaging',
         component: () => import('@/views/SubjectsManaging'),
       },
+      {
+        path: '/classes',
+        name: 'classes',
+        component: () => import('@/views/Classes'),
+      },
     ],
   },
 ]

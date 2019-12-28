@@ -127,4 +127,52 @@ router.post('/getAll', checkRoles(['admin', 'teacher', 'student']), async (req, 
   return res.json(list)
 })
 
+router.post('/getGroupSubjects', checkSchema({
+  groupID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid group id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No group id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const groupSubjects = await Controller.getSubjectsOnGroup(req.body)
+
+  return res.json(groupSubjects)
+})
+
+router.post('/getGroupAvailableSubjects', checkSchema({
+  groupID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid group id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No group id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const groupSubjects = await Controller.getGroupAvailableSubjects(req.body)
+
+  return res.json(groupSubjects)
+})
+
 export default router

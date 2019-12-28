@@ -11,18 +11,26 @@ import Rooms from '../../models/rooms'
 import Timetable from '../../models/timetable'
 import Teachers from '../../models/teachers'
 import SubjectTypes from '../../models/subject_types'
+import Subgroups from '../../models/subgroups'
 
 export default class GroupsController {
   static async create(data) {
     const errors = []
 
-    const { specialtyID, number } = data
+    const {
+      specialtyID,
+      number,
+      entry,
+      graduation,
+    } = data
 
     try {
       const exists = await Groups.count({
         where: {
           specialtyID,
           number,
+          entry,
+          graduation,
         },
       })
 
@@ -811,11 +819,7 @@ export default class GroupsController {
 
         const scheduleClassData = classes.getItem({ order, day })
 
-        console.log(scheduleClassData)
-
         if (scheduleClassData === null) {
-          console.log('denumerator subgroups ............................................')
-
           return classes.setItem({
             day,
             classData: {
@@ -858,6 +862,20 @@ export default class GroupsController {
       console.error(e)
 
       return { schedule: [] }
+    }
+  }
+
+  static async getSubgroups({ groupID }) {
+    try {
+      const subgroups = await Subgroups.findAll({
+        where: { groupID },
+      })
+
+      return { subgroups }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
     }
   }
 }

@@ -3,21 +3,19 @@
     <div class="label">18 тижнів</div>
 
     <div class="list">
-      <div class="day" v-for="i in 6" v-bind:key="i">
-        <div class="title">Понеділок</div>
+      <div
+        class="day"
+        v-for="(data, index) in group.schedule.list"
+        v-bind:key="index"
+      >
+        <div class="title">{{days[data.day - 1]}}</div>
 
         <div class="classes">
-          <div class="class">
-            <span class="number">1</span>
-
-            <app-select :options="[]"></app-select>
-          </div>
-
-          <div v-if="Math.random() > 0.5" class="class">
-            <span class="number">2</span>
-
-            <app-select :options="[]"></app-select>
-          </div>
+          <app-class-item
+            v-for="(classData, classIndex) in data.classes"
+            v-bind:key="classIndex"
+            :classData="classData"
+          ></app-class-item>
 
           <div class="add-class">
             <span class="icon">
@@ -33,12 +31,32 @@
 </template>
 
 <script>
-import AppSelect from '../AppSelect.vue'
+import { mapGetters } from 'vuex'
+
+import AppClassItem from './AppClassItem.vue'
 
 export default {
   name: 'AppScheduleList',
+  data() {
+    return {
+      days: [
+        'Понеділок',
+        'Вівторок',
+        'Середа',
+        'Четвер',
+        'П\'ятниця',
+        'Субота',
+        'Неділя',
+      ],
+    }
+  },
   components: {
-    AppSelect,
+    AppClassItem,
+  },
+  computed: {
+    ...mapGetters({
+      group: 'group/group',
+    }),
   },
 }
 </script>

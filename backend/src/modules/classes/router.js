@@ -25,7 +25,7 @@ router.post('/create', checkRoles(['admin']), checkSchema({
   },
   subgroups: {
     in: 'body',
-    isInt: {
+    isBoolean: {
       errorMessage: 'Invalid subgroups value',
       options: {
         min: 0,
@@ -58,7 +58,9 @@ router.post('/create', checkRoles(['admin']), checkSchema({
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.json(errors.array())
+    return res.json({
+      errors: errors.array(),
+    })
   }
 
   const result = await Controller.create(req.body)

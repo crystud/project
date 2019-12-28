@@ -417,18 +417,14 @@ export default class ClassesController {
         where: { id },
       })
 
-      if (!edit) {
-        return { edited: false }
-      }
-
       return {
-        edited: true,
+        edited: !!edit,
         class: newClassData,
       }
     } catch (e) {
       console.error(e)
 
-      return { created: false }
+      return { edited: false }
     }
   }
 

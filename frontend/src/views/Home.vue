@@ -68,6 +68,7 @@
       <app-home-link role="admin" link="shortenedDays">Скорочені дні</app-home-link>
       <app-home-link role="admin" link="schedule">Розклад</app-home-link>
       <app-home-link role="admin" link="semesters">Семестри</app-home-link>
+      <app-home-link role="admin" link="classes">Пари</app-home-link>
     </div>
   </div>
 

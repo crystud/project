@@ -194,4 +194,28 @@ router.post('/getAll', checkRoles(['admin', 'teacher', 'student']), checkSchema(
   return res.json(groups)
 })
 
+router.post('/getSubgroups', checkSchema({
+  groupID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid group id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No group id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const subgroups = await Controller.getSubgroups(req.body)
+
+  return res.json(subgroups)
+})
+
 export default router

@@ -209,7 +209,9 @@ export default {
       const month = (currentMonth + 1) < 10 ? `0${(currentMonth + 1)}` : (currentMonth + 1)
       const date = (this.selectedDate + 1) < 10 ? `0${this.selectedDate}` : this.selectedDate
 
-      this.$emit('change', `${year}-${month}-${date}`)
+      if (year && currentMonth && this.selectedDate) {
+        this.$emit('change', `${year}-${month}-${date}`)
+      }
     },
   },
   created() {
