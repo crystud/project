@@ -26,6 +26,7 @@ import {
   faAngleDoubleRight,
   faUser,
   faHashtag,
+  faSchool,
 } from '@fortawesome/free-solid-svg-icons'
 
 import VueTruncate from 'vue-truncate-filter'
@@ -65,6 +66,7 @@ library.add(faAngleDoubleLeft)
 library.add(faAngleDoubleRight)
 library.add(faUser)
 library.add(faHashtag)
+library.add(faSchool)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

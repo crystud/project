@@ -17,6 +17,7 @@ import semesters from './semesters'
 import hours from './hours'
 import scoringSystems from './scoringSystems'
 import classes from './classes'
+import schedule from './schedule'
 
 Vue.use(Vuex)
 
@@ -44,5 +45,6 @@ export default new Vuex.Store({
     hours,
     classes,
     scoringSystems,
+    schedule,
   },
 })

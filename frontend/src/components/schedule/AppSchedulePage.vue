@@ -10,6 +10,8 @@
         <app-hours-list class="row"></app-hours-list>
       </div>
     </div>
+
+    <app-schedule-editing></app-schedule-editing>
   </div>
 </template>
 
@@ -19,6 +21,7 @@ import { mapGetters, mapActions } from 'vuex'
 import AppGroupsSelect from './AppGroupsSelect.vue'
 import AppHoursList from './AppHoursList.vue'
 import AppScheduleList from './AppScheduleList.vue'
+import AppScheduleEditing from './AppScheduleEditing.vue'
 
 export default {
   name: 'AppSchedulePage',
@@ -26,10 +29,13 @@ export default {
     AppGroupsSelect,
     AppScheduleList,
     AppHoursList,
+    AppScheduleEditing,
   },
   computed: {
     ...mapGetters({
       group: 'group/group',
+      isEditing: 'schedule/isEditing',
+      editingItem: 'schedule/editing',
     }),
   },
   methods: {

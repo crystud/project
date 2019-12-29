@@ -536,6 +536,14 @@ export default class GroupsController {
                   model: Groups,
                   as: 'group',
                 },
+                {
+                  model: Subjects,
+                  as: 'subject',
+                },
+                {
+                  model: Teachers,
+                  as: 'teacher',
+                },
               ],
             },
             {
@@ -567,6 +575,14 @@ export default class GroupsController {
                   model: Groups,
                   as: 'group',
                 },
+                {
+                  model: Subjects,
+                  as: 'subject',
+                },
+                {
+                  model: Teachers,
+                  as: 'teacher',
+                },
               ],
             },
             {
@@ -595,8 +611,20 @@ export default class GroupsController {
               },
               include: [
                 {
+                  model: Subgroups,
+                  as: 'subgroup',
+                },
+                {
                   model: Groups,
                   as: 'group',
+                },
+                {
+                  model: Subjects,
+                  as: 'subject',
+                },
+                {
+                  model: Teachers,
+                  as: 'teacher',
                 },
               ],
             },
@@ -626,8 +654,20 @@ export default class GroupsController {
               },
               include: [
                 {
+                  model: Subgroups,
+                  as: 'subgroup',
+                },
+                {
                   model: Groups,
                   as: 'group',
+                },
+                {
+                  model: Subjects,
+                  as: 'subject',
+                },
+                {
+                  model: Teachers,
+                  as: 'teacher',
                 },
               ],
             },
@@ -659,6 +699,18 @@ export default class GroupsController {
                 {
                   model: Groups,
                   as: 'group',
+                },
+                {
+                  model: Subgroups,
+                  as: 'subgroup',
+                },
+                {
+                  model: Subjects,
+                  as: 'subject',
+                },
+                {
+                  model: Teachers,
+                  as: 'teacher',
                 },
               ],
             },
