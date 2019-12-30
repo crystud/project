@@ -13,13 +13,8 @@ export default {
     async create(_, createData) {
       try {
         const {
-          data: {
-            errors,
-            created,
-          },
+          data: { errors },
         } = await axios.post('/class/create', createData)
-
-        console.log(errors, created)
 
         if (errors) {
           return Promise.reject(errors)

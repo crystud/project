@@ -54,12 +54,23 @@ router.post('/create', checkSchema({
     })
   }
 
-  const create = await Controller.createTimetable({
-    ...req.body,
-    user: req.user,
-  })
+  const create = await Controller.createTimetable(req.body)
 
   return res.json(create)
+})
+
+router.post('/getAll', async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const timetables = await Controller.getAll()
+
+  return res.json(timetables)
 })
 
 export default router

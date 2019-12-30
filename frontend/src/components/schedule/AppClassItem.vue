@@ -60,7 +60,6 @@ export default {
 <style lang="less" scoped>
 .class {
   margin-bottom: 10px;
-  background: #101215;
   color: #fff;
 
   .num-denom-title {

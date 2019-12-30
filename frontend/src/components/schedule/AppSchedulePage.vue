@@ -11,7 +11,14 @@
       </div>
     </div>
 
-    <app-schedule-editing></app-schedule-editing>
+    <app-schedule-editing
+      :groupID="groupID"
+      @edited="update"
+    ></app-schedule-editing>
+
+    <app-schedule-create
+      @created="update"
+    ></app-schedule-create>
   </div>
 </template>
 
@@ -22,6 +29,7 @@ import AppGroupsSelect from './AppGroupsSelect.vue'
 import AppHoursList from './AppHoursList.vue'
 import AppScheduleList from './AppScheduleList.vue'
 import AppScheduleEditing from './AppScheduleEditing.vue'
+import AppScheduleCreate from './AppScheduleCreate.vue'
 
 export default {
   name: 'AppSchedulePage',
@@ -30,6 +38,7 @@ export default {
     AppScheduleList,
     AppHoursList,
     AppScheduleEditing,
+    AppScheduleCreate,
   },
   computed: {
     ...mapGetters({
@@ -38,12 +47,21 @@ export default {
       editingItem: 'schedule/editing',
     }),
   },
+  data() {
+    return {
+      groupID: 0,
+    }
+  },
   methods: {
     ...mapActions({
       loadGroup: 'group/get',
     }),
+    update() {
+      this.loadGroup(this.groupID)
+    },
     groupChange(groupID) {
       this.loadGroup(groupID)
+      this.groupID = groupID
     },
   },
 }
@@ -53,7 +71,7 @@ export default {
 .schedule {
   .sections {
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 2fr 3fr;
     grid-gap: 20px;
 
     @media screen and (max-width: 1400px) {

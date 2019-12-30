@@ -11,18 +11,29 @@
         <div class="title">{{days[data.day - 1]}}</div>
 
         <div class="classes">
-          <app-class-item
+          <div
             v-for="(classData, classIndex) in data.classes"
             v-bind:key="classIndex"
-            :classData="classData"
-          ></app-class-item>
+            class="info"
+          >
+            <div class="order">
+              {{classData.order}}
+            </div>
+
+            <app-class-item
+              :classData="classData"
+            ></app-class-item>
+          </div>
 
           <div class="add-class">
             <span class="icon">
               <font-awesome-icon icon="plus"></font-awesome-icon>
             </span>
 
-            <span class="text">Добавити пару</span>
+            <span
+              class="text"
+              @click="setCreating(data.day)"
+            >Добавити пару</span>
           </div>
         </div>
       </div>
@@ -31,7 +42,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 import AppClassItem from './AppClassItem.vue'
 
@@ -58,6 +69,11 @@ export default {
       group: 'group/group',
     }),
   },
+  methods: {
+    ...mapActions({
+      setCreating: 'schedule/setCreating',
+    }),
+  },
 }
 </script>
 
@@ -68,17 +84,29 @@ export default {
     margin-bottom: 10px;
   }
 
+  .info {
+    display: flex;
+    align-items: top;
+    justify-content: space-between;
+
+    .order {
+      font-size: 1.5em;
+      color: var(--color-font-dark);
+      padding: 0 10px;
+    }
+  }
+
   .list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 20px;
 
-    @media screen and (max-width: 1400px) {
+    @media screen and (max-width: 1500px) {
       grid-template-columns: repeat(2, 1fr);
       grid-column-gap: 10px;
     }
 
-    @media screen and (max-width: 1250px) {
+    @media screen and (max-width: 1000px) {
       grid-template-columns: 1fr;
     }
 

@@ -11,7 +11,7 @@ const database = new Sequelize({
   host: dbData.host,
   dialect: 'mariadb',
   timezone: 'Etc/GMT0',
-  omitNull: true,
+  omitNull: false,
   define: {
     underscored: false,
     timestamps: false,

@@ -18,6 +18,8 @@ import hours from './hours'
 import scoringSystems from './scoringSystems'
 import classes from './classes'
 import schedule from './schedule'
+import timetables from './timetables'
+import rooms from './rooms'
 
 Vue.use(Vuex)
 
@@ -46,5 +48,7 @@ export default new Vuex.Store({
     classes,
     scoringSystems,
     schedule,
+    timetables,
+    rooms,
   },
 })

@@ -10,18 +10,7 @@ export default class TimetableController {
         start,
         finish,
         isFullTime,
-        user: { roles },
       } = data
-
-      if (!roles.includes('admin')) {
-        errors.push({
-          msg: 'You do not have permission to create timetable',
-          param: 'roles',
-          location: 'user',
-        })
-
-        return { errors }
-      }
 
       const timetableExists = await Timetable.findOne({
         where: {
@@ -60,6 +49,30 @@ export default class TimetableController {
       console.error(e)
 
       return { created: false }
+    }
+  }
+
+  static async getAll() {
+    try {
+      const order = [['order']]
+
+      const [fullTime, partTime] = await Promise.all([
+        await Timetable.findAll({
+          where: { type: 'fulltime' },
+          order,
+        }),
+
+        await Timetable.findAll({
+          where: { type: 'parttime' },
+          order,
+        }),
+      ])
+
+      return { fullTime, partTime }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
     }
   }
 }

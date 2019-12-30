@@ -33,7 +33,11 @@ Schedule.init({
       key: 'id',
     },
   },
-  type: DataTypes.ENUM('numerator', 'denominator'),
+  type: {
+    allowNull: true,
+    defaultValue: null,
+    type: DataTypes.ENUM('numerator', 'denominator'),
+  },
 },
 {
   sequelize,

@@ -9,6 +9,7 @@ import Groups from '../../models/groups'
 import Semesters from '../../models/semesters'
 import Classes from '../../models/classes'
 import Subgroups from '../../models/subgroups'
+import Teachers from '../../models/teachers'
 
 export default class SubjectController {
   static async createSubject(data) {
@@ -159,6 +160,16 @@ export default class SubjectController {
           {
             model: Classes,
             as: 'class',
+            include: [
+              {
+                model: Subgroups,
+                as: 'subgroup',
+              },
+              {
+                model: Teachers,
+                as: 'teacher',
+              },
+            ],
             where: {
               [Op.or]: {
                 groupID,

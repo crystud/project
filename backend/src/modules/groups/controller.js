@@ -510,6 +510,7 @@ export default class GroupsController {
             {
               model: Timetable,
               as: 'timetable',
+              order: [['order']],
             },
             {
               model: Rooms,
@@ -549,6 +550,7 @@ export default class GroupsController {
             {
               model: Timetable,
               as: 'timetable',
+              order: [['order']],
             },
             {
               model: Rooms,
@@ -588,6 +590,7 @@ export default class GroupsController {
             {
               model: Timetable,
               as: 'timetable',
+              order: [['order']],
             },
             {
               model: Rooms,
@@ -631,6 +634,7 @@ export default class GroupsController {
             {
               model: Timetable,
               as: 'timetable',
+              order: [['order']],
             },
             {
               model: Rooms,
@@ -674,6 +678,7 @@ export default class GroupsController {
             {
               model: Timetable,
               as: 'timetable',
+              order: [['order']],
             },
             {
               model: Rooms,
@@ -717,6 +722,7 @@ export default class GroupsController {
             {
               model: Timetable,
               as: 'timetable',
+              order: [['order']],
             },
             {
               model: Rooms,

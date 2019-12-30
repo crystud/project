@@ -1,16 +1,19 @@
 <template>
-  <app-modal-window :show="isEditing" @close="setNoEditing">
+  <app-modal-window :show="isCreating" @close="setNoCreating">
     <div slot="header">Редагування елементу розкладу</div>
-    <div slot="content" v-if="isEditing">
+    <div slot="content" v-if="isCreating">
       <app-radio-choice
         :options="[
           { label: 'Проста пара', value: null },
           { label: 'Чисельник', value: 'numerator' },
           { label: 'Знаменник', value: 'denominator' },
         ]"
-        :defaultValue="editing.type"
         @change="(val) => type = val"
       ></app-radio-choice>
+
+      <div class="creating-day">
+        День: {{creatingDay}}
+      </div>
 
       <app-select
         class="form-input"
@@ -20,14 +23,12 @@
           value: id,
           label: `${order} / ${start}-${finish}`,
         })"
-        :defaultValue="{ id: editing.timetableID }"
         @change="val => timetableID = val"
       ></app-select>
 
       <app-select
         class="form-input"
         placeholder="Пара"
-        :defaultValue="{ class: { id: editing.classID } }"
         :options="classes"
         :option="({
           name,
@@ -37,7 +38,7 @@
           value,
           label: `
             ${name} /
-            ${classData.teacher ? classData.teacher.name : ''}
+            ${classData.teacher.name}
             ${classData.subgroups ? `(${classData.subgroup.name})` : ''}`,
         })"
         @change="val => classID = val"
@@ -46,7 +47,6 @@
       <app-select
         class="form-input"
         placeholder="Аудиторія"
-        :defaultValue="{ id: editing.roomID }"
         :options="rooms"
         :option="({
           id: value,
@@ -60,24 +60,17 @@
       ></app-select>
 
       <div class="btns">
-        <button
-          class="delete-btn"
-          @click="deleteSchedule(editing.id)"
-        >Вилучити пару з розкладу</button>
+        <app-button
+          :isOkay="false"
+          class="btn"
+          @click="setNoCreating"
+        >Скасувати</app-button>
 
-        <div>
-          <app-button
-            :isOkay="false"
-            class="btn"
-            @click="setNoEditing()"
-          >Скасувати</app-button>
-
-          <app-button
-            :isOkay="true"
-            class="btn"
-            @click="save"
-          >Зберегти</app-button>
-        </div>
+        <app-button
+          :isOkay="true"
+          class="btn"
+          @click="create"
+        >Створити</app-button>
       </div>
     </div>
   </app-modal-window>
@@ -99,52 +92,30 @@ export default {
     AppSelect,
     AppButton,
   },
-  props: {
-    groupID: {
-      type: Number,
-      required: true,
-    },
-  },
   computed: {
     ...mapGetters({
-      editing: 'schedule/editing',
-      isEditing: 'schedule/isEditing',
+      isCreating: 'schedule/isCreating',
       timetables: 'timetables/fulltime',
       classes: 'group/subjects',
       rooms: 'rooms/list',
+      creatingDay: 'schedule/creatingDay',
     }),
-  },
-  watch: {
-    groupID() {
-      this.fetchClasses(this.groupID)
-    },
-    editing() {
-      if (this.editing) {
-        const { editing } = this
-
-        this.type = editing.type
-        this.timetableID = editing.timetableID
-        this.classID = editing.classID
-        this.roomID = editing.roomID
-      }
-    },
   },
   data() {
     return {
-      type: this.editing ? this.editing.type : 0,
-      classID: this.editing ? this.editing.classID : 0,
-      roomID: this.editing ? this.editing.roomID : 0,
-      timetableID: this.editing ? this.editing.timetableID : 0,
+      type: null,
+      classID: 0,
+      roomID: 0,
+      timetableID: 0,
     }
   },
   methods: {
     ...mapActions({
-      setNoEditing: 'schedule/setNoEditing',
-      editSchedule: 'schedule/edit',
+      setNoCreating: 'schedule/setNoCreating',
       fetchTimetables: 'timetables/fetch',
       fetchClasses: 'group/loadGroupSubjects',
       fetchRooms: 'rooms/fetch',
-      deleteScheduleAction: 'schedule/deleteSchedule',
+      createSchedule: 'schedule/create',
     }),
     scheduleTypeToNumber(type) {
       if (!type) return 1
@@ -158,13 +129,7 @@ export default {
           return 1
       }
     },
-    deleteSchedule(scheduleID) {
-      this.deleteScheduleAction({ scheduleID }).then(() => {
-        this.setNoEditing()
-        this.$emit('edited')
-      })
-    },
-    save() {
+    create() {
       const {
         type,
         timetableID,
@@ -172,16 +137,17 @@ export default {
         classID,
       } = this
 
-      this.editSchedule({
-        scheduleID: this.editing.id,
-        day: this.editing.day,
+      console.log(type, timetableID, roomID, classID)
+
+      this.createSchedule({
+        day: this.creatingDay,
         type: type || null,
         timetableID,
         roomID,
         classID,
       }).then(() => {
-        this.setNoEditing()
-        this.$emit('edited')
+        this.setNoCreating()
+        this.$emit('created')
       }).catch((e) => {
         console.error(e)
       })
@@ -199,23 +165,15 @@ export default {
   margin-bottom: 10px;
 }
 
+.creating-day {
+  margin: 20px 0;
+  color: var(--color-font-dark);
+}
+
 .btns {
   margin-top: 25px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  .delete-btn {
-    color: #c72929;
-    background: transparent;
-    font-size: 1em;
-    border: 0;
-    cursor: pointer;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
+  justify-content: flex-end;
 
   .btn {
     margin-left: 10px;

@@ -114,10 +114,9 @@ export default class RoomController {
     }
   }
 
-  static async getAll({ floor }) {
+  static async getAll() {
     try {
       const rooms = await Rooms.findAll({
-        where: { floor },
         order: [['name']],
       })
 

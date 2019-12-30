@@ -1,11 +1,5 @@
 <template>
   <div class="class" @click="setEditingItem()">
-    <div class="order-number">
-      <span class="value">
-        {{data.timetable.order}}
-      </span>
-    </div>
-
     <span class="short-data">
       {{data.class.subject.name}},
       {{data.class.teacher.name}},

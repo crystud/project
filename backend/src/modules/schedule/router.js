@@ -66,12 +66,103 @@ router.post('/create', checkRoles(['admin']), checkSchema({
     })
   }
 
-  const create = await Controller.createSchedule({
-    ...req.body,
-    user: req.user,
-  })
+  const create = await Controller.createSchedule(req.body)
 
   return res.json(create)
+})
+
+router.post('/delete', checkRoles(['admin']), checkSchema({
+  scheduleID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid schedule id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No schedule id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const deleteResult = await Controller.delete(req.body)
+
+  return res.json(deleteResult)
+})
+
+router.post('/edit', checkRoles(['admin']), checkSchema({
+  scheduleID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid schedule id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No schedule id provided',
+    },
+  },
+  day: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid day',
+      options: {
+        min: 1,
+        max: 7,
+      },
+    },
+  },
+  classID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid class id',
+      options: {
+        min: 1,
+      },
+    },
+    notEmpty: {
+      errorMessage: 'No class id provided',
+    },
+  },
+  timetableID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid timetable id',
+      options: {
+        min: 1,
+      },
+    },
+    notEmpty: {
+      errorMessage: 'No timetable id provided',
+    },
+  },
+  roomID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid room id',
+      options: {
+        min: 1,
+      },
+    },
+    notEmpty: {
+      errorMessage: 'No room id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const edit = await Controller.edit(req.body)
+
+  return res.json(edit)
 })
 
 router.post('/day', checkRoles(['admin', 'teacher', 'student']), checkSchema({

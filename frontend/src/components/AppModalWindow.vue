@@ -52,7 +52,7 @@ export default {
   justify-content: center;
   align-items: center;
 
-  transition: all .5s;
+  transition: all .25s;
 
   .body {
     min-width: 450px;
@@ -97,6 +97,8 @@ export default {
 
     .content {
       padding: 20px;
+      max-height: calc(100vh - 150px);
+      overflow: auto;
     }
   }
 

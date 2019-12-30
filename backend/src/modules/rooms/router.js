@@ -103,20 +103,7 @@ router.post('/get', checkRoles(['admin', 'teacher', 'student']), checkSchema({
   return res.json(create)
 })
 
-router.post('/getAll', checkRoles(['admin', 'teacher', 'student']), checkSchema({
-  floor: {
-    in: 'body',
-    isInt: {
-      errorMessage: 'Invalid floor provided',
-      options: {
-        min: 1,
-      },
-    },
-    notEmpty: {
-      errorMessage: 'No floor provided',
-    },
-  },
-}), async (req, res) => {
+router.post('/getAll', checkRoles(['admin', 'teacher', 'student']), async (req, res) => {
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
@@ -125,7 +112,7 @@ router.post('/getAll', checkRoles(['admin', 'teacher', 'student']), checkSchema(
     })
   }
 
-  const create = await Controller.getAll(req.body)
+  const create = await Controller.getAll()
 
   return res.json(create)
 })

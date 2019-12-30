@@ -52,8 +52,6 @@ export default class ScheduleController {
         return { errors }
       }
 
-      console.log(roomID)
-
       const roomExists = await Rooms.findOne({
         where: {
           id: roomID,
@@ -159,6 +157,204 @@ export default class ScheduleController {
         })
 
         if (!groupHasClass.hasClass) {
+          response = await proceedCreating()
+        } else {
+          errors.push({
+            msg: 'This group has class at this time',
+            location: 'body',
+            param: ['day', 'order'],
+          })
+
+          return { errors }
+        }
+      }
+
+      return response
+    } catch (e) {
+      console.log(e)
+
+      return { created: false }
+    }
+  }
+
+  static async delete({ scheduleID: id }) {
+    try {
+      const deleted = await Schedule.destroy({
+        where: { id },
+      })
+
+      console.log(deleted)
+
+      return { deleted }
+    } catch (e) {
+      console.error(e)
+
+      return { deleted: false }
+    }
+  }
+
+  static async edit(data) {
+    const errors = []
+
+    try {
+      const {
+        scheduleID,
+        day,
+        classID,
+        timetableID,
+        roomID,
+        type: isNumerator = null,
+      } = data
+
+      console.log('------------------------', isNumerator)
+
+      const timetableData = await Timetable.findOne({
+        where: {
+          id: timetableID,
+        },
+      })
+
+      if (!timetableData) {
+        errors.push({
+          msg: 'Such timetable does not exist',
+          location: 'body',
+          param: 'timetableID',
+        })
+
+        return { errors }
+      }
+
+      const classData = await Classes.findOne({
+        where: {
+          id: classID,
+        },
+      })
+
+      if (!classData) {
+        errors.push({
+          msg: 'Such class does not exist',
+          param: 'classID',
+          location: 'body',
+        })
+
+        return { errors }
+      }
+
+      const roomExists = await Rooms.findOne({
+        where: {
+          id: roomID,
+        },
+      })
+
+      if (!roomExists) {
+        errors.push({
+          msg: 'Such room does not exist',
+          param: 'roomID',
+          location: 'body',
+        })
+
+        return { errors }
+      }
+
+      const { order } = timetableData
+      const {
+        subgroups,
+        subgroupID,
+        teacherID,
+        groupID,
+      } = classData
+
+      const proceedCreating = async () => {
+        const [roomIsFree, teacherIsFree] = await Promise.all([
+          this.checkRoomIsFree({
+            roomID,
+            day,
+            order,
+            numeratorDenominator: isNumerator,
+          }),
+
+          this.checkTeacherIsFree({
+            teacherID,
+            day,
+            order,
+            numeratorDenominator: isNumerator,
+          }),
+        ])
+
+        if (roomIsFree.hasClass && roomIsFree.hasClass.id !== scheduleID) {
+          errors.push({
+            msg: 'Room is not available for class',
+            location: 'body',
+            param: 'roomID',
+          })
+
+          return { errors }
+        }
+
+        if (teacherIsFree.hasClass && teacherIsFree.hasClass.id !== scheduleID) {
+          errors.push({
+            msg: 'Teacher is not available for class',
+            location: 'classData',
+            param: 'teacherID',
+          })
+
+          return { errors }
+        }
+
+        console.log({
+          day,
+          roomID,
+          timetableID,
+          classID,
+          type: isNumerator,
+          where: { id: scheduleID },
+        })
+
+        const [edited] = await Schedule.update({
+          day,
+          roomID,
+          timetableID,
+          classID,
+          type: isNumerator,
+        }, {
+          where: { id: scheduleID },
+        })
+
+        console.log(edited)
+
+        return { edited: !!edited }
+      }
+
+      let response = { isDone: false }
+
+      if (subgroups) {
+        const subgroupHasClass = await this.checkSubgroupIsFree({
+          subgroupID,
+          day,
+          order,
+          numeratorDenominator: isNumerator,
+        })
+
+        if (!subgroupHasClass.hasClass || subgroupHasClass.hasClass.id === scheduleID) {
+          response = await proceedCreating()
+        } else {
+          errors.push({
+            msg: 'This subgroup has class at this time',
+            location: 'body',
+            param: ['day', 'order'],
+          })
+
+          return { errors }
+        }
+      } else {
+        const groupHasClass = await this.checkGroupIsFree({
+          groupID,
+          day,
+          order,
+          numeratorDenominator: isNumerator,
+        })
+
+        if (!groupHasClass.hasClass || groupHasClass.hasClass.id === scheduleID) {
           response = await proceedCreating()
         } else {
           errors.push({

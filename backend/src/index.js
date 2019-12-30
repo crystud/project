@@ -22,6 +22,7 @@ import groups from './modules/groups'
 import student from './modules/student'
 import scoringSystems from './modules/scoringSystems'
 import schedule from './modules/schedule'
+import timetable from './modules/timetable'
 
 const app = express()
 const port = process.env.PORT || 4000
@@ -57,5 +58,6 @@ groups(app)
 student(app)
 scoringSystems(app)
 schedule(app)
+timetable(app)
 
 app.listen(port)
