@@ -840,7 +840,7 @@ export default class GroupsController {
               num: {
                 subgroups: [classData],
               },
-              numDenomSubgroupsClass: true,
+              numDenominatorClass: true,
               order,
             },
           })
@@ -884,7 +884,7 @@ export default class GroupsController {
               denum: {
                 subgroups: [classData],
               },
-              numDenomSubgroupsClass: true,
+              numDenominatorClass: true,
               order,
             },
           })

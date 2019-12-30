@@ -14,7 +14,7 @@
             :data="classData.num"
           ></app-simple-class-item>
 
-          <div v-if="!classData.num">No class for numerator</div>
+          <div v-if="!classData.num">Немає пари в чисельнику</div>
         </div>
       </div>
 
@@ -27,7 +27,7 @@
             :data="classData.denom"
           ></app-simple-class-item>
 
-          <div v-if="!classData.denom">No class for denominator</div>
+          <div v-if="!classData.denom">Немає пари в знаменнику</div>
         </div>
       </div>
     </div>
