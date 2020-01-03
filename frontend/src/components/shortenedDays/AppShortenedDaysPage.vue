@@ -6,7 +6,10 @@
       <app-shortened-days-list></app-shortened-days-list>
 
       <div>
-        <app-datepicker @change="setDate"></app-datepicker>
+        <app-datepicker
+          :highlighthedDates="dates"
+          @change="setDate"
+        ></app-datepicker>
 
         <app-card class="form">
           <span class="label date">Дата: {{normalTime || 'Вкажіть дату'}}</span>
@@ -31,7 +34,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 import AppCard from '../AppCard.vue'
 import AppButton from '../AppButtonCustom.vue'
@@ -46,6 +49,11 @@ export default {
     AppButton,
     AppDatepicker,
     AppShortenedDaysList,
+  },
+  computed: {
+    ...mapGetters({
+      dates: 'shortenedDays/dates',
+    }),
   },
   data() {
     return {

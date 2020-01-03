@@ -1,31 +1,39 @@
 <template>
   <app-card class="datepicker">
-    <div class="option year">
-      <span class="icon">
-        <font-awesome-icon icon="angle-left"></font-awesome-icon>
-      </span>
+    <div class="options-wrap">
+      <div class="icon-side">
+        <span class="icon month-icon" @click="moveMonth(-1)">
+          <font-awesome-icon icon="angle-left"></font-awesome-icon>
+        </span>
 
-      <span class="value">
-        {{currentYear}}
-      </span>
+        <span class="icon" @click="moveYear(-1)">
+          <font-awesome-icon icon="angle-double-left"></font-awesome-icon>
+        </span>
+      </div>
 
-      <span class="icon">
-        <font-awesome-icon icon="angle-right"></font-awesome-icon>
-      </span>
-    </div>
+      <div class="options">
+        <div class="option year">
+          <span class="value">
+            {{date.getFullYear()}}
+          </span>
+        </div>
 
-    <div class="option month">
-      <span class="icon">
-        <font-awesome-icon icon="angle-left"></font-awesome-icon>
-      </span>
+        <div class="option month">
+          <span class="value">
+            {{months[date.getMonth()]}}
+          </span>
+        </div>
+      </div>
 
-      <span class="value">
-        {{months[currentMonth]}}
-      </span>
+      <div class="icon-side">
+        <span class="icon" @click="moveYear(1)">
+          <font-awesome-icon icon="angle-double-right"></font-awesome-icon>
+        </span>
 
-      <span class="icon">
-        <font-awesome-icon icon="angle-right"></font-awesome-icon>
-      </span>
+        <span class="icon month-icon" @click="moveMonth(1)">
+          <font-awesome-icon icon="angle-right"></font-awesome-icon>
+        </span>
+      </div>
     </div>
 
     <div class="calendar">
@@ -39,17 +47,7 @@
         v-for="i in (daysInMonth + daysOffset)"
         v-bind:key="i - daysOffset"
         class="day"
-        :class="
-          [
-            (currentDate === (i - daysOffset) ? 'green-day' : ''),
-            (selected === (i - daysOffset) ? 'selected' : ''),
-            (
-              dates.includes(`${currentYear}/${currentMonth + 1}/${i - daysOffset}`)
-              ? 'gray-day' : ''),
-            (minDate.getTime() > new Date(currentYear, currentMonth, i - daysOffset).getTime()
-              ? 'disabled' : ''),
-          ]
-        "
+        :class="evaluateClasses(i - daysOffset)"
         @click="() => selectDate(i - daysOffset)"
       >
         <span v-if="i > daysOffset">
@@ -61,26 +59,34 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 import AppCard from './AppCard.vue'
 
 export default {
   name: 'AppDatepicker',
-  computed: {
-    ...mapGetters({
-      dates: 'shortenedDays/dates',
-    }),
+  props: {
+    highlighthedDates: {
+      type: Array,
+      required: false,
+      default: () => [],
+    },
+    borderedDays: {
+      type: Array,
+      required: false,
+      default: () => [],
+    },
+    activeDates: {
+      type: Array,
+      required: false,
+      default: () => [],
+    },
   },
   data() {
     return {
-      currentMonth: 4,
-      currentDate: 15,
       minDate: new Date(),
-      currentYear: 0,
       daysInMonth: 0,
       daysOffset: 0,
       selected: 0,
+      date: new Date(),
       months: [
         'Січень',
         'Лютий',
@@ -107,6 +113,64 @@ export default {
     }
   },
   methods: {
+    moveYear(side) {
+      const currentMonth = this.date.getMonth()
+      const currentYear = this.date.getFullYear()
+      const currentDate = this.date.getDate()
+
+      this.date = new Date(currentYear + side, currentMonth, currentDate)
+      this.calculate()
+    },
+    moveMonth(side) {
+      const currentMonth = this.date.getMonth()
+      const currentYear = this.date.getFullYear()
+      const currentDate = this.date.getDate()
+
+      this.date = new Date(currentYear, currentMonth + side, currentDate)
+      this.calculate()
+    },
+    evaluateClasses(date) {
+      const {
+        highlighthedDates,
+        borderedDays,
+        activeDates,
+        date: currentDateObj,
+        selected,
+        minDate,
+      } = this
+
+      const currentMonth = currentDateObj.getMonth()
+      const currentYear = currentDateObj.getFullYear()
+      const currentTimeObj = new Date()
+
+      const currentSelectedTime = `${currentYear}/${currentMonth + 1}/${date}`
+      const currentTime = `${currentTimeObj.getFullYear()}/${currentTimeObj.getMonth() + 1}/${currentTimeObj.getDate()}`
+
+      const classes = [
+        (currentSelectedTime === currentTime ? 'green-day' : ''),
+      ]
+
+      const currentTimeString = `${currentYear}/${currentMonth + 1}/${date}`
+
+      if (date <= 0) {
+        return [...classes, 'unactive']
+      }
+
+      if (minDate.getTime() > new Date(currentYear, currentMonth, date).getTime()) {
+        return [...classes, 'disabled']
+      }
+
+      if (activeDates.length && !activeDates.includes(currentSelectedTime)) {
+        return [...classes, 'disabled']
+      }
+
+      return [
+        ...classes,
+        (selected === date ? 'selected' : ''),
+        (highlighthedDates.includes(currentTimeString) ? 'gray-day' : ''),
+        (borderedDays.includes(currentTimeString) ? 'bordered-day' : ''),
+      ]
+    },
     selectDate(dateNumber) {
       const {
         currentYear,
@@ -114,13 +178,12 @@ export default {
         months,
         days,
         minDate,
-        daysOffset,
       } = this
 
       const currentTimestamp = new Date(
         currentYear,
         currentMonth,
-        dateNumber - daysOffset,
+        dateNumber,
       ).getTime()
 
       if (minDate.getTime() >= currentTimestamp) {
@@ -133,7 +196,10 @@ export default {
         return
       }
 
-      const dateString = `${currentYear}-${currentMonth + 1}-${dateNumber}`
+      const month = (currentMonth + 1) < 10 ? `0${currentMonth + 1}` : currentMonth
+      const dayValue = (dateNumber + 1) < 10 ? `0${dateNumber}` : dateNumber
+
+      const dateString = `${currentYear}-${month}-${dayValue}`
       const date = new Date(currentYear, currentMonth + 1, dateNumber)
 
       this.selected = dateNumber
@@ -144,7 +210,7 @@ export default {
       })
     },
     calculate() {
-      const currentDate = new Date()
+      const { date: currentDate } = this
 
       this.currentMonth = currentDate.getMonth()
       this.currentYear = currentDate.getFullYear()
@@ -170,29 +236,62 @@ export default {
 
 <style lang="less" scoped>
 .datepicker {
-  .option {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 10px;
+  .options-wrap {
+    &, .icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .icon-side {
+      display: flex;
+      align-items: center;
+      margin: 0 30px;
+      user-select: none;
+    }
 
     .icon {
-      font-size: 1.5em;
-      color: #15191c;
-      display: none;
+      margin: 0 10px;
+      font-size: 1.45em;
+      background: var(--color-bg-dark);
+      border-radius: 50%;
+
+      width: 50px;
+      height: 50px;
+
+      color: #fff;
+      cursor: pointer;
+
+      transform: scale(1);
+      transition: all .15s;
+
+      &.month-icon {
+        width: 40px;
+        height: 40px;
+      }
+
+      &:hover {
+        transform: scale(1.1);
+      }
     }
 
-    .value {
-      margin: 0 20px;
-    }
+    .option {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
 
-    &.month .value {
-      font-size: 1.3em;
-    }
+      .value {
+        margin: 0 20px;
+      }
 
-    &.year .value {
-      font-size: 1.7em;
+      &.month .value {
+        font-size: 1.3em;
+      }
+
+      &.year .value {
+        font-size: 1.7em;
+      }
     }
   }
 
@@ -201,6 +300,30 @@ export default {
     grid-template-columns: repeat(7, 1fr);
     grid-row-gap: 20px;
     padding: 10px 40px;
+
+    .day, .header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      padding: 20px;
+
+      width: 50px;
+      height: 50px;
+      margin: 0 auto;
+
+      &.bordered-day {
+        border: 3px solid #3b42a2;
+      }
+
+      &.green-day {
+        border: 2px solid #00ff87;
+      }
+
+      &.gray-day {
+        background: #1e2329;
+      }
+    }
 
     .day {
       cursor: pointer;
@@ -218,27 +341,12 @@ export default {
         cursor: default;
       }
 
+      &.unactive {
+        opacity: 0;
+        visibility: hidden;
+      }
+
       transition: all .3s;
-    }
-
-    .day, .header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 50%;
-      padding: 20px;
-
-      width: 50px;
-      height: 50px;
-      margin: 0 auto;
-
-      &.green-day {
-        border: 2px solid #00ff87;
-      }
-
-      &.gray-day {
-        background: #1e2329;
-      }
     }
   }
 

@@ -891,19 +891,19 @@ export default class GroupsController {
         }
 
         if (scheduleClassData !== null) {
-          if (!scheduleClassData.denum) {
-            scheduleClassData.denum = {
+          if (!scheduleClassData.denom) {
+            scheduleClassData.denom = {
               subgroups: [],
             }
           }
 
-          if (!scheduleClassData.denum.subgroups) {
-            scheduleClassData.denum = {
+          if (!scheduleClassData.denom.subgroups) {
+            scheduleClassData.denom = {
               subgroups: [],
             }
           }
 
-          scheduleClassData.denum.subgroups.push(classData)
+          scheduleClassData.denom.subgroups.push(classData)
 
           return classes.rewriteItem({
             day,

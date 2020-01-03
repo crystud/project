@@ -115,6 +115,11 @@ const routes = [
         name: 'classes',
         component: () => import('@/views/Classes'),
       },
+      {
+        path: '/class/:classID',
+        name: 'class',
+        component: () => import('@/views/Class'),
+      },
     ],
   },
 ]

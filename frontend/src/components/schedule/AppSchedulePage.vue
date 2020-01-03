@@ -71,7 +71,7 @@ export default {
 .schedule {
   .sections {
     display: grid;
-    grid-template-columns: 2fr 3fr;
+    grid-template-columns: 1fr 3fr;
     grid-gap: 20px;
 
     @media screen and (max-width: 1400px) {

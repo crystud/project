@@ -25,15 +25,12 @@
             ></app-class-item>
           </div>
 
-          <div class="add-class">
+          <div class="add-class" @click="setCreating(data.day)">
             <span class="icon">
               <font-awesome-icon icon="plus"></font-awesome-icon>
             </span>
 
-            <span
-              class="text"
-              @click="setCreating(data.day)"
-            >Добавити пару</span>
+            <span class="text">Добавити пару</span>
           </div>
         </div>
       </div>

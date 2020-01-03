@@ -17,7 +17,7 @@ export default class ScheduleController {
         classID,
         timetableID,
         roomID,
-        isNumerator = null,
+        type: isNumerator = null,
       } = data
 
       const timetableData = await Timetable.findOne({
@@ -668,11 +668,13 @@ export default class ScheduleController {
           as: 'class',
           where: {
             subgroupID,
+            subgroups: 1,
           },
         },
         {
           model: Timetable,
           as: 'timetable',
+          required: true,
           where: {
             order,
           },
@@ -711,6 +713,7 @@ export default class ScheduleController {
           as: 'class',
           where: {
             groupID,
+            subgroups: 0,
           },
         },
         {

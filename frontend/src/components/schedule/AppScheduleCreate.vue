@@ -9,6 +9,7 @@
           { label: 'Знаменник', value: 'denominator' },
         ]"
         @change="(val) => type = val"
+        :defaultValue="null"
       ></app-radio-choice>
 
       <div class="creating-day">

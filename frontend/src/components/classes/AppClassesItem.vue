@@ -1,7 +1,7 @@
 <template>
   <div class="class">
     <div class="name">
-      {{data.name}}
+      <router-link :to="`/class/${data.id}`">{{data.name}}</router-link>
     </div>
 
     <div class="additional-info">

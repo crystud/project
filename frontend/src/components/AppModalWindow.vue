@@ -6,7 +6,7 @@
           <slot name="header"></slot>
         </div>
 
-        <div class="close" @click="$emit('close')">
+        <div v-show="showClose" class="close" @click="$emit('close')">
           <font-awesome-icon
             icon="times"
             class="icon"
@@ -28,6 +28,11 @@ export default {
     show: {
       type: Boolean,
       required: true,
+    },
+    showClose: {
+      type: Boolean,
+      required: false,
+      default: () => true,
     },
   },
 }
@@ -72,6 +77,10 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+
+      .slot {
+        width: 100%;
+      }
 
       .close {
         width: 50px;

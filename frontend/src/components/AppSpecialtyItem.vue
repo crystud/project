@@ -385,7 +385,7 @@ export default {
 
     .group {
       background: #EBAC2D;
-      width: 50px;
+      min-width: 50px;
       height: 50px;
 
       color: #fff;
