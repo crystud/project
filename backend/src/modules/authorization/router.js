@@ -91,4 +91,23 @@ router.post('/refresh', checkSchema({
   return res.json(result)
 })
 
+router.post('/logOut', checkSchema({
+  authorization: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'token is missing',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({ errors: errors.array() })
+  }
+
+  const result = await Controller.logOut(req.body)
+
+  return res.json(result)
+})
+
 export default router
