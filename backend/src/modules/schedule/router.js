@@ -84,7 +84,18 @@ router.post('/create', checkRoles(['admin']), checkSchema({
 })
 
 router.post('/day', checkRoles(['admin', 'teacher', 'student']), checkSchema({
+  studentID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid student ID provided',
+      options: { min: 1 },
+    },
+    notEmpty: {
+      errorMessage: 'No stundet ID provided',
+    },
+  },
   day: {
+    in: 'body',
     isInt: {
       errorMessage: 'Invalid day',
       options: {
@@ -97,6 +108,7 @@ router.post('/day', checkRoles(['admin', 'teacher', 'student']), checkSchema({
     },
   },
   groupID: {
+    in: 'body',
     isInt: {
       errorMessage: 'Invalid group id',
       options: {
@@ -123,6 +135,7 @@ router.post('/day', checkRoles(['admin', 'teacher', 'student']), checkSchema({
 
 router.post('/week', checkRoles(['admin', 'teacher', 'student']), checkSchema({
   groupID: {
+    in: 'body',
     isInt: {
       errorMessage: 'Invalid group id',
       options: {
@@ -131,6 +144,18 @@ router.post('/week', checkRoles(['admin', 'teacher', 'student']), checkSchema({
     },
     notEmpty: {
       errorMessage: 'No group id provided',
+    },
+  },
+  studentID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid student id provided',
+      options: {
+        min: 1,
+      },
+    },
+    notEmpty: {
+      errorMessage: 'No student id provided',
     },
   },
 }), async (req, res) => {

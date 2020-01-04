@@ -2,6 +2,7 @@ import Schedule from '../../models/schedule'
 import Timetable from '../../models/timetable'
 import Classes from '../../models/classes'
 import Groups from '../../models/groups'
+import SubgroupsStudents from '../../models/subgroups_students'
 
 export default class ScheduleController {
   static async createSchedule(data) {
@@ -101,7 +102,15 @@ export default class ScheduleController {
     }
   }
 
-  static async getDaySchedule({ groupID, day }) {
+  static async getDaySchedule(data) {
+    const {
+      groupID,
+      day,
+      studentID,
+    } = data
+
+    let { userSubgroups } = data
+
     const errors = []
 
     try {
@@ -119,7 +128,16 @@ export default class ScheduleController {
         return { errors }
       }
 
-      const schedule = await Schedule.findAll({
+      if (!userSubgroups) {
+        userSubgroups = await SubgroupsStudents.findAll({
+          attributes: ['subgroupID'],
+          where: {
+            studentID,
+          },
+        })
+      }
+
+      const scheduleList = await Schedule.findAll({
         where: { day },
         include: [
           {
@@ -143,6 +161,56 @@ export default class ScheduleController {
         ],
       })
 
+      const schedule = []
+
+      scheduleList.forEach((itemRaw) => {
+        const item = itemRaw.toJSON()
+        const {
+          subgroups,
+          subgroupID,
+          type,
+          timetable: { order },
+        } = item
+
+        if (subgroups) {
+          let isUserSubgroup = false
+
+          userSubgroups.forEach(({ subgroupID: userSubgroupItem }) => {
+            if (userSubgroupItem === subgroupID) {
+              isUserSubgroup = true
+            }
+          })
+
+          if (!isUserSubgroup) {
+            return
+          }
+        }
+
+        if (!type) {
+          schedule[order - 1] = item
+        } else {
+          if (!schedule[order - 1]) {
+            schedule[order - 1] = [item]
+          }
+
+          let typeConflicts = false
+
+          schedule[order - 1].forEach(({ type: timeType }) => {
+            if (timeType !== type) {
+              typeConflicts = true
+            }
+          })
+
+          if (typeConflicts) {
+            schedule[order - 1].push(item)
+
+            schedule[order - 1].sort((a, b) => a.type < b.type)
+          } else {
+            console.log('conflict...')
+          }
+        }
+      })
+
       return {
         fetched: true,
         schedule,
@@ -154,7 +222,7 @@ export default class ScheduleController {
     }
   }
 
-  static async getWeekSchedule({ groupID }) {
+  static async getWeekSchedule({ groupID, studentID }) {
     const errors = []
 
     try {
@@ -172,43 +240,14 @@ export default class ScheduleController {
         return { errors }
       }
 
-      const schedule = await Schedule.findAll({
-        order: [
-          [
-            {
-              model: Timetable,
-              as: 'timetable',
-            },
-            'order',
-          ],
-        ],
-        include: [
-          {
-            model: Classes,
-            as: 'class',
-            where: { groupID },
-          },
-          {
-            model: Timetable,
-            as: 'timetable',
-          },
-        ],
-      })
-
-      const days = []
-
-      schedule.forEach((item) => {
-        const { day } = item
-
-        if (!days[day]) {
-          days[day] = {
-            day,
-            classes: [],
-          }
-        }
-
-        days[day].classes.push(item)
-      })
+      const days = await Promise.all([
+        this.getDaySchedule({ groupID, studentID, day: 1 }),
+        this.getDaySchedule({ groupID, studentID, day: 2 }),
+        this.getDaySchedule({ groupID, studentID, day: 3 }),
+        this.getDaySchedule({ groupID, studentID, day: 4 }),
+        this.getDaySchedule({ groupID, studentID, day: 5 }),
+        this.getDaySchedule({ groupID, studentID, day: 6 }),
+      ])
 
       return {
         fetched: true,

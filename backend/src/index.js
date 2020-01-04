@@ -18,6 +18,7 @@ import classes from './modules/classes'
 import scoringSystems from './modules/scoringSystems'
 import users from './modules/users'
 import subgroups from './modules/subgroups'
+import schedule from './modules/schedule'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -49,6 +50,7 @@ classes(app)
 scoringSystems(app)
 users(app)
 subgroups(app)
+schedule(app)
 department(app)
 
 app.listen(port)
