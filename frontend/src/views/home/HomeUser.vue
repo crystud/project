@@ -1,5 +1,5 @@
 <template>
-  <div class="home-teacher">
+  <div class="home-user">
     <app-card>А тут новини коледжу, типу завтра скорочені пари</app-card>
   </div>
 </template>
@@ -16,7 +16,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.home-teacher {
+.home-user {
   .app-card {
     padding: 20px;
     color: #fff;

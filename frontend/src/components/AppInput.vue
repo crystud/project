@@ -3,6 +3,7 @@
   <input
       :type="type"
       :placeholder="name"
+      :value="value"
       @input="$emit('input', $event.target.value)"
   >
 

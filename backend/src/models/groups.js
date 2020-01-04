@@ -30,4 +30,9 @@ Groups.belongsTo(Specialty, {
   as: 'specialty',
 })
 
+Specialty.hasMany(Groups, {
+  foreignKey: 'specialtyID',
+  as: 'groups',
+})
+
 export default Groups

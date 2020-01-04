@@ -24,8 +24,8 @@ Departments.init({
   modelName: 'departments',
 })
 
-Departments.hasOne(Teachers, {
-  foreignKey: 'id',
+Departments.belongsTo(Teachers, {
+  foreignKey: 'leaderID',
   as: 'leader',
 })
 

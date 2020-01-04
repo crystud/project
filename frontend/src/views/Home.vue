@@ -20,7 +20,7 @@
       >{{ localization.role[role] }}</div>
     </div>
 
-    <div v-if="this.roles.includes('student')" class="stats">
+    <div v-if="this.roles.includes('student') && studentStatistics" class="stats">
       <div class="item">
         <div class="icon">
           <font-awesome-icon icon="chart-line" />
@@ -30,7 +30,7 @@
         </div>
 
         <div class="value">
-          <div class="number">4.945</div>
+          <div class="number">{{studentStatistics.avgMark}}</div>
           <div class="title">Рейтинг</div>
         </div>
       </div>
@@ -58,7 +58,8 @@
     <div class="menu">
       <app-home-link role="user" link="home">Домівка користувача</app-home-link>
       <app-home-link role="student" link="homeStudent">Домівка студента</app-home-link>
-      <app-home-link role="teacher" link="homeTeacher">Домівка студента</app-home-link>
+      <app-home-link role="teacher" link="homeTeacher">Домівка вчителя</app-home-link>
+      <app-home-link role="admin" link="departments">Структура коледжу</app-home-link>
     </div>
   </div>
 

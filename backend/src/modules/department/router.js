@@ -69,6 +69,31 @@ router.post('/edit', checkSchema({
   return res.json(result)
 })
 
+router.post('/get', checkSchema({
+  departmentID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid department id provided',
+      options: { min: 1 },
+    },
+    notEmpty: {
+      errorMessage: 'No department id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const department = await Controller.get(req.body)
+
+  return res.json(department)
+})
+
 router.post('/getAll', async (req, res) => {
   const departments = await Controller.getAll()
 

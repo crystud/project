@@ -173,6 +173,7 @@ module.exports = {
       },
       name: Sequelize.TEXT,
       coefficient: Sequelize.FLOAT,
+      scoringSystemID: Sequelize.SMALLINT,
     }, { transaction: t }),
 
     queryInterface.createTable('subjects', {
