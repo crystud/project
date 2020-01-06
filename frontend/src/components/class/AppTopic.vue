@@ -1,18 +1,18 @@
 <template>
   <div class="topic">
     <div class="date">
-      <div class="day">21/11</div>
-      <div class="hours">2 години</div>
+      <div class="day">{{date}}</div>
+      <div class="hours" style="opacity: .1">2 години</div>
     </div>
 
-    <div class="info" :class="Math.random() > 0.5 ? 'active-topic' : ''">
+    <div class="info" :class="!isPassed ? 'active-topic' : ''">
       <div>
         <div class="name">
-          Тема: бло бло бло бло
+          Тема: {{lesson.topic}}
         </div>
 
         <div class="homework">
-          Домашнє завдання: бла бла бла бла
+          Домашнє завдання: {{lesson.home_work}}
         </div>
       </div>
 
@@ -20,11 +20,7 @@
         <font-awesome-icon
           icon="edit"
           class="icon edit"
-        ></font-awesome-icon>
-
-        <font-awesome-icon
-          icon="trash"
-          class="icon trash"
+          @click="$emit('edit', lesson)"
         ></font-awesome-icon>
       </div>
     </div>
@@ -34,6 +30,49 @@
 <script>
 export default {
   name: 'AppTopic.vue',
+  data() {
+    return {
+      date: '',
+      isPassed: false,
+    }
+  },
+  props: {
+    lesson: {
+      type: Object,
+      required: true,
+    },
+  },
+  watch: {
+    lesson() {
+      this.calculateDate()
+    },
+  },
+  methods: {
+    calculateDate() {
+      const { date } = this.lesson
+
+      const dateTime = new Date(date)
+      const currentTime = new Date()
+
+      if (currentTime > dateTime) {
+        this.isPassed = true
+      }
+
+      if (!dateTime) {
+        this.date = 'Invalid date'
+
+        return
+      }
+
+      const day = dateTime.getDate()
+      const month = dateTime.getMonth() + 1
+
+      this.date = `${day < 10 ? `0${day}` : day}/${month < 10 ? `0${month}` : month}`
+    },
+  },
+  created() {
+    this.calculateDate()
+  },
 }
 </script>
 
@@ -85,12 +124,12 @@ export default {
 
     .actions {
       display: flex;
+      justify-content: flex-end;
+
+      .edit { color: var(--color-font-dark) }
 
       .icon {
-        margin-left: 10px;
-
-        &.trash { color: #f44 }
-        &.edit { color: var(--color-font-dark) }
+        cursor: pointer;
       }
     }
 

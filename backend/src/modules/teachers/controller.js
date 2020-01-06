@@ -555,11 +555,7 @@ export default class TeachersController {
 
         const scheduleClassData = classes.getItem({ order, day })
 
-        console.log(scheduleClassData)
-
         if (scheduleClassData === null) {
-          console.log('denumerator subgroups ............................................')
-
           return classes.setItem({
             day,
             classData: {

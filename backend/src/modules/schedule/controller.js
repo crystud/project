@@ -171,7 +171,7 @@ export default class ScheduleController {
 
       return response
     } catch (e) {
-      console.log(e)
+      console.error(e)
 
       return { created: false }
     }
@@ -182,8 +182,6 @@ export default class ScheduleController {
       const deleted = await Schedule.destroy({
         where: { id },
       })
-
-      console.log(deleted)
 
       return { deleted }
     } catch (e) {
@@ -205,8 +203,6 @@ export default class ScheduleController {
         roomID,
         type: isNumerator = null,
       } = data
-
-      console.log('------------------------', isNumerator)
 
       const timetableData = await Timetable.findOne({
         where: {
@@ -301,15 +297,6 @@ export default class ScheduleController {
           return { errors }
         }
 
-        console.log({
-          day,
-          roomID,
-          timetableID,
-          classID,
-          type: isNumerator,
-          where: { id: scheduleID },
-        })
-
         const [edited] = await Schedule.update({
           day,
           roomID,
@@ -319,8 +306,6 @@ export default class ScheduleController {
         }, {
           where: { id: scheduleID },
         })
-
-        console.log(edited)
 
         return { edited: !!edited }
       }
@@ -369,7 +354,7 @@ export default class ScheduleController {
 
       return response
     } catch (e) {
-      console.log(e)
+      console.error(e)
 
       return { created: false }
     }

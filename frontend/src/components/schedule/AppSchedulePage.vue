@@ -5,7 +5,7 @@
         @change="groupChange"
       ></app-groups-select>
 
-      <div class="right">
+      <div class="right" v-if="groupID">
         <app-schedule-list class="row"></app-schedule-list>
         <app-hours-list class="row"></app-hours-list>
       </div>

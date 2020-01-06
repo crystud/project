@@ -3,11 +3,19 @@ import axios from '../tools/axios'
 export default {
   namespaced: true,
 
-  state: {},
+  state: {
+    student: {},
+  },
 
-  getters: {},
+  getters: {
+    student: state => state.student,
+  },
 
-  mutations: {},
+  mutations: {
+    setStudent(state, student) {
+      state.student = student
+    },
+  },
 
   actions: {
     async create(_, createData) {
@@ -26,17 +34,12 @@ export default {
       }
     },
     async edit(_, editData) {
-      console.log(editData)
-
       try {
         const {
           data: {
             errors,
-            edited,
           },
         } = await axios.post('/class/edit', editData)
-
-        console.log(errors, edited)
 
         if (errors) {
           return Promise.reject(errors)
@@ -46,6 +49,44 @@ export default {
       } catch (e) {
         return Promise.reject(e)
       }
+    },
+    async loadStudent({ commit }, data) {
+      const {
+        data: {
+          errors,
+          marks,
+          student,
+          classData,
+        },
+      } = await axios.post('/class/student', data)
+
+      if (!errors && marks) {
+        commit('setStudent', {
+          marks,
+          student,
+          classData,
+        })
+
+        return Promise.resolve()
+      }
+
+      commit('setStudent', {
+        marks: [],
+        student: {},
+      })
+
+      return Promise.reject()
+    },
+    async createMark(_, data) {
+      const {
+        data: { errors },
+      } = await axios.post('/class/setMark', data)
+
+      if (!errors) {
+        return Promise.resolve()
+      }
+
+      return Promise.reject()
     },
   },
 }

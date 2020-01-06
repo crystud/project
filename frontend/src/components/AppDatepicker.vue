@@ -193,6 +193,11 @@ export default {
       if (this.selected === dateNumber) {
         this.selected = 0
 
+        this.$emit('change', {
+          iso: '',
+          normalTime: '',
+        })
+
         return
       }
 

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="student-name">
-      Середній Олег Батькович / 02.12.2020
+      {{student.name}} / 02.12.2020
     </div>
 
     <div class="scoring-system">5-ти бальна система оцінювання</div>
@@ -54,6 +54,11 @@ export default {
     data: {
       type: Object,
       required: true,
+    },
+    student: {
+      type: Object,
+      required: true,
+      default: () => {},
     },
   },
 }

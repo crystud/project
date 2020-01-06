@@ -57,7 +57,7 @@ export default {
   justify-content: center;
   align-items: center;
 
-  transition: all .25s;
+  transition: all .15s;
 
   .body {
     min-width: 450px;
@@ -67,7 +67,7 @@ export default {
     color: #fff;
 
     transform: scale(0.9);
-    transition: all .3s .2s;
+    transition: all .15s .1s;
 
     .header {
       padding: 20px;

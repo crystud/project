@@ -1,6 +1,6 @@
 <template>
   <div class="chart" :style="`height: ${height}px`">
-    <div class="leftbar" @click="generate">
+    <div class="leftbar">
       <span
         class="value"
         :class="
@@ -26,34 +26,53 @@ export default {
       type: Number,
       required: true,
     },
+    leftBarKeys: {
+      type: Array,
+      required: true,
+    },
+    option: {
+      type: Function,
+      required: true,
+    },
+    chartData: {
+      type: Array,
+      required: true,
+      default: () => [],
+    },
   },
   data() {
     return {
-      chartData: [
-        { key: '1', value: 0.5 },
-      ],
-      leftBarKeys: ['75-100%', '50-75%', '25-50%', '0-25%'],
       ctx: null,
     }
   },
+  watch: {
+    chartData() {
+      this.generate()
+    },
+  },
   methods: {
     generate() {
-      this.chartData = []
-
-      // Generate random values
-      for (let i = 1; i < 20; i += 1) {
-        this.chartData.push({
-          key: `i${i}`,
-          value: Math.round(Math.random() * 100),
-        })
-      }
-
-      const { ctx, chartData, $refs: { canvas } } = this
+      const {
+        ctx,
+        chartData,
+        option,
+        $refs: { canvas },
+      } = this
 
       const canvasWidth = canvas.offsetWidth
 
       canvas.width = canvasWidth
       canvas.height = canvas.offsetHeight
+
+      const normalizedChartData = []
+
+      chartData.forEach((item) => {
+        const value = option(item)
+
+        if (value !== null) {
+          normalizedChartData.push(item)
+        }
+      })
 
       this.ctx.strokeStyle = '#1e2328'
 
@@ -66,8 +85,8 @@ export default {
         this.ctx.stroke()
       })
 
-      this.chartData.forEach((_, index) => {
-        const x = (canvas.width / this.chartData.length) * (index + 1)
+      normalizedChartData.forEach((_, index) => {
+        const x = (canvas.width / normalizedChartData.length) * (index + 1)
 
         this.ctx.beginPath()
         this.ctx.moveTo(x, 0)
@@ -83,17 +102,31 @@ export default {
       ctx.shadowOffsetX = 0
       ctx.shadowOffsetY = 0
 
-      chartData.forEach(({ value }, index, data) => {
-        const x = (canvasWidth / chartData.length) * index
+      let itemsPast = 0
+      let currentValue = 0
+
+      normalizedChartData.forEach((item, index, data) => {
+        const rawValue = option(item)
+
+        if (rawValue === null) return
+
+        itemsPast += 1
+        currentValue += rawValue
+
+        const value = currentValue / itemsPast
+
+        const x = (canvasWidth / normalizedChartData.length) * index
         const y = canvas.height - ((canvas.height / 100) * (value))
 
         if (!data[index + 1]) {
           return
         }
 
-        const { value: nextValue } = data[index + 1]
+        const nextValueRaw = option(data[index + 1])
 
-        const nextX = (canvasWidth / chartData.length) * (index + 1)
+        const nextValue = (currentValue + nextValueRaw) / (itemsPast + 1)
+
+        const nextX = (canvasWidth / normalizedChartData.length) * (index + 1)
         const nextY = canvas.height - ((canvas.height / 100) * (nextValue))
 
         ctx.beginPath()

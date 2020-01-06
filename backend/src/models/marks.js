@@ -42,4 +42,9 @@ Marks.belongsTo(Lessons, {
   foreignKey: 'lessonID',
 })
 
+Lessons.hasMany(Marks, {
+  foreignKey: 'lessonID',
+  as: 'marks',
+})
+
 export default Marks

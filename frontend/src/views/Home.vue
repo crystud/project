@@ -49,7 +49,7 @@
 
         <div class="value">
           <div class="number">
-            {{ studentStatistics.studentWasMissing }}
+            {{studentStatistics.studentWasMissing}}
           </div>
 
           <div class="title">Пропусків</div>
@@ -69,6 +69,7 @@
       <app-home-link role="admin" link="schedule">Розклад</app-home-link>
       <app-home-link role="admin" link="semesters">Семестри</app-home-link>
       <app-home-link role="admin" link="classes">Пари</app-home-link>
+      <app-home-link role="admin" link="subgroups">Підгрупи</app-home-link>
     </div>
   </div>
 

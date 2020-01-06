@@ -68,8 +68,6 @@ export default class HoursController {
         where: { id },
       })
 
-      console.log('deleted')
-
       return { deleted: !!deleted }
     } catch (e) {
       return { deleted: false }

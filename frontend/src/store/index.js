@@ -20,6 +20,8 @@ import classes from './classes'
 import schedule from './schedule'
 import timetables from './timetables'
 import rooms from './rooms'
+import lessons from './lessons'
+import subgroups from './subgroups'
 
 Vue.use(Vuex)
 
@@ -50,5 +52,7 @@ export default new Vuex.Store({
     schedule,
     timetables,
     rooms,
+    lessons,
+    subgroups,
   },
 })

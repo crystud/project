@@ -2,37 +2,52 @@
   <div class="create">
     <app-datepicker
       @change="updateDate"
+      :highlighthedDates="lessonDates"
     ></app-datepicker>
 
     <div class="date">Дата: {{date.normalTime}}</div>
 
-    <div class="text-field">
+    <div
+      class="text-field topic-field"
+      :class="!date.iso ? 'hidden-text-field' : ''"
+    >
       <div class="title">Тема</div>
 
       <textarea
         class="field"
         placeholder="Тема..."
+        v-model="topic"
+        :disabled="!date.iso"
       ></textarea>
     </div>
 
-    <div class="text-field">
+    <div
+      class="text-field homework-field"
+      :class="!date.iso ? 'hidden-text-field' : ''"
+    >
       <div class="title">Домашнє завдання</div>
 
       <textarea
         class="field"
-        placeholder="Тема..."
+        placeholder="Д/з..."
+        v-model="homeWork"
+        :disabled="!date.iso"
       ></textarea>
     </div>
 
     <div class="submit-btn">
       <app-button
         :isOkay="true"
+        @click="createLesson"
+        :disabled="!date.iso || !topic"
       >Створити тему</app-button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 import AppDatepicker from '../AppDatepicker.vue'
 import AppButton from '../AppButtonCustom.vue'
 
@@ -42,17 +57,76 @@ export default {
     AppDatepicker,
     AppButton,
   },
+  computed: {
+    ...mapGetters({
+      lessons: 'lessons/lessons',
+    }),
+  },
   data() {
     return {
+      homeWork: '',
+      lessonDates: [],
+      topic: '',
       date: {
         iso: '',
         normalTime: '',
       },
     }
   },
+  watch: {
+    lessons() {
+      this.lessonDates = []
+
+      this.lessons.forEach(({ date }) => {
+        const time = new Date(date)
+
+        const year = time.getFullYear()
+        const month = time.getMonth() + 1
+        const day = time.getDate()
+
+        this.lessonDates.push(`${year}/${month}/${day}`)
+      })
+    },
+  },
   methods: {
+    ...mapActions({
+      create: 'lessons/create',
+      getAll: 'lessons/getAll',
+    }),
     updateDate(date) {
       this.date = date
+    },
+    createLesson() {
+      const {
+        date: {
+          iso: date,
+        },
+        topic,
+        homeWork,
+        $route: {
+          params: {
+            classID,
+          },
+        },
+      } = this
+
+      if (!date || !topic || !classID) {
+        return
+      }
+
+      this.create({
+        date,
+        topic,
+        home_work: homeWork,
+        classID,
+      }).then(() => {
+        global.alert('added')
+
+        this.homeWork = ''
+        this.topic = ''
+
+        this.getAll(classID)
+      })
     },
   },
 }
@@ -83,6 +157,16 @@ export default {
   .text-field {
     margin-bottom: 15px;
     padding: 0 40px;
+    opacity: 1;
+    transition: all .5s;
+
+    &.homework-field {
+      transition-delay: .15s;
+    }
+
+    &.hidden-text-field {
+      opacity: .25;
+    }
 
     .placeholder {
       margin-bottom: 5px;

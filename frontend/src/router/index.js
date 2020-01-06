@@ -120,6 +120,11 @@ const routes = [
         name: 'class',
         component: () => import('@/views/Class'),
       },
+      {
+        path: '/subgroups',
+        name: 'subgroups',
+        component: () => import('@/views/Subgroups'),
+      },
     ],
   },
 ]

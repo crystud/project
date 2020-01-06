@@ -53,8 +53,8 @@ Groups.hasMany(Classes, {
   as: 'classes',
 })
 
-Classes.hasOne(Groups, {
-  foreignKey: 'id',
+Classes.belongsTo(Groups, {
+  foreignKey: 'groupID',
 })
 
 Classes.belongsTo(Subgroups, {

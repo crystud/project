@@ -1,5 +1,5 @@
 <template>
-  <div class="class">
+  <div class="class-page">
     <div class="header">
       <app-card>
         Журнал
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import AppCard from '../AppCard.vue'
 import AppRegisterSection from './AppRegisterSection.vue'
 import AppTopicsSection from './AppTopicsSection.vue'
@@ -33,17 +35,30 @@ export default {
     AppRegisterSection,
     AppTopicsSection,
   },
+  methods: {
+    ...mapActions({
+      fetchLessons: 'lessons/getAll',
+    }),
+  },
   data() {
     return {
-      currentSection: 1,
+      currentSection: 0,
       sections: ['Оцінки', 'Теми'],
+      loaded: false,
     }
+  },
+  created() {
+    const { $route: { params }, fetchLessons } = this
+
+    fetchLessons(params.classID).then(() => {
+      this.loaded = true
+    })
   },
 }
 </script>
 
 <style lang="less" scoped>
-.class {
+.class-page {
   .header {
     display: flex;
     justify-content: space-between;

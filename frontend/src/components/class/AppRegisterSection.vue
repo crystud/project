@@ -2,12 +2,13 @@
   <div class="section">
     <div class="info">
       <div>
-        <div class="name">Назва предмету</div>
-        <div class="teacher">Ім'я вчителя</div>
+        <div class="name">{{classData.subject.name}}</div>
+        <div class="teacher">{{classData.teacher.name}}</div>
       </div>
 
       <div>
-        230 годин / 106 годин залишилось
+        загально {{hours.totalLessons}} уроки /
+        {{hours.totalLessons - hours.passedLessons}} залишилось
       </div>
     </div>
 
@@ -18,14 +19,18 @@
         <div class="row">
           <div
             class="column"
-            v-for="(_, index) in 15"
+            v-for="(lesson, index) in lessons"
             v-bind:key="index"
+            :title="`
+              Тема: ${lesson.topic}.
+              д/з: ${lesson.home_work};
+            `"
           >
             <div
               class="date"
               :class="index === 5 ? 'selected' : ''"
             >
-              {{index+1}}/12
+              {{toTimeString(lesson.date)}}
             </div>
           </div>
         </div>
@@ -36,9 +41,9 @@
       <div class="students" ref="students">
         <div
           class="student"
-          v-for="(_, i) in 15"
+          v-for="(data, i) in studentsList"
           v-bind:key="i"
-          @click="showStudentInfo"
+          @click="showStudentInfo(data.id)"
         >
           <div class="number">
             {{i+1}}
@@ -47,59 +52,139 @@
           <div class="image"></div>
 
           <div class="data">
-            <div class="name">Середній Олег Батькович</div>
-            <div class="avg">Сер. бал: 4.34; пропуски: 1</div>
+            <div class="name">{{ data.name || data.student.name }}</div>
+            <div class="avg" v-show="false">Сер. бал: 4.34; пропуски: 1</div>
           </div>
         </div>
       </div>
 
       <div class="wrap" ref="register" v-on:scroll="registerScroll">
         <div class="marks">
-          <div class="row student-marks" v-for="(_, i) in 15" v-bind:key="i">
+          <div
+            class="row student-marks"
+            v-for="(student, i) in studentsList"
+            v-bind:key="i"
+          >
             <div
               class="column lesson"
-              v-for="(_, i) in 15"
+              v-for="(lesson, i) in lessons"
               v-bind:key="i"
-              @click="openContextWindow"
+              @click="openContextWindow(student, lessons[i])"
             >
-              <div class="mark">4</div>
-              <div class="missing">
-                <font-awesome-icon
-                  icon="times"
-                  class="icon"
-                ></font-awesome-icon>
-              </div>
+              <span
+                v-for="mark in student.marks"
+                v-bind:key="mark.id"
+              >
+                <span v-if="lesson.id === mark.lessonID">
+                  <div
+                    class="mark"
+                    v-if="mark.type === 'mark'"
+                  >{{mark.mark}}</div>
+
+                  <div
+                    class="missing"
+                    v-if="mark.type === 'miss'"
+                  >
+                    <font-awesome-icon
+                      icon="times"
+                      class="icon"
+                    ></font-awesome-icon>
+                  </div>
+                </span>
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <app-context-window
-      :contextWindow="contextWindow"
-    ></app-context-window>
-
     <app-student-modal-info
       :show="studentModal.show"
       @close="studentModal.show = false"
     ></app-student-modal-info>
+
+    <app-set-mark-modal
+      :student="setMarkModal.student"
+      :lesson="setMarkModal.lesson"
+      :show="setMarkModal.show"
+      @done="closeSetMark"
+    ></app-set-mark-modal>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 import AppStudentModalInfo from './AppStudentModalInfo.vue'
-import AppContextWindow from './AppContextWindow.vue'
+import AppSetMarkModal from './AppSetMarkModal.vue'
 
 export default {
   name: 'AppRegisterSection.vue',
   components: {
-    AppContextWindow,
     AppStudentModalInfo,
+    AppSetMarkModal,
+  },
+  computed: {
+    ...mapGetters({
+      students: 'lessons/students',
+      classData: 'lessons/class',
+      lessons: 'lessons/lessons',
+    }),
+  },
+  watch: {
+    students() {
+      this.studentsList = []
+
+      this.students.forEach((data) => {
+        const student = data.name ? data : data.student
+
+        student.marksList = []
+
+        this.lessons.forEach((lesson) => {
+          const { id: lessonID } = lesson
+
+          const localMarksList = []
+
+          student.marks.forEach((mark) => {
+            const { lessonID: markLessonID } = mark
+
+            if (lessonID === markLessonID) {
+              localMarksList.push(mark)
+            }
+          })
+
+          student.marksList.push(localMarksList)
+        })
+
+        this.studentsList.push(student)
+      })
+    },
+    lessons() {
+      this.hours.totalLessons = this.lessons.length
+
+      this.lessons.forEach(({ date }) => {
+        const time = new Date(date)
+
+        if (time < new Date()) {
+          this.hours.passedLessons += 1
+        }
+      })
+    },
   },
   data() {
     return {
       studentModal: {
         studentIndex: null,
+        show: false,
+      },
+      hours: {
+        totalLessons: 0,
+        passedLessons: 0,
+      },
+      studentsList: [],
+      setMarkModal: {
+        student: {},
+        lesson: {},
         show: false,
       },
       contextWindow: {
@@ -113,8 +198,31 @@ export default {
     }
   },
   methods: {
-    showStudentInfo() {
-      this.studentModal.show = true
+    ...mapActions({
+      loadStudentData: 'classes/loadStudent',
+    }),
+    closeSetMark() {
+      this.setMarkModal = {
+        lesson: {},
+        student: {},
+        show: false,
+      }
+    },
+    toTimeString(time) {
+      const date = new Date(time)
+
+      const day = date.getDate()
+      const month = date.getMonth() + 1
+
+      return `${day < 10 ? `0${day}` : day}/${month < 10 ? `0${month}` : month}`
+    },
+    showStudentInfo(studentID) {
+      this.loadStudentData({
+        studentID,
+        classID: this.$route.params.classID,
+      }).then(() => {
+        this.studentModal.show = true
+      })
     },
     registerScroll({
       target: { scrollTop, scrollLeft } = {},
@@ -124,39 +232,12 @@ export default {
 
       this.contextWindow.show = false
     },
-    openContextWindow(ev) {
-      const { register } = this.$refs
-
-      ev.path.forEach((item) => {
-        try {
-          const { className = '' } = item
-
-          const classNames = className.split(' ')
-
-          if (classNames.includes('column')) {
-            const {
-              offsetLeft,
-              offsetTop,
-              offsetWidth,
-              offsetHeight,
-            } = item
-
-            const xPosition = offsetLeft - register.scrollLeft + (offsetWidth / 1.25)
-            const yPosition = offsetTop - register.scrollTop + (offsetHeight / 1.25)
-
-            this.contextWindow.position.x = xPosition
-            this.contextWindow.position.y = yPosition
-
-            this.contextWindow.show = true
-          }
-
-          return true
-        } catch (e) {
-          console.error(e)
-
-          return false
-        }
-      })
+    openContextWindow(student, lesson) {
+      this.setMarkModal = {
+        student,
+        lesson,
+        show: true,
+      }
     },
   },
 }
