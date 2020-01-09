@@ -125,6 +125,11 @@ const routes = [
         name: 'subgroups',
         component: () => import('@/views/Subgroups'),
       },
+      {
+        path: '/bells',
+        name: 'bells',
+        component: () => import('@/views/Bells'),
+      },
     ],
   },
 ]

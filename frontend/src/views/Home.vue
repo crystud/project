@@ -67,6 +67,7 @@
       <app-home-link role="admin" link="subjectsManaging">Керування предметами</app-home-link>
       <app-home-link role="admin" link="shortenedDays">Скорочені дні</app-home-link>
       <app-home-link role="admin" link="schedule">Розклад</app-home-link>
+      <app-home-link role="admin" link="bells">Розклад дзвінків</app-home-link>
       <app-home-link role="admin" link="semesters">Семестри</app-home-link>
       <app-home-link role="admin" link="classes">Пари</app-home-link>
       <app-home-link role="admin" link="subgroups">Підгрупи</app-home-link>

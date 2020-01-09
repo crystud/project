@@ -28,8 +28,6 @@ export default {
         data: { fullTime, partTime },
       } = await axios.post('/timetable/getAll')
 
-      console.log(fullTime, partTime)
-
       commit('setFullTime', fullTime)
       commit('setPartTime', partTime)
 

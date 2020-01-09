@@ -63,7 +63,7 @@ export default class TimetableController {
         }),
 
         await Timetable.findAll({
-          where: { type: 'parttime' },
+          where: { type: 'pertime' },
           order,
         }),
       ])
