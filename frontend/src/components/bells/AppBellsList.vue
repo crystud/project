@@ -33,7 +33,10 @@
           })"
           @click="openEditTimetable(bell)"
         >
-          <div class="time">{{bell.start}}-{{bell.finish}}</div>
+          <div class="time">
+            #{{bell.order}},
+            {{bell.start}}-{{bell.finish}}
+          </div>
           <div class="duration">
             {{
               calculateClassDuration({
@@ -49,16 +52,15 @@
     <app-create-timetable
       :show="isCreatingTimetable"
       @cancel="isCreatingTimetable = false"
+      @done="isCreatingTimetable = false"
       :type="type"
     ></app-create-timetable>
 
     <app-edit-timetable
       :show="editing.isEditing"
       :timetable="editing.timetable"
-      @cancel="
-        editing.isEditing = false
-        editing.timetable = {}
-      "
+      @cancel="closeEditing"
+      @done="closeEditing"
     ></app-edit-timetable>
   </div>
 </template>
@@ -104,6 +106,12 @@ export default {
     },
   },
   methods: {
+    closeEditing() {
+      const { editing } = this
+
+      editing.isEditing = false
+      editing.timetable = {}
+    },
     getTime({ start, finish }) {
       const [startHours, startMinutes, startSeconds] = start.split(':')
       const [finishHours, finishMinutes, finishSeconds] = finish.split(':')

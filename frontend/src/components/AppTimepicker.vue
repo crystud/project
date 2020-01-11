@@ -11,9 +11,9 @@
       <app-select
         placeholder="Година"
         class="select"
-        :option="option => ({
-          label: option,
-          value: option,
+        :option="({ value }) => ({
+          label: value,
+          value,
         })"
         :options="hours.list"
         @change="
@@ -22,14 +22,15 @@
             sendValue()
           }
         "
+        :defaultValue="{ value: hours.default }"
       ></app-select>
 
       <app-select
         placeholder="Хвилина"
         class="select"
-        :option="option => ({
-          label: option,
-          value: option,
+        :option="({ value }) => ({
+          label: value,
+          value,
         })"
         :options="minutes.list"
         @change="
@@ -38,6 +39,7 @@
             sendValue()
           }
         "
+        :defaultValue="{ value: minutes.default }"
       ></app-select>
     </div>
   </div>
@@ -53,6 +55,9 @@ export default {
   },
   props: {
     placeholder: {
+      required: false,
+    },
+    default: {
       type: String,
       required: false,
     },
@@ -60,36 +65,68 @@ export default {
   data() {
     return {
       hours: {
-        selected: null,
+        selected: 0,
+        default: null,
         list: [],
       },
       minutes: {
-        selected: null,
+        selected: 0,
+        default: null,
         list: [],
       },
     }
   },
+  watch: {
+    default() {
+      const { default: defaultValue } = this
+
+      if (!defaultValue) {
+        this.minutes.default = null
+        this.hours.default = null
+
+        return
+      }
+
+      const [hours, minutes] = defaultValue.split(':')
+
+      this.hours.default = hours
+      this.minutes.default = minutes
+    },
+  },
   methods: {
     sendValue() {
       const {
-        hours: { selected: hour },
-        minutes: { selected: minute },
+        hours: {
+          selected: hour,
+          default: defaultHour,
+        },
+        minutes: {
+          selected: minute,
+          default: defaultMinute,
+        },
       } = this
 
-      this.$emit('change', { hour, minute })
+      this.$emit('change', {
+        hour: hour || defaultHour,
+        minute: minute || defaultMinute,
+      })
     },
   },
   created() {
     for (let i = 0; i < 24; i += 1) {
       const hour = i
 
-      this.hours.list.push(hour < 10 ? `0${hour}` : hour)
+      this.hours.list.push({
+        value: hour < 10 ? `0${hour}` : `${hour}`,
+      })
     }
 
     for (let i = 0; i < 60; i += 1) {
       const minute = i
 
-      this.minutes.list.push(minute < 10 ? `0${minute}` : minute)
+      this.minutes.list.push({
+        value: minute < 10 ? `0${minute}` : `${minute}`,
+      })
     }
   },
 }

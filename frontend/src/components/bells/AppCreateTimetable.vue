@@ -34,14 +34,16 @@
         <app-button
           :isOkay="true"
           class="btn"
-          @click="$emit('cancel')"
-        >Зберегти</app-button>
+          @click="create"
+        >Створити</app-button>
       </div>
     </div>
   </app-modal-window>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import AppModalWindow from '../AppModalWindow.vue'
 import AppInput from '../AppInput.vue'
 import AppButton from '../AppButtonCustom.vue'
@@ -67,6 +69,10 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      createTimetable: 'timetables/create',
+      fetchTimetables: 'timetables/fetch',
+    }),
     setStart({ hour, minute }) {
       this.start = {
         hour,
@@ -78,6 +84,38 @@ export default {
         hour,
         minute,
       }
+    },
+    create() {
+      const {
+        start: {
+          hour: startHour,
+          minute: startMinute,
+        },
+        finish: {
+          hour: finishHour,
+          minute: finishMinute,
+        },
+        type,
+        order,
+      } = this
+
+      const start = `${startHour}:${startMinute}:00`
+      const finish = `${finishHour}:${finishMinute}:00`
+
+      this.createTimetable({
+        isFullTime: type === 'fulltime',
+        order,
+        start,
+        finish,
+      }).then(async () => {
+        await this.fetchTimetables()
+
+        this.order = ''
+        this.start = {}
+        this.finish = {}
+
+        this.$emit('done')
+      }).catch(() => {})
     },
   },
   data() {

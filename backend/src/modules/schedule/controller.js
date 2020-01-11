@@ -711,9 +711,6 @@ export default class ScheduleController {
       ],
     })
 
-    // 1. check if subgroup has class at this time
-    // 2. check if subgroup's entire group has class at this time
-
     return { hasClass: groupHasClass }
   }
 }

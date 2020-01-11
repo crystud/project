@@ -1,15 +1,22 @@
 <template>
   <div class="classes-list">
-    <app-classes-create
-      :groupID="groupID"
-    ></app-classes-create>
+    <div
+      v-if="!groupID"
+      class="no-group-selected"
+    >Оберіть групу...</div>
 
-    <app-classes-item
-      v-for="(classData, index) in groupSubjects"
-      v-bind:key="index"
-      :data="classData"
-      :groupID="groupID"
-    ></app-classes-item>
+    <div v-if="groupID">
+      <app-classes-create
+        :groupID="groupID"
+      ></app-classes-create>
+
+      <app-classes-item
+        v-for="(classData, index) in groupSubjects"
+        v-bind:key="index"
+        :data="classData"
+        :groupID="groupID"
+      ></app-classes-item>
+    </div>
   </div>
 </template>
 
@@ -40,5 +47,10 @@ export default {
 </script>
 
 <style>
-
+.no-group-selected {
+  font-size: 1.2em;
+  text-align: center;
+  margin: 30px 0;
+  color: #fff;
+}
 </style>
