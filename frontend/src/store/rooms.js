@@ -18,15 +18,23 @@ export default {
   },
 
   actions: {
-    async create(_, hoursData) {
+    async create(_, roomData) {
       const {
-        data: {
-          created,
-          errors,
-        },
-      } = await axios.post('/hours/create', hoursData)
+        data: { errors },
+      } = await axios.post('/rooms/create', roomData)
 
-      if (errors || !created) {
+      if (errors) {
+        return Promise.reject(errors)
+      }
+
+      return Promise.resolve()
+    },
+    async edit(_, roomData) {
+      const {
+        data: { errors },
+      } = await axios.post('/rooms/edit', roomData)
+
+      if (errors) {
         return Promise.reject(errors)
       }
 
@@ -41,7 +49,9 @@ export default {
           },
         } = await axios.post('/rooms/getAll')
 
-        console.log(errors, rooms)
+        if (errors) {
+          return Promise.reject(errors)
+        }
 
         commit('setRooms', rooms)
 

@@ -52,11 +52,13 @@ export default {
 <style lang="less" scoped>
 .semesters {
   display: grid;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 2fr 5fr;
   grid-gap: 10px;
+
+  align-items: flex-start;
 }
 
-@media screen and (max-width: 1500px) {
+@media screen and (max-width: 1400px) {
   .semesters {
     grid-template-columns: 1fr;
   }

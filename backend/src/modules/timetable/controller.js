@@ -107,11 +107,38 @@ export default class TimetableController {
         timetableID: id,
       } = data
 
-      const { exists: timetableExists } = await this.timetableExists({
-        start,
-        finish,
-        order,
-        type,
+      const timetableExists = await Timetable.findOne({
+        where: {
+          [Op.or]: [
+            {
+              start: {
+                [Op.gte]: start,
+                [Op.lte]: finish,
+              },
+              id: {
+                [Op.ne]: id,
+              },
+              type,
+            },
+            {
+              finish: {
+                [Op.gte]: start,
+                [Op.lte]: finish,
+              },
+              id: {
+                [Op.ne]: id,
+              },
+              type,
+            },
+            {
+              order,
+              type,
+              id: {
+                [Op.ne]: id,
+              },
+            },
+          ],
+        },
       })
 
       if (timetableExists) {

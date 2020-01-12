@@ -7,22 +7,24 @@
     <div slot="header">Редагування дзвінка</div>
 
     <div slot="content">
-      <app-input
+      <app-custom-input
         type="number"
-        name="Порядок"
+        placeholder="Порядок"
         :value="order"
-        @input="newOrder => order = newOrder"
-      ></app-input>
+        @change="newOrder => order = newOrder"
+        class="line-input"
+      ></app-custom-input>
 
       <app-timepicker
         :default="start"
         placeholder="Початок"
-        @change="setStart"
+        @change="({ hour, minute }) => start = `${hour}:${minute}:00`"
       ></app-timepicker>
 
       <app-timepicker
         :default="finish"
         placeholder="Кінець"
+        @change="({ hour, minute }) => finish = `${hour}:${minute}:00`"
       ></app-timepicker>
 
       <div class="label">Тип: {{type === 'fulltime' ? 'Повні пари' : 'Скорочені пари' }}</div>
@@ -47,7 +49,7 @@
           <app-button
             :isOkay="true"
             class="btn"
-            @click="$emit('cancel')"
+            @click="save"
           >Зберегти</app-button>
         </div>
       </div>
@@ -58,7 +60,7 @@
 <script>
 import { mapActions } from 'vuex'
 
-import AppInput from '../AppInput.vue'
+import AppCustomInput from '../AppCustomInput.vue'
 import AppButton from '../AppButtonCustom.vue'
 import AppTimepicker from '../AppTimepicker.vue'
 import AppModalWindow from '../AppModalWindow.vue'
@@ -68,7 +70,7 @@ export default {
   components: {
     AppModalWindow,
     AppTimepicker,
-    AppInput,
+    AppCustomInput,
     AppButton,
   },
   props: {
@@ -87,10 +89,8 @@ export default {
     ...mapActions({
       submitDeleteTimetable: 'timetables/deleteTimetable',
       fetchTimetables: 'timetables/fetch',
+      edit: 'timetables/edit',
     }),
-    setStart(data) {
-      console.log(data)
-    },
     deleteTimetable() {
       const { timetableID } = this
 
@@ -99,6 +99,27 @@ export default {
 
         this.$emit('done')
       }).catch(() => {})
+    },
+    save() {
+      const {
+        start,
+        finish,
+        order,
+        type,
+        timetableID,
+      } = this
+
+      this.edit({
+        timetableID,
+        start,
+        finish,
+        order,
+        type,
+      }).then(async () => {
+        await this.fetchTimetables()
+
+        this.$emit('done')
+      })
     },
   },
   watch: {

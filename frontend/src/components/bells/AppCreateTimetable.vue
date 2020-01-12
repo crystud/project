@@ -3,11 +3,14 @@
     <div slot="header">Створення дзвінка</div>
 
     <div slot="content">
-      <app-input
+      <app-custom-input
         type="number"
         name="Порядок"
-        @input="newOrder => order = newOrder"
-      ></app-input>
+        placeholder="Порядок"
+        :isSuccess="!!order"
+        @change="newOrder => order = newOrder"
+        class="line-input"
+      ></app-custom-input>
 
       <app-timepicker
         placeholder="Початок"
@@ -18,11 +21,6 @@
         placeholder="Кінець"
         @change="setFinish"
       ></app-timepicker>
-
-      start: {{start.hour}}:{{start.minute}}
-      copy: {{finish.hour}}:{{finish.minute}}
-
-      type: {{type}}
 
       <div class="btns">
         <app-button
@@ -45,7 +43,7 @@
 import { mapActions } from 'vuex'
 
 import AppModalWindow from '../AppModalWindow.vue'
-import AppInput from '../AppInput.vue'
+import AppCustomInput from '../AppCustomInput.vue'
 import AppButton from '../AppButtonCustom.vue'
 import AppTimepicker from '../AppTimepicker.vue'
 
@@ -54,7 +52,7 @@ export default {
   components: {
     AppModalWindow,
     AppTimepicker,
-    AppInput,
+    AppCustomInput,
     AppButton,
   },
   props: {

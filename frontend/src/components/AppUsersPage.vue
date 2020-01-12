@@ -5,7 +5,7 @@
     </app-card>
 
     <app-card class="content">
-       <div v-if="!usersList.list.length" class="no-result">
+      <div v-if="!usersList.list.length" class="no-result">
         <span>Користувачів не знайдено...</span>
       </div>
 
@@ -18,6 +18,8 @@
           :address="address"
           :email="email"
           @updated="updateUsers"
+          @creatingTeacher="setTeacherCreating"
+          @creatingStudent="setStudentCreating"
         ></app-users-item>
       </div>
 
@@ -25,6 +27,30 @@
         <button class="btn-load-more" @click="loadMore">Загрузити ще...</button>
       </div>
     </app-card>
+
+    <app-create-teacher
+      :show="teacher.isCreating"
+      :teacher="teacher.data"
+      @done="modalDone"
+      @cancel="
+        teacher = {
+          isCreating: false,
+          data: {},
+        }
+      "
+    ></app-create-teacher>
+
+    <app-create-student
+      :show="student.isCreating"
+      :student="student.data"
+      @done="modalDone"
+      @cancel="
+        student = {
+          isCreating: false,
+          data: {},
+        }
+      "
+    ></app-create-student>
   </div>
 </template>
 
@@ -33,12 +59,16 @@ import { mapGetters, mapActions } from 'vuex'
 
 import AppCard from './AppCard.vue'
 import AppUsersItem from './AppUsersItem.vue'
+import AppCreateTeacher from './users/AppCreateTeacher.vue'
+import AppCreateStudent from './users/AppCreateStudent.vue'
 
 export default {
   name: 'UsersPage',
   components: {
     AppUsersItem,
     AppCard,
+    AppCreateTeacher,
+    AppCreateStudent,
   },
   computed: {
     ...mapGetters({
@@ -59,10 +89,43 @@ export default {
 
       this.loadUsers(this.currentPage)
     },
+    setTeacherCreating(data) {
+      this.teacher = {
+        isCreating: true,
+        data,
+      }
+    },
+    setStudentCreating(data) {
+      this.student = {
+        isCreating: true,
+        data,
+      }
+    },
+    async modalDone() {
+      const { loadUsers, currentPage } = this
+
+      await loadUsers(currentPage)
+
+      const noCreatingState = {
+        isCreating: false,
+        data: {},
+      }
+
+      this.student = noCreatingState
+      this.teacher = noCreatingState
+    },
   },
   data() {
     return {
       currentPage: 0,
+      teacher: {
+        isCreating: false,
+        data: {},
+      },
+      student: {
+        isCreating: false,
+        data: {},
+      },
     }
   },
   created() {
@@ -111,6 +174,15 @@ export default {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 5px 15px;
+
+    @media screen and (max-width: 1450px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media screen and (max-width: 1000px) {
+      grid-template-columns: repeat(1, 1fr);
+      grid-gap: 5px 0;
+    }
 
     margin-top: 20px;
   }

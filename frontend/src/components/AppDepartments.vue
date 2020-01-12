@@ -72,6 +72,18 @@ export default {
     grid-template-columns: repeat(4, 1fr);
     grid-auto-rows: 220px;
     grid-gap: 15px;
+
+    @media screen and (max-width: 1450px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media screen and (max-width: 1100px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media screen and (max-width: 1000px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
   }
 }
 </style>

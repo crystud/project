@@ -58,6 +58,11 @@ export default {
   grid-auto-rows: 46vh 46vh;
   grid-gap: 25px;
 
+  @media screen and (max-width: 1450px) {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 100vh;
+  }
+
   .section {
     background: #2C3339;
     border-radius: 5px;

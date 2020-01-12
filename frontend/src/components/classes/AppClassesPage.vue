@@ -4,6 +4,7 @@
       class="group-select"
       @change="setGroup"
     ></app-group-select>
+
     <app-classes-list :groupID="groupID"></app-classes-list>
   </div>
 </template>
@@ -50,5 +51,11 @@ export default {
   display: grid;
   grid-template-columns: 20% 80%;
   grid-gap: 20px;
+
+  @media screen and (max-width: 1450px) {
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+    grid-template-rows: 100px auto;
+  }
 }
 </style>

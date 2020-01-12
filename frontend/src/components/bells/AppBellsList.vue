@@ -32,11 +32,15 @@
             finish: bell.finish,
           })"
           @click="openEditTimetable(bell)"
+          :title="`
+            Початок: ${bell.start} \n
+            Кінець: ${bell.finish}
+          `"
         >
           <div class="time">
-            #{{bell.order}},
-            {{bell.start}}-{{bell.finish}}
+            #{{bell.order}}
           </div>
+
           <div class="duration">
             {{
               calculateClassDuration({
@@ -240,8 +244,16 @@ export default {
         transition: all .3s;
 
         .time {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          width: 100%;
+          height: 100%;
+
           color: #fff;
-          font-size: 1.3em;
+          font-size: 2em;
+          font-weight: 100;
         }
 
         .duration {

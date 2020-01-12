@@ -61,16 +61,17 @@
       <app-home-link role="user" link="home">Домівка користувача</app-home-link>
       <app-home-link role="student" link="homeStudent">Домівка студента</app-home-link>
       <app-home-link role="teacher" link="homeTeacher">Домівка вчителя</app-home-link>
-      <app-home-link role="admin" link="departments">Структура коледжу</app-home-link>
-      <app-home-link role="admin" link="users">Користувачі</app-home-link>
       <app-home-link role="admin" link="teachers">Вчителі</app-home-link>
-      <app-home-link role="admin" link="subjectsManaging">Керування предметами</app-home-link>
+      <app-home-link role="admin" link="departments">Структура коледжу</app-home-link>
       <app-home-link role="admin" link="shortenedDays">Скорочені дні</app-home-link>
+      <app-home-link role="admin" link="users">Користувачі</app-home-link>
+      <app-home-link role="admin" link="subjectsManaging">Керування предметами</app-home-link>
       <app-home-link role="admin" link="schedule">Розклад</app-home-link>
       <app-home-link role="admin" link="bells">Розклад дзвінків</app-home-link>
       <app-home-link role="admin" link="semesters">Семестри</app-home-link>
       <app-home-link role="admin" link="classes">Пари</app-home-link>
       <app-home-link role="admin" link="subgroups">Підгрупи</app-home-link>
+      <app-home-link role="admin" link="rooms">Аудиторії</app-home-link>
     </div>
   </div>
 
@@ -133,6 +134,9 @@ export default {
   .sidebar {
     grid-area: name;
     background: var(--color-bg-dark);
+
+    max-height: 100vh;
+    overflow: auto;
 
     .header {
       height: 15px;
@@ -243,6 +247,9 @@ export default {
   .content {
     padding: 20px 45px;
     position: relative;
+
+    max-height: 100vh;
+    overflow: auto;
   }
 }
 </style>

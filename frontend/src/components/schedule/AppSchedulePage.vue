@@ -7,7 +7,6 @@
 
       <div class="right" v-if="groupID">
         <app-schedule-list class="row"></app-schedule-list>
-        <app-hours-list class="row"></app-hours-list>
       </div>
     </div>
 
@@ -26,7 +25,6 @@
 import { mapGetters, mapActions } from 'vuex'
 
 import AppGroupsSelect from './AppGroupsSelect.vue'
-import AppHoursList from './AppHoursList.vue'
 import AppScheduleList from './AppScheduleList.vue'
 import AppScheduleEditing from './AppScheduleEditing.vue'
 import AppScheduleCreate from './AppScheduleCreate.vue'
@@ -36,7 +34,6 @@ export default {
   components: {
     AppGroupsSelect,
     AppScheduleList,
-    AppHoursList,
     AppScheduleEditing,
     AppScheduleCreate,
   },
@@ -71,7 +68,7 @@ export default {
 .schedule {
   .sections {
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 1fr 2fr;
     grid-gap: 20px;
 
     @media screen and (max-width: 1400px) {
@@ -79,10 +76,6 @@ export default {
     }
 
     .right {
-      display: grid;
-      grid-template-rows: 2fr 1fr;
-      grid-gap: 20px;
-
       .row {
         border-radius: 5px;
       }

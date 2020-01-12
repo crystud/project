@@ -130,6 +130,11 @@ const routes = [
         name: 'bells',
         component: () => import('@/views/Bells'),
       },
+      {
+        path: '/rooms',
+        name: 'rooms',
+        component: () => import('@/views/Rooms'),
+      },
     ],
   },
 ]

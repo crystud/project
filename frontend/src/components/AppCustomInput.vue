@@ -4,7 +4,7 @@
 
     <input
       :type="type"
-      :placeholder="placeholder"
+      placeholder="Введіть значення..."
       :class="isSuccess ? 'success-border' : 'fail-border'"
       :value="currentValue"
       @input="updateField"
@@ -26,6 +26,11 @@ export default {
 
       this.currentValue = value
       this.$emit('change', value)
+    },
+  },
+  watch: {
+    value() {
+      this.currentValue = this.value
     },
   },
   props: {
@@ -82,6 +87,16 @@ export default {
 
   .fail-border {
     border-color: #d43f3e;
+  }
+
+  &.line-input {
+    display: flex;
+    align-items: center;
+
+    input {
+      margin-left: 10px;
+      width: 180px;
+    }
   }
 }
 </style>

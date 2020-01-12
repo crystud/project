@@ -41,20 +41,20 @@
       <div class="subgroups-list">
         <app-list-item
           class="subgroup"
+          borderColor="#cf8d23"
+          @click="groupID ? showCreateSubgroup = true : null"
+        >
+          <span class="create-label">Створити підгрупу</span>
+        </app-list-item>
+
+        <app-list-item
+          class="subgroup"
           v-for="subgroup in (groupID ? subgroups : [])"
           v-bind:key="subgroup.id"
           :borderColor="subgroup.id === selectedSubgroup ? '#23c9cf' : 'transparent'"
           @click="selectSubgroup(subgroup.id)"
         >
           <span class="name">{{subgroup.name}}</span>
-        </app-list-item>
-
-        <app-list-item
-          class="subgroup"
-          borderColor="#cf8d23"
-          @click="groupID ? showCreateSubgroup = true : null"
-        >
-          <span class="create-label">Створити підгрупу</span>
         </app-list-item>
       </div>
     </div>
@@ -225,6 +225,14 @@ export default {
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 20px;
 
+    user-select: none;
+
+    @media screen and (max-width: 1450px) {
+      grid-template-columns: 1fr;
+      grid-gap: 0;
+      grid-row-gap: 20px;
+    }
+
     background: var(--color-bg-dark);
     padding: 15px;
     margin-bottom: 20px;
@@ -271,6 +279,12 @@ export default {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 15px;
+
+    @media screen and (max-width: 1450px) {
+      grid-template-columns: 1fr;
+      grid-gap: 0;
+      grid-row-gap: 10px;
+    }
 
     .subgroup {
       background: var(--color-bg-dark);
