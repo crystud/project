@@ -55,6 +55,39 @@ router.post('/create', checkSchema({
   return res.json(create)
 })
 
+router.post('/semesterStatistics', checkSchema({
+  semesterID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid semester id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No semester id provided',
+    },
+  },
+  studentID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid student id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No student id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const stats = await Controller.loadSemesterStatistics(req.body)
+
+  return res.json(stats)
+})
+
 router.post('/edit', checkRoles(['admin']), checkSchema({
   studentID: {
     in: 'body',

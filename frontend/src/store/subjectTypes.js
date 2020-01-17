@@ -55,8 +55,6 @@ export default {
         data: { errors },
       } = await axios.post('/subjectType/create', createData)
 
-      console.log(errors)
-
       if (errors) {
         return Promise.reject(errors)
       }

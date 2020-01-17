@@ -142,7 +142,7 @@ export default {
 
       this.createClassAction({
         teacherID,
-        groupID: isSubgroups ? null : groupID,
+        groupID,
         subgroupID: isSubgroups ? subgroupID : null,
         subgroups: isSubgroups ? 1 : 0,
         subjectID,

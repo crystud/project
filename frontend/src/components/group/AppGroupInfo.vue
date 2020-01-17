@@ -6,8 +6,8 @@
           <span class="name">{{name}}</span>
 
           <div class="additional-info">
-            <span>7 предметів</span>
-            <span>8 вчителів</span>
+            <span v-if="group.classes">Предметів - {{group.classes.length}}</span>
+            <span v-show="false">8 вчителів</span>
           </div>
         </div>
 
@@ -17,7 +17,7 @@
       </div>
 
       <div class="user-advanced-info">
-        <div class="item">
+        <div class="item" v-show="false">
           <font-awesome-icon icon="calendar-alt" class="icon"></font-awesome-icon>
           <span class="text">7 занять/тиждень</span>
         </div>
@@ -27,15 +27,22 @@
           <span class="text">{{specialty}}</span>
         </div>
 
-        <div class="item">
-          <font-awesome-icon icon="lightbulb" class="icon"></font-awesome-icon>
-          <span class="text">Середній бал 3.43</span>
-        </div>
+        <template v-if="statistics.groupAVG !== undefined">
+          <div class="item">
+            <font-awesome-icon icon="lightbulb" class="icon"></font-awesome-icon>
+            <span class="text">Середній бал {{statistics.groupAVG || '-'}}</span>
+          </div>
 
-        <div class="item">
-          <font-awesome-icon icon="user-times" class="icon"></font-awesome-icon>
-          <span class="text">Пропуски 132</span>
-        </div>
+          <div class="item">
+            <font-awesome-icon icon="user-times" class="icon"></font-awesome-icon>
+            <span class="text">Пропуски {{statistics.groupMissingsCount}}</span>
+          </div>
+
+          <div class="item">
+            <font-awesome-icon icon="marker" class="icon"></font-awesome-icon>
+            <span class="text">К-сть оцінок {{statistics.marksCount}}</span>
+          </div>
+        </template>
       </div>
 
       <div class="students">
@@ -45,9 +52,10 @@
         </div>
 
         <div
-          class="student"
-          v-for="(data, i) in students"
+          v-for="(data, i) in (statistics.students || students)"
           v-bind:key="i"
+          class="student"
+          @click="$router.push(`/student/${data.id}`)"
         >
           <div class="image-wrap">
             <div class="image good"></div>
@@ -55,9 +63,12 @@
 
           <div class="info">
             <div class="name">{{data.name}}</div>
-            <div class="success-data" v-show="false">
-              <span>Сер. бал 3.43</span>
-              <span>Проп. 13</span>
+            <div class="success-data">
+              <span
+                v-if="data.marks !== undefined"
+              >
+                Сер. бал {{data.avg ? data.avg.toFixed(3) : '-'}}
+              </span>
             </div>
           </div>
         </div>
@@ -67,8 +78,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'AppGroupInfo',
+  computed: {
+    ...mapGetters({
+      group: 'group/group',
+      statistics: 'group/statistics',
+    }),
+  },
   props: {
     name: {
       type: String,
@@ -88,9 +107,6 @@ export default {
 
 <style lang="less" scoped>
 .personal-info {
-  width: 350px;
-  margin-right: 10px;
-
   background: var(--color-bg-dark);
   border-radius: 4px;
 
@@ -178,7 +194,7 @@ export default {
     display: grid;
     grid-template-columns: 1fr;
 
-    @media screen and (max-width: 1500px) {
+    @media screen and (min-width: 1500px) {
       grid-template-columns: repeat(2, 1fr);
     }
 
@@ -187,6 +203,7 @@ export default {
       align-items: center;
 
       margin-bottom: 25px;
+      cursor: pointer;
 
       .image {
         width: 60px;

@@ -16,7 +16,10 @@
         </div>
       </div>
 
-      <div class="actions">
+      <div
+        class="actions"
+        v-if="!isPassed"
+      >
         <font-awesome-icon
           icon="edit"
           class="icon edit"

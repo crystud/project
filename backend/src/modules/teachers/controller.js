@@ -11,6 +11,7 @@ import Timetable from '../../models/timetable'
 import Rooms from '../../models/rooms'
 import Groups from '../../models/groups'
 import Subjects from '../../models/subjects'
+import Subgroups from '../../models/subgroups'
 
 export default class TeachersController {
   static async create(teacher) {
@@ -238,6 +239,10 @@ export default class TeachersController {
                   as: 'group',
                 },
                 {
+                  model: Subgroups,
+                  as: 'subgroup',
+                },
+                {
                   model: Subjects,
                   as: 'subject',
                 },
@@ -272,6 +277,14 @@ export default class TeachersController {
                   model: Groups,
                   as: 'group',
                 },
+                {
+                  model: Subgroups,
+                  as: 'subgroup',
+                },
+                {
+                  model: Subjects,
+                  as: 'subject',
+                },
               ],
             },
             {
@@ -302,6 +315,14 @@ export default class TeachersController {
                 {
                   model: Groups,
                   as: 'group',
+                },
+                {
+                  model: Subgroups,
+                  as: 'subgroup',
+                },
+                {
+                  model: Subjects,
+                  as: 'subject',
                 },
               ],
             },
@@ -334,6 +355,14 @@ export default class TeachersController {
                   model: Groups,
                   as: 'group',
                 },
+                {
+                  model: Subgroups,
+                  as: 'subgroup',
+                },
+                {
+                  model: Subjects,
+                  as: 'subject',
+                },
               ],
             },
             {
@@ -365,6 +394,14 @@ export default class TeachersController {
                   model: Groups,
                   as: 'group',
                 },
+                {
+                  model: Subgroups,
+                  as: 'subgroup',
+                },
+                {
+                  model: Subjects,
+                  as: 'subject',
+                },
               ],
             },
             {
@@ -395,6 +432,14 @@ export default class TeachersController {
                 {
                   model: Groups,
                   as: 'group',
+                },
+                {
+                  model: Subgroups,
+                  as: 'subgroup',
+                },
+                {
+                  model: Subjects,
+                  as: 'subject',
                 },
               ],
             },

@@ -1,7 +1,7 @@
 <template>
 <app-screen>
   <div class="sidebar">
-    <div class="header">
+    <div class="header" v-show="false">
       <font-awesome-icon icon="bars" />
     </div>
 
@@ -11,7 +11,12 @@
       <div class="name">{{ name }}</div>
     </div>
 
-    <button @click="exit">Покинути це недороблене місце</button>
+    <div class="logout">
+      <button
+        @click="exit"
+        class="btn"
+      >Вихід</button>
+    </div>
 
     <div class="roles">
       <div
@@ -146,11 +151,32 @@ export default {
       font-size: 24px;
     }
 
+    .logout {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+
+      .btn {
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+        color: var(--color-font-dark);
+        font-size: 1em;
+        font-family: 'Exo 2';
+        margin: 10px 0;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
     .user {
       margin-top: 30px;
       display: flex;
       flex-direction: column;
       align-items: center;
+
 
       .avatar {
         height: 130px;

@@ -38,6 +38,7 @@ export default class SpecialtysController {
     const {
       name,
       departmentID,
+      symbol,
       specialtyID: id,
     } = data
 
@@ -45,6 +46,7 @@ export default class SpecialtysController {
       const [update] = await Specialty.update({
         name,
         departmentID,
+        symbol,
       }, {
         where: { id },
       })

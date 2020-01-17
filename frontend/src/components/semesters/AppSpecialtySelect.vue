@@ -51,23 +51,15 @@ export default {
 
       if (!specialtyID) return
 
-      console.log(1)
-
       this.nullSemester()
-
-      console.log(2)
 
       this.offsetTop = target.offsetTop || 0
       this.height = target.clientHeight || 0
-
-      console.log(3)
 
       this.$emit('onSet', {
         specialtyID,
         name,
       })
-
-      console.log(4)
     },
   },
   created() {

@@ -34,7 +34,13 @@ export default {
 .subgroups {
   display: grid;
   grid-template-columns: 300px 1fr;
+  grid-auto-rows: max-content;
   grid-gap: 15px;
   align-items: flex-start;
+
+  @media screen and (max-width: 1100px) {
+    grid-template-columns: 1fr;
+    grid-gap: 15px 0;
+  }
 }
 </style>

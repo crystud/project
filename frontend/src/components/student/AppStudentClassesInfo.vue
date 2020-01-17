@@ -1,14 +1,19 @@
 <template>
   <div class="classes-info">
-    <div v-if="chartValues.length">
+    <div
+      v-if="
+        semesterStatistics.marks.length
+        && $route.params.studentID === semesterStatistics.studentID
+      "
+    >
       <div class="list-label">
-        Успішність студентів (%)
+        Успішність студента (у обраному семестрі)
       </div>
 
       <app-chart
         :height="300"
         :leftBarKeys="['75-100%', '50-75%', '25-50%', '0-25%']"
-        :chartData="chartValues"
+        :chartData="semesterStatistics.marks"
         :option="({ mark, isMiss, lesson: { class: classData } }) => {
           if (isMiss) return null
 
@@ -58,7 +63,6 @@
               v-for="(classData, i) in classes"
               v-bind:key="i"
               :classData="classData"
-              :showGroup="false"
               class="schedule-item"
             ></app-schedule-item>
           </div>
@@ -110,13 +114,14 @@ export default {
   computed: {
     ...mapGetters({
       semesters: 'semesters/list',
-      statistics: 'group/statistics',
-      group: 'group/group',
+      semesterStatistics: 'student/semesterStatistics',
+      student: 'student/student',
     }),
   },
   methods: {
     ...mapActions({
-      loadStatistics: 'group/loadStatistics',
+      loadStatistics: 'student/loadSemesterStatistics',
+      loadSemesters: 'semesters/loadSemesters',
     }),
     renderSchedule() {
       const { schedule } = this
@@ -135,14 +140,15 @@ export default {
       this.groupSchedule = schedule
     },
     async setSemester(semesterID) {
-      const { group: { id: groupID } } = this
+      const {
+        $route: {
+          params: { studentID },
+        },
+      } = this
 
       this.selectedSemester = semesterID
 
-      await this.loadStatistics({
-        groupID,
-        semesterID,
-      })
+      await this.loadStatistics({ studentID, semesterID })
     },
   },
   data() {
@@ -165,7 +171,8 @@ export default {
     AppScheduleItem,
     AppChart,
   },
-  created() {
+  async created() {
+    await this.loadSemesters(this.student.group.specialtyID)
     this.renderSchedule()
   },
 }
@@ -226,12 +233,12 @@ export default {
   .sections {
     margin-top: 10px;
 
+    .schedule-item {
+      margin-bottom: 10px;
+    }
+
     .schedule {
       padding: 0 10px;
-
-      .schedule-item {
-        margin-bottom: 10px;
-      }
 
       .week {
         .day {

@@ -1,128 +1,47 @@
 <template>
   <div class="classes-info">
-    <div class="list-label">
-      Успішність студентів %
-    </div>
+    <div v-if="false">
+      <div class="list-label">
+        Успішність студентів %
+      </div>
 
-    <app-chart
-      :height="300"
-    ></app-chart>
+      <app-chart
+        :height="300"
+      ></app-chart>
+    </div>
 
     <div class="sections">
       <div class="schedule">
         <div class="list-label">Розклад занять на тиждень</div>
 
-        <div class="week">
-          <div class="day">
-            <div class="list-label title">Понеділок</div>
-
-            <div class="class" v-for="i in 4" v-bind:key="i">
-              <span class="order">1</span>
-
-              <div class="info">
-                <span class="name">Name</span>
-
-                <div>
-                  <span class="icon-block">
-                    <font-awesome-icon
-                      icon="users"
-                      class="icon"
-                    ></font-awesome-icon>
-
-                    <span class="text">П-42</span>
-                  </span>
-
-                  <span class="icon-block">
-                    <font-awesome-icon
-                      icon="map-marker"
-                      class="icon"
-                    ></font-awesome-icon>
-
-                    <span class="text">128</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="day">
-            <div class="list-label title">Вівторок</div>
-
-            <div class="class" v-for="i in 4" v-bind:key="i">
-              <span class="order">1</span>
-
-              <div class="options-list">
-                <div class="option">
-                  <div class="list-label options-label">Чисельник</div>
-
-                  <div class="info no-padding">
-                    <span class="name">Name</span>
-
-                    <div>
-                      <span class="icon-block">
-                        <font-awesome-icon
-                          icon="users"
-                          class="icon"
-                        ></font-awesome-icon>
-
-                        <span class="text">П-42</span>
-                      </span>
-
-                      <span class="icon-block">
-                        <font-awesome-icon
-                          icon="map-marker"
-                          class="icon"
-                        ></font-awesome-icon>
-
-                        <span class="text">128</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="option">
-                  <div class="list-label options-label">Знаменник</div>
-
-                  <div class="info no-padding">
-                    <span class="name">Name</span>
-
-                    <div>
-                      <span class="icon-block">
-                        <font-awesome-icon
-                          icon="users"
-                          class="icon"
-                        ></font-awesome-icon>
-
-                        <span class="text">П-42</span>
-                      </span>
-
-                      <span class="icon-block">
-                        <font-awesome-icon
-                          icon="map-marker"
-                          class="icon"
-                        ></font-awesome-icon>
-
-                        <span class="text">128</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="subjects">
-        <div class="list-label">Предмети вчителя</div>
-
-        <div class="list">
-          <app-teacher-subject
-            v-for="i in 15"
+        <div
+          class="week"
+          v-if="teacher.schedule"
+        >
+          <div
+            v-for="({ classes }, i) in teacherSchedule"
             v-bind:key="i"
-            name="some subject name"
-            :coefficient="Math.random()"
-          ></app-teacher-subject>
+
+            class="day"
+          >
+            <div class="list-label title">{{weekDays[i]}}</div>
+
+            <div
+              v-if="!classes.length"
+              class="no-items"
+            >
+              В цей день пар немає
+            </div>
+
+            <app-schedule-item
+              v-for="(classData, i) in classes"
+              v-bind:key="i"
+
+              :classData="classData"
+              :showTeacher="false"
+              class="schedule-item"
+            ></app-schedule-item>
+          </div>
         </div>
       </div>
     </div>
@@ -130,14 +49,57 @@
 </template>
 
 <script>
-import AppTeacherSubject from '@/components/teacher/AppTeacherSubject.vue'
+import { mapGetters } from 'vuex'
+
 import AppChart from '@/components/AppChart.vue'
+import AppScheduleItem from '../schedule/AppScheduleItem.vue'
 
 export default {
   name: 'AppTeacherClassesInfo',
   components: {
-    AppTeacherSubject,
+    AppScheduleItem,
     AppChart,
+  },
+  computed: {
+    ...mapGetters({
+      teacher: 'teachers/teacher',
+    }),
+  },
+  watch: {
+    teacher() {
+      const { list: schedule } = this.teacher.schedule
+
+      schedule.forEach((dayItem, i) => {
+        const { classes, day } = dayItem
+
+        classes.sort((a, b) => {
+          console.log(a.order < b.order ? 1 : 0)
+
+          return a.order > b.order ? 1 : -1
+        })
+
+        schedule[i] = {
+          day,
+          classes,
+        }
+      })
+
+      this.teacherSchedule = schedule
+    },
+  },
+  data() {
+    return {
+      teacherSchedule: [],
+      weekDays: [
+        'Понеділок',
+        'Вівторок',
+        'Середа',
+        'Четвер',
+        'П\'ятниця',
+        'Субота',
+        'Неділя',
+      ],
+    }
   },
 }
 </script>
@@ -151,14 +113,14 @@ export default {
   }
 
   .sections {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 10px;
-
     margin-top: 10px;
 
     .schedule {
       padding: 0 10px;
+
+      .schedule-item {
+        margin-bottom: 10px;
+      }
 
       .week {
         .day {
@@ -230,6 +192,14 @@ export default {
           }
         }
       }
+    }
+
+    .no-items {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 1.3em;
+      color: #475868;
+      font-weight: 300;
     }
 
     .subjects {

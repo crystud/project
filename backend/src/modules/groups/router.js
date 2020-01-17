@@ -155,6 +155,15 @@ router.post('/statistics', checkSchema({
       errorMessage: 'No group id provided',
     },
   },
+  semesterID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid semester id',
+    },
+    notEmpty: {
+      errorMessage: 'No semester id provided',
+    },
+  },
 }), async (req, res) => {
   const errors = validationResult(req)
 

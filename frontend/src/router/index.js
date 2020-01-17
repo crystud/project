@@ -135,6 +135,11 @@ const routes = [
         name: 'rooms',
         component: () => import('@/views/Rooms'),
       },
+      {
+        path: '/student/:studentID',
+        name: 'student',
+        component: () => import('@/views/Student'),
+      },
     ],
   },
 ]

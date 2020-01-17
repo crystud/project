@@ -87,8 +87,6 @@ export default {
           data: { errors },
         } = await axios.post('/semester/edit', editData)
 
-        console.log(errors)
-
         if (!errors) {
           return Promise.resolve()
         }

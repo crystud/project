@@ -115,9 +115,7 @@ export default class SemestersController {
   static async getAll({ specialtyID }) {
     try {
       const semesters = await Semesters.findAll({
-        where: {
-          specialtyID,
-        },
+        where: { specialtyID },
         order: [['number']],
       })
 

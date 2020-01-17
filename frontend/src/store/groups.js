@@ -8,6 +8,7 @@ export default {
     subgroups: [],
     groupSubjects: [],
     availableSubjects: [],
+    statistics: {},
     group: {
       entry: '',
       graduation: '',
@@ -28,6 +29,7 @@ export default {
     subjects: state => state.groupSubjects,
     subgroups: state => state.subgroups,
     availableSubjects: state => state.availableSubjects,
+    statistics: state => state.statistics,
   },
 
   mutations: {
@@ -45,6 +47,9 @@ export default {
     },
     setGroupAvailableSubjects(state, subjects) {
       state.availableSubjects = subjects
+    },
+    setStatistics(state, statistics) {
+      state.statistics = statistics
     },
   },
 
@@ -70,6 +75,22 @@ export default {
       } catch (e) {
         return Promise.reject(e)
       }
+    },
+    async loadStatistics({ commit }, postData) {
+      const {
+        data: {
+          errors,
+          statistics,
+        },
+      } = await axios.post('/groups/statistics', postData)
+
+      commit('setStatistics', statistics || {})
+
+      if (!errors) {
+        return Promise.resolve()
+      }
+
+      return Promise.reject()
     },
     async loadSubgroups({ commit }, groupID) {
       try {
@@ -120,8 +141,6 @@ export default {
         const {
           data,
         } = await axios.post('/groups/create', createData)
-
-        console.log(data)
 
         if (!data.errors) {
           return Promise.resolve()

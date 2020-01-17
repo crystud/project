@@ -48,8 +48,6 @@ export default {
       store.commit('subjectTypes/setEditingItem', {}, { root: true })
     },
     openEdit(subjectTypeData) {
-      console.log(subjectTypeData)
-
       store.commit('subjectTypes/setEditingItem', subjectTypeData, { root: true })
     },
   },

@@ -138,8 +138,6 @@ export default {
         classID,
       } = this
 
-      console.log(type, timetableID, roomID, classID)
-
       this.createSchedule({
         day: this.creatingDay,
         type: type || null,

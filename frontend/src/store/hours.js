@@ -31,8 +31,6 @@ export default {
         },
       } = await axios.post('/hours/edit', hoursData)
 
-      console.log(errors)
-
       if (errors) {
         return Promise.reject(errors)
       }
@@ -45,8 +43,6 @@ export default {
           errors,
         },
       } = await axios.post('/hours/delete', hoursData)
-
-      console.log(errors)
 
       if (errors) {
         return Promise.reject(errors)

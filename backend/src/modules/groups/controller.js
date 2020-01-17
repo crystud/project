@@ -12,6 +12,7 @@ import Timetable from '../../models/timetable'
 import Teachers from '../../models/teachers'
 import SubjectTypes from '../../models/subject_types'
 import Subgroups from '../../models/subgroups'
+import ScoringSystems from '../../models/scoring_systems'
 
 export default class GroupsController {
   static async create(data) {
@@ -101,14 +102,12 @@ export default class GroupsController {
     }
   }
 
-  static getGroupName(data) {
-    const {
-      number,
-      entry,
-      symbol,
-      graduation,
-    } = data
-
+  static getGroupName({
+    number,
+    entry,
+    symbol,
+    graduation,
+  }) {
     const graduationTime = new Date(graduation)
     const entryTime = new Date(entry)
     const currentTime = new Date()
@@ -241,16 +240,27 @@ export default class GroupsController {
                 model: Classes,
                 as: 'class',
                 required: true,
+                where: { semesterID },
                 include: {
                   attributes: ['id'],
                   model: Subjects,
                   as: 'subject',
                   required: true,
-                  include: {
-                    model: Hours,
-                    as: 'hours',
-                    where: { semesterID },
-                  },
+                  include: [
+                    {
+                      model: Hours,
+                      as: 'hours',
+                      required: true,
+                    },
+                    {
+                      model: SubjectTypes,
+                      as: 'subjectTypeData',
+                      include: {
+                        model: ScoringSystems,
+                        as: 'scoring_system',
+                      },
+                    },
+                  ],
                 },
               },
             },
@@ -320,7 +330,7 @@ export default class GroupsController {
 
       info.groupAVG = +(info.marksValuesCount / info.marksCount).toFixed(5)
 
-      return info
+      return { statistics: info }
     } catch (e) {
       console.error(e)
 

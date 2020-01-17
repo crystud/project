@@ -38,8 +38,6 @@ export default {
         },
       } = await axios.post('/lessons/create', data)
 
-      console.log(errors)
-
       if (!errors) {
         return Promise.resolve()
       }
@@ -79,8 +77,6 @@ export default {
         },
       } = await axios.post('/lessons/delete', data)
 
-      console.log(errors)
-
       if (!errors) {
         return Promise.resolve()
       }
@@ -93,8 +89,6 @@ export default {
           errors,
         },
       } = await axios.post('/lessons/edit', data)
-
-      console.log(errors)
 
       if (!errors) {
         return Promise.resolve()

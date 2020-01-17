@@ -1,7 +1,5 @@
 <template>
   <div class="manage-department">
-    <app-card class="pagename">Інформація про відділення</app-card>
-
     <app-card class="content">
       <div class="header">
         <button class="btn-back" @click="$router.push({ name: 'departments' })">
@@ -19,7 +17,23 @@
         </div>
 
         <div class="specialtys-count">
-          Кількість спеціальностей: {{department.specialtys ? department.specialtys.length : ''}}
+          <div
+            class="edit"
+            @click="isEditing = true"
+          >
+            <font-awesome-icon
+              icon="edit"
+              class="icon"
+            ></font-awesome-icon>
+          </div>
+
+          <span>
+            Кількість спеціальностей: {{
+              department.specialtys ?
+                department.specialtys.length
+              : ''
+            }}
+          </span>
         </div>
       </div>
 
@@ -41,6 +55,16 @@
         ></app-create-specialty>
       </div>
     </app-card>
+
+    <app-edit-department
+      :show="isEditing"
+      :department="department"
+      @cancel="isEditing = false"
+      @done="
+        isEditing = false
+        loadDepartment($route.params.id)
+      "
+    ></app-edit-department>
   </div>
 </template>
 
@@ -51,12 +75,20 @@ import AppSpecialtyItem from './AppSpecialtyItem.vue'
 import AppCard from './AppCard.vue'
 import AppCreateSpecialty from './AppCreateSpecialty.vue'
 
+import AppEditDepartment from './department/AppEditDepartment.vue'
+
 export default {
   name: 'Department',
   components: {
     AppCard,
     AppSpecialtyItem,
     AppCreateSpecialty,
+    AppEditDepartment,
+  },
+  data() {
+    return {
+      isEditing: false,
+    }
   },
   computed: {
     ...mapGetters({
@@ -76,17 +108,6 @@ export default {
 
 <style lang="less" scoped>
 .manage-department {
-  width: 100%;
-  max-height: 100%;
-  overflow: auto;
-
-  display: block;
-
-  .pagename {
-    margin-bottom: 10px;
-    display: inline-block;
-  }
-
   .app-card {
     padding: 20px;
     color: #fff;
@@ -96,9 +117,32 @@ export default {
     width: 100%;
 
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: flex-end;
     padding: 15px;
+
+    .edit {
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+
+      color: var(--color-font-dark);
+      cursor: pointer;
+
+      font-size: .85em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+
+      transition: all .064s;
+
+      &:hover {
+        color: #fff;
+      }
+    }
   }
 
   .header {

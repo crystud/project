@@ -61,7 +61,15 @@ export default {
 
       return Promise.reject(errors)
     },
-    async get({ commit }, { subgroupID }) {
+    async get({ commit }, data) {
+      if (data === null) {
+        commit('setSubgroup', {})
+
+        return Promise.resolve()
+      }
+
+      const { subgroupID } = data
+
       const {
         data: {
           errors,

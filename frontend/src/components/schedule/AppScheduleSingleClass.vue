@@ -1,52 +1,62 @@
 <template>
-  <div class="class">
-    <span class="order">{{data.order}}</span>
+  <div>
+    <div
+      v-if="!data.subgroups"
+      class="class"
+    >
+      <span
+        class="order"
+        v-if="data.order"
+      >{{data.order}}</span>
 
-    <div class="info">
-      <span class="name">{{data.class ? data.class.subject.name : '-'}}</span>
+      <app-class-template
+        :showGroup="showGroup"
+        :showTeacher="showTeacher"
+        :showLocation="showLocation"
+        :data="data.class ? data : { class: data }"
+      ></app-class-template>
+    </div>
 
-      <div>
-        <span v-if="showGroup" class="icon-block">
-          <font-awesome-icon
-            icon="users"
-            class="icon"
-          ></font-awesome-icon>
+    <div
+      v-else-if="data.subgroups"
+      class="class"
+    >
+      <span
+        class="order"
+        v-if="data.order"
+      >{{data.order}}</span>
 
-          <!-- <span class="text"></span> -->
-        </span>
+      <div class="subgroup-body">
+        <span class="type">Підгрупи:</span>
 
-        <span
-          v-if="showTeacher"
-          @click="$router.push(`/teacher/${data.class.teacher.id}`)"
-          class="icon-block cursor-pointer"
+        <div
+          v-for="(subgroup, i) in data.subgroups"
+          v-bind:key="i"
         >
-          <font-awesome-icon
-            icon="user"
-            class="icon"
-          ></font-awesome-icon>
+          <div class="subgroup-name">
+            Підгрупа: {{subgroup.class.subgroup ? subgroup.class.subgroup.name : ''}}
+          </div>
 
-          <span
-            class="text"
-            :title="data.class.teacher.name"
-          >{{data.class.teacher.name | truncate(15) }}</span>
-        </span>
-
-        <span v-if="showLocation" class="icon-block">
-          <font-awesome-icon
-            icon="map-marker"
-            class="icon"
-          ></font-awesome-icon>
-
-          <span class="text">{{data.room.name}}</span>
-        </span>
+          <app-class-template
+            :showGroup="showGroup"
+            :showTeacher="showTeacher"
+            :showLocation="showLocation"
+            :data="subgroup"
+          ></app-class-template>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import AppClassTemplate from './AppClassTemplate.vue'
+
 export default {
   name: 'AppScheduleSingleClass',
+  components: {
+    AppClassTemplate,
+  },
   props: {
     data: {
       type: Object,
@@ -68,6 +78,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.subgroup-body {
+  padding: 5px 10px;
+}
 </style>

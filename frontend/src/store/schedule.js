@@ -41,8 +41,6 @@ export default {
       try {
         const { data: { errors } } = await axios.post('/schedule/edit', scheduleData)
 
-        console.log(errors)
-
         if (!errors) {
           return Promise.resolve()
         }
@@ -58,8 +56,6 @@ export default {
       try {
         const { data: { errors } } = await axios.post('/schedule/create', createData)
 
-        console.log('create schedule errors: ', errors)
-
         if (!errors) {
           return Promise.resolve()
         }
@@ -74,8 +70,6 @@ export default {
     async deleteSchedule(_, deleteData) {
       try {
         const { data: { errors } } = await axios.post('/schedule/delete', deleteData)
-
-        console.log('delete schedule errors: ', errors)
 
         if (!errors) {
           return Promise.resolve()

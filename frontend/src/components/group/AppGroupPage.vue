@@ -1,5 +1,5 @@
 <template>
-  <div class="teacher">
+  <div class="group">
     <div class="sections" v-if="loaded">
       <app-group-personal-info
         @onEdit="show = true"
@@ -15,14 +15,12 @@
     </div>
 
     <app-modal-window :show="show" @close="show = false">
-      <template v-slot:header>
-        <div class="edit-group-header">
-          <span class="group-name">П-42</span>
-          <span class="group-students">16 студентів</span>
-        </div>
-      </template>
+      <div slot="header" class="edit-group-header">
+        <span class="group-name">П-42</span>
+        <span class="group-students">16 студентів</span>
+      </div>
 
-      <template v-slot:content>
+      <div slot="content">
         <div>
           <span class="edit-title">Редагування групи</span>
 
@@ -54,7 +52,7 @@
             <button class="btn btn-change">Зберегти</button>
           </div>
         </div>
-      </template>
+      </div>
     </app-modal-window>
   </div>
 </template>
@@ -80,6 +78,7 @@ export default {
   methods: {
     ...mapActions({
       get: 'group/get',
+      loadSemesters: 'semesters/loadSemesters',
     }),
   },
   data() {
@@ -96,16 +95,17 @@ export default {
     AppInput,
     AppDatepicker,
   },
-  created() {
-    this.get(this.$route.params.id).then(() => {
-      this.loaded = true
-    })
+  async created() {
+    await this.get(this.$route.params.id)
+    await this.loadSemesters(this.group.specialtyID)
+
+    this.loaded = true
   },
 }
 </script>
 
-<style lang="less">
-.teacher {
+<style lang="less" scoped>
+.group {
   .header {
     color: #fff;
     padding: 10px;
@@ -162,7 +162,7 @@ export default {
   .sections {
     margin-top: 10px;
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 3fr 6fr;
     grid-gap: 20px;
 
     .classes-info {
@@ -175,10 +175,8 @@ export default {
     .personal-info {
       width: 100%;
     }
-  }
 
-  @media screen and (max-width: 1500px) {
-    .sections {
+    @media screen and (max-width: 1350px) {
       grid-template-columns: 1fr;
     }
   }

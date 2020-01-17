@@ -37,7 +37,6 @@ Subgroups.hasMany(SubgroupsStudents, {
 
 SubgroupsStudents.belongsTo(Students, {
   foreignKey: 'studentID',
-  as: 'studentData',
 })
 
 export default SubgroupsStudents

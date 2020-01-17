@@ -5,7 +5,7 @@
     <input
       :type="type"
       placeholder="Введіть значення..."
-      :class="isSuccess ? 'success-border' : 'fail-border'"
+      :class="success ? 'success-border' : 'fail-border'"
       :value="currentValue"
       @input="updateField"
     >
@@ -18,6 +18,7 @@ export default {
   data() {
     return {
       currentValue: this.value || '',
+      success: false,
     }
   },
   methods: {
@@ -31,6 +32,9 @@ export default {
   watch: {
     value() {
       this.currentValue = this.value
+    },
+    isSuccess() {
+      this.success = this.isSuccess
     },
   },
   props: {

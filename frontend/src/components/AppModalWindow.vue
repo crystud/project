@@ -61,6 +61,7 @@ export default {
 
   .body {
     min-width: 450px;
+    max-width: 80%;
     border-radius: 5px;
 
     background: var(--color-bg-dark);

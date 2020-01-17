@@ -25,6 +25,14 @@ Lessons.init({
   modelName: 'lessons',
 })
 
+Classes.belongsTo(Lessons, {
+  foreignKey: 'id',
+})
+
+Classes.hasMany(Lessons, {
+  foreignKey: 'id',
+})
+
 Lessons.belongsTo(Classes, {
   foreignKey: 'classID',
   as: 'class',

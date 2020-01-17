@@ -5,7 +5,10 @@
       @change="setGroup"
     ></app-group-select>
 
-    <app-classes-list :groupID="groupID"></app-classes-list>
+    <app-classes-list
+      :groupID="groupID"
+      class="app-classes-list"
+    ></app-classes-list>
   </div>
 </template>
 
@@ -49,13 +52,15 @@ export default {
 <style lang="less" scoped>
 .classes {
   display: grid;
-  grid-template-columns: 20% 80%;
+  grid-template-columns: 2fr 5fr;
   grid-gap: 20px;
 
   @media screen and (max-width: 1450px) {
-    grid-template-columns: 1fr;
-    align-items: flex-start;
-    grid-template-rows: 100px auto;
+    display: block;
+
+    .app-classes-list {
+      margin-top: 20px;
+    }
   }
 }
 </style>

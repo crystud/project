@@ -18,6 +18,11 @@
         </div>
 
         <div class="students-list" v-if="subgroup.group">
+          <div
+            class="no-students"
+            v-if="!subgroup.group.students.length"
+          >В групі немає студентів...</div>
+
           <app-list-item
             class="student"
             :class="checkUserInSubgroup(student.id) ? 'shadow' : ''"
@@ -114,6 +119,7 @@ export default {
       const { groupID } = this
 
       this.loadAll({ groupID })
+      this.loadSubgroup(null)
     },
   },
   methods: {
@@ -192,6 +198,12 @@ export default {
     opacity: .075;
   }
 
+  .no-students {
+    color: var(--color-font-dark);
+    font-size: 1.3em;
+    font-weight: 100;
+  }
+
   .header {
     display: flex;
     align-items: center;
@@ -226,12 +238,6 @@ export default {
     grid-gap: 20px;
 
     user-select: none;
-
-    @media screen and (max-width: 1450px) {
-      grid-template-columns: 1fr;
-      grid-gap: 0;
-      grid-row-gap: 20px;
-    }
 
     background: var(--color-bg-dark);
     padding: 15px;
@@ -280,19 +286,32 @@ export default {
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 15px;
 
-    @media screen and (max-width: 1450px) {
-      grid-template-columns: 1fr;
-      grid-gap: 0;
-      grid-row-gap: 10px;
-    }
-
     .subgroup {
       background: var(--color-bg-dark);
       cursor: pointer;
 
+      display: flex;
+      align-items: center;
+
       .create-label {
         color: var(--color-font-dark);
       }
+    }
+  }
+
+  @media screen and (max-width: 1450px) {
+    .subgroups-list,
+    .students-list {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media screen and (max-width: 1150px) {
+    .subgroups-list,
+    .students-list {
+      grid-template-columns: 1fr;
+      grid-gap: 0;
+      grid-row-gap: 10px;
     }
   }
 }

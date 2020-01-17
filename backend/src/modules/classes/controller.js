@@ -192,13 +192,9 @@ export default class ClassesController {
         mark: isMiss ? false : mark,
       })
 
-      if (!set) {
-        return { set: false }
-      }
-
       return {
-        set: true,
-        mark: set.dataValues,
+        set: !!set,
+        mark: set,
       }
     } catch (e) {
       console.error(e)
