@@ -115,7 +115,7 @@ export default {
       }).then(() => {
         this.isCreating = false
         this.loadSubjects()
-      }).catch(console.error)
+      })
     },
   },
 }

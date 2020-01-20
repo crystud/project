@@ -65,8 +65,6 @@ export default {
 
         return Promise.reject(errors)
       } catch (e) {
-        console.error(e)
-
         return Promise.reject()
       }
     },

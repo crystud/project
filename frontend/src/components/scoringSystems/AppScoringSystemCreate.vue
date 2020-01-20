@@ -120,7 +120,7 @@ export default {
         this.loadScoringSystems()
 
         this.isCreating = false
-      }).catch(console.error)
+      })
     },
   },
 }

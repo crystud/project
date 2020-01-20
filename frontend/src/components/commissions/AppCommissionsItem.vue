@@ -97,7 +97,7 @@ export default {
         this.inActions = false
 
         this.loadCommissions()
-      }).catch(console.error)
+      })
     },
   },
   props: {

@@ -147,8 +147,6 @@ export default {
       }).then(() => {
         this.setNoCreating()
         this.$emit('created')
-      }).catch((e) => {
-        console.error(e)
       })
     },
   },

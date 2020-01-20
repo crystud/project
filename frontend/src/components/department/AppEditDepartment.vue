@@ -105,7 +105,7 @@ export default {
         this.leaderID = null
 
         this.$emit('done')
-      }).catch(console.error)
+      })
     },
   },
   props: {

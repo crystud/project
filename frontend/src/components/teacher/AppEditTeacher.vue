@@ -109,7 +109,7 @@ export default {
         this.commission = null
 
         this.$emit('done')
-      }).catch(console.error)
+      })
     },
   },
   computed: {

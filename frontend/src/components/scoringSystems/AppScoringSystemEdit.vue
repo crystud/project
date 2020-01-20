@@ -127,7 +127,7 @@ export default {
         scoringSystemID,
       }).then(() => {
         this.$emit('edited')
-      }).catch(console.error)
+      })
     },
   },
 }
