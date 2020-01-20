@@ -29,8 +29,17 @@
         </div>
 
         <div class="confirm-btns">
-          <app-button class="btn btn-cancel" @click="isCreating = false">Скасувати</app-button>
-          <app-button class="btn btn-save" @click="create">Створити</app-button>
+          <app-button
+            class="btn"
+            :isOkay="false"
+            @click="isCreating = false"
+          >Скасувати</app-button>
+
+          <app-button
+            :isOkay="true"
+            class="btn"
+            @click="create"
+          >Створити</app-button>
         </div>
       </div>
 
@@ -46,7 +55,7 @@
 import { mapActions } from 'vuex'
 
 import AppInput from './AppInput.vue'
-import AppButton from './AppButton.vue'
+import AppButton from './AppButtonCustom.vue'
 
 export default {
   name: 'AppSpecialtyItem',
@@ -144,20 +153,7 @@ export default {
     justify-content: center;
 
     .btn {
-      padding: 10px 15px;
-      background: var(--color-bg-light);
-      color: var(--color-font-main);
       margin-right: 10px;
-
-      cursor: pointer;
-    }
-
-    .btn-save {
-      background: #2afe8e;
-    }
-
-    .btn-cancel {
-      background: #f76f40;
     }
   }
 

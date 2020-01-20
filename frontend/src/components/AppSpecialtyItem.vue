@@ -188,11 +188,6 @@ export default {
       required: true,
     },
   },
-  watch: {
-    groups() {
-      this.calculateData()
-    },
-  },
   methods: {
     ...mapActions({
       loadDepartments: 'departments/loadDepartments',
@@ -280,6 +275,23 @@ export default {
 
         this.studentsCount += students.length || 0
       })
+    },
+  },
+  watch: {
+    groups() {
+      this.calculateData()
+    },
+    name() {
+      this.edited.name = this.name
+    },
+    specialtyID() {
+      this.specialtyID = this.id
+    },
+    symbol() {
+      this.edited.symbol = this.symbol
+    },
+    department() {
+      this.edited.departmentID = this.department.id
     },
   },
   data() {
