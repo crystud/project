@@ -77,7 +77,7 @@ export default {
         this.name = ''
 
         this.$emit('done')
-      }).catch(console.error)
+      })
     },
   },
 }

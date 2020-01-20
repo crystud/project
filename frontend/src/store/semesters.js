@@ -76,8 +76,6 @@ export default {
 
         return Promise.reject()
       } catch (e) {
-        console.error(e)
-
         return Promise.reject(e)
       }
     },
@@ -93,8 +91,6 @@ export default {
 
         return Promise.reject()
       } catch (e) {
-        console.error(e)
-
         return Promise.reject(e)
       }
     },

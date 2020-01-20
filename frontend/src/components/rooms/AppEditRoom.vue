@@ -93,7 +93,7 @@ export default {
         this.floor = ''
 
         this.$emit('done')
-      }).catch(console.error)
+      })
     },
   },
   data() {

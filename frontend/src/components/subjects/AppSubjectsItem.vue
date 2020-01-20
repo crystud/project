@@ -142,7 +142,7 @@ export default {
         this.inActions = false
 
         this.loadSubjects()
-      }).catch(console.error)
+      })
     },
   },
   props: {

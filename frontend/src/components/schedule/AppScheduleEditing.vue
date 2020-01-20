@@ -182,8 +182,6 @@ export default {
       }).then(() => {
         this.setNoEditing()
         this.$emit('edited')
-      }).catch((e) => {
-        console.error(e)
       })
     },
   },

@@ -88,8 +88,6 @@ export default {
         this.isTeacherCreating = false
 
         this.$emit('done')
-      }).catch((e) => {
-        console.error(e)
       })
     },
   },
