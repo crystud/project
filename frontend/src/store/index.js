@@ -7,6 +7,21 @@ import student from './student'
 import departments from './departments'
 import teachers from './teachers'
 import specialty from './specialty'
+import users from './users'
+import commissions from './commissions'
+import group from './groups'
+import subjects from './subjects'
+import subjectTypes from './subjectTypes'
+import shortenedDays from './shortenedDays'
+import semesters from './semesters'
+import hours from './hours'
+import scoringSystems from './scoringSystems'
+import classes from './classes'
+import schedule from './schedule'
+import timetables from './timetables'
+import rooms from './rooms'
+import lessons from './lessons'
+import subgroups from './subgroups'
 
 Vue.use(Vuex)
 
@@ -24,5 +39,20 @@ export default new Vuex.Store({
     departments,
     teachers,
     specialty,
+    users,
+    commissions,
+    group,
+    subjects,
+    subjectTypes,
+    shortenedDays,
+    semesters,
+    hours,
+    classes,
+    scoringSystems,
+    schedule,
+    timetables,
+    rooms,
+    lessons,
+    subgroups,
   },
 })

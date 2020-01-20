@@ -1,7 +1,7 @@
 <template>
 <app-screen>
   <div class="sidebar">
-    <div class="header">
+    <div class="header" v-show="false">
       <font-awesome-icon icon="bars" />
     </div>
 
@@ -9,6 +9,13 @@
       <div class="avatar"></div>
 
       <div class="name">{{ name }}</div>
+    </div>
+
+    <div class="logout">
+      <button
+        @click="exit"
+        class="btn"
+      >Вихід</button>
     </div>
 
     <div class="roles">
@@ -30,7 +37,7 @@
         </div>
 
         <div class="value">
-          <div class="number">{{studentStatistics.avgMark}}</div>
+          <div class="number">{{studentStatistics.avgMark || '-'}}</div>
           <div class="title">Рейтинг</div>
         </div>
       </div>
@@ -47,7 +54,7 @@
 
         <div class="value">
           <div class="number">
-            {{ studentStatistics.studentWasMissing }}
+            {{studentStatistics.studentWasMissing}}
           </div>
 
           <div class="title">Пропусків</div>
@@ -59,7 +66,17 @@
       <app-home-link role="user" link="home">Домівка користувача</app-home-link>
       <app-home-link role="student" link="homeStudent">Домівка студента</app-home-link>
       <app-home-link role="teacher" link="homeTeacher">Домівка вчителя</app-home-link>
+      <app-home-link role="admin" link="teachers">Вчителі</app-home-link>
       <app-home-link role="admin" link="departments">Структура коледжу</app-home-link>
+      <app-home-link role="admin" link="shortenedDays">Скорочені дні</app-home-link>
+      <app-home-link role="admin" link="users">Користувачі</app-home-link>
+      <app-home-link role="admin" link="subjectsManaging">Керування предметами</app-home-link>
+      <app-home-link role="admin" link="schedule">Розклад</app-home-link>
+      <app-home-link role="admin" link="bells">Розклад дзвінків</app-home-link>
+      <app-home-link role="admin" link="semesters">Семестри</app-home-link>
+      <app-home-link role="admin" link="classes">Пари</app-home-link>
+      <app-home-link role="admin" link="subgroups">Підгрупи</app-home-link>
+      <app-home-link role="admin" link="rooms">Аудиторії</app-home-link>
     </div>
   </div>
 
@@ -97,7 +114,12 @@ export default {
     }),
   },
   methods: {
+    exit() {
+      localStorage.removeItem('refreshToken')
+      localStorage.removeItem('accessToken')
 
+      document.location.href = '/'
+    },
   },
   components: {
     AppScreen,
@@ -118,6 +140,9 @@ export default {
     grid-area: name;
     background: var(--color-bg-dark);
 
+    max-height: 100vh;
+    overflow: auto;
+
     .header {
       height: 15px;
       margin-top: 20px;
@@ -126,11 +151,32 @@ export default {
       font-size: 24px;
     }
 
+    .logout {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+
+      .btn {
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+        color: var(--color-font-dark);
+        font-size: 1em;
+        font-family: 'Exo 2';
+        margin: 10px 0;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
     .user {
       margin-top: 30px;
       display: flex;
       flex-direction: column;
       align-items: center;
+
 
       .avatar {
         height: 130px;
@@ -226,6 +272,10 @@ export default {
 
   .content {
     padding: 20px 45px;
+    position: relative;
+
+    max-height: 100vh;
+    overflow: auto;
   }
 }
 </style>

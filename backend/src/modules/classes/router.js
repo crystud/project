@@ -25,7 +25,7 @@ router.post('/create', checkRoles(['admin']), checkSchema({
   },
   subgroups: {
     in: 'body',
-    isInt: {
+    isBoolean: {
       errorMessage: 'Invalid subgroups value',
       options: {
         min: 0,
@@ -58,7 +58,9 @@ router.post('/create', checkRoles(['admin']), checkSchema({
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.json(errors.array())
+    return res.json({
+      errors: errors.array(),
+    })
   }
 
   const result = await Controller.create(req.body)
@@ -188,6 +190,7 @@ router.post('/setMark', checkRoles(['teacher', 'admin']), checkSchema({
     notEmpty: {
       errorMessage: 'No mark provided',
     },
+    optional: true,
   },
   studentID: {
     in: 'body',
@@ -291,6 +294,39 @@ router.post('/getStatistics', checkRoles(['admin', 'teacher', 'student']), check
   const stats = await Controller.getStatistics(req.body)
 
   return res.json(stats)
+})
+
+router.post('/student', checkSchema({
+  classID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid class id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No class id provided',
+    },
+  },
+  studentID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid student id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No student id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const data = await Controller.getStudentInfo(req.body)
+
+  return res.json(data)
 })
 
 export default router

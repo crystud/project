@@ -1,7 +1,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.sequelize.transaction((t) => Promise.all([
     queryInterface.addColumn('groups', 'number', Sequelize.INTEGER, { transaction: t }),
-    queryInterface.addColumn('specialty', 'symbol', Sequelize.TINYTEXT, { transaction: t }),
+    queryInterface.addColumn('specialty', 'symbol', Sequelize.TEXT, { transaction: t }),
     queryInterface.addColumn('users', 'isAdmin', Sequelize.BOOLEAN, { transaction: t }),
   ])),
 

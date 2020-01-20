@@ -5,7 +5,7 @@
 </template>
 
 <style lang="less">
-@import (css) url('https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap');
+@import (css) url('https://fonts.googleapis.com/css?family=Exo+2:200,400,500,700|Lato:300,400,700,900&display=swap&subset=cyrillic-ext');
 
 html,
 body {
@@ -38,7 +38,7 @@ body {
 #app {
   height: 100%;
   width: 100%;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Lato', 'Exo 2', sans-serif;
 
   a {
     color: var(--color-font-main);

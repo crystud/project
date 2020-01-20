@@ -12,8 +12,6 @@ module.exports = {
       minMark: Sequelize.FLOAT,
     }, { transaction: t }),
 
-    queryInterface.addColumn('subject_types', 'scoringSystemID', Sequelize.SMALLINT),
-
     queryInterface.addConstraint('subject_types', ['scoringSystemID'], {
       type: 'foreign key',
       name: 'subject_types-scoring_systems',
@@ -28,7 +26,6 @@ module.exports = {
 
   down: (queryInterface) => queryInterface.sequelize.transaction(() => Promise.all([
     queryInterface.removeConstraint('subject_types', 'subject_types-scoring_systems'),
-    queryInterface.removeColumn('subject_types', 'scoringSystemID'),
     queryInterface.dropTable('scoring_systems'),
   ])),
 }

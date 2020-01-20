@@ -110,4 +110,5 @@ router.post('/logOut', checkSchema({
   return res.json(result)
 })
 
+
 export default router

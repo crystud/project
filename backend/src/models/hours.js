@@ -31,4 +31,27 @@ Hours.init({
   modelName: 'hours',
 })
 
+Subjects.belongsTo(Hours, {
+  foreignKey: 'id',
+  targetKey: 'subjectID',
+  as: 'hours',
+})
+
+Hours.belongsTo(Subjects, {
+  foreignKey: 'subjectID',
+  targetKey: 'id',
+  as: 'subject',
+})
+
+Hours.belongsTo(Semesters, {
+  foreignKey: 'semesterID',
+  targetKey: 'id',
+})
+
+Semesters.belongsTo(Hours, {
+  foreignKey: 'id',
+  targetKey: 'semesterID',
+  as: 'hours',
+})
+
 export default Hours

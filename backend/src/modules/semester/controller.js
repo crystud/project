@@ -1,5 +1,10 @@
+import { Op } from 'sequelize'
+
 import Semesters from '../../models/semesters'
 import Specialties from '../../models/specialty'
+import Subjects from '../../models/subjects'
+import Commissions from '../../models/commissions'
+import Hours from '../../models/hours'
 
 export default class SemestersController {
   static async create(semester) {
@@ -44,13 +49,9 @@ export default class SemestersController {
 
     const created = await Semesters.create(semester)
 
-    if (!created) {
-      return { created: false }
-    }
-
     return {
-      created: true,
-      semester,
+      created: !!created,
+      semester: created,
     }
   }
 
@@ -66,6 +67,9 @@ export default class SemestersController {
       where: {
         number,
         specialtyID,
+        id: {
+          [Op.ne]: id,
+        },
       },
     })
 
@@ -79,16 +83,16 @@ export default class SemestersController {
       return { errors }
     }
 
-    const noRecord = await Semesters.findOne({
+    const semesterExist = await Semesters.findOne({
       attributes: ['id'],
       where: {
         id,
       },
     })
 
-    if (!noRecord) {
+    if (!semesterExist) {
       errors.push({
-        msg: 'The record doesn`t exist',
+        msg: 'Such semester does not exist',
         param: 'id',
         location: 'body',
       })
@@ -96,19 +100,84 @@ export default class SemestersController {
       return { errors }
     }
 
-    const updated = await Semesters.update({ number, weeks, specialtyID }, {
+    const [updated] = await Semesters.update({ number, weeks }, {
       where: {
         id,
       },
     })
 
-    if (!updated) {
-      return { updated: false }
-    }
-
     return {
-      updated: true,
+      updated: !!updated,
       semester,
+    }
+  }
+
+  static async getAll({ specialtyID }) {
+    try {
+      const semesters = await Semesters.findAll({
+        where: { specialtyID },
+        order: [['number']],
+      })
+
+      return { semesters }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async get({ semesterID: id }) {
+    const errors = []
+
+    try {
+      const semester = await Semesters.findOne({
+        where: { id },
+        include: {
+          model: Specialties,
+          as: 'specialty',
+        },
+      })
+
+      if (!semester) {
+        errors.push({
+          msg: 'Such semester does not exist',
+          location: 'body',
+          param: 'semesterID',
+        })
+
+        return { errors }
+      }
+
+      const commissions = await Commissions.findAll({
+        include: {
+          model: Subjects,
+          required: true,
+          include: [
+            {
+              model: Hours,
+              as: 'hours',
+              include: {
+                model: Semesters,
+                where: {
+                  id,
+                },
+              },
+            },
+          ],
+        },
+      })
+
+      return {
+        semester: {
+          ...semester.toJSON(),
+          commissions,
+        },
+      }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
     }
   }
 }

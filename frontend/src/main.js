@@ -3,8 +3,35 @@ import Vue from 'vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
-  faChartLine, faCheck, faHome, faTimes, faBars, faColumns, faPlus, faAngleLeft, faEdit,
+  faChartLine,
+  faCheck,
+  faHome,
+  faTimes,
+  faBars,
+  faColumns,
+  faPlus,
+  faAngleLeft,
+  faEdit,
+  faEllipsisH,
+  faTrash,
+  faUsers,
+  faClock,
+  faLightbulb,
+  faMapMarker,
+  faUserTimes,
+  faUserTie,
+  faCalendarAlt,
+  faAngleRight,
+  faAngleDoubleLeft,
+  faAngleDoubleRight,
+  faUser,
+  faHashtag,
+  faSchool,
+  faMarker,
+  faAngleDown,
 } from '@fortawesome/free-solid-svg-icons'
+
+import VueTruncate from 'vue-truncate-filter'
 
 import App from './App.vue'
 import router from './router'
@@ -27,8 +54,27 @@ library.add(faColumns)
 library.add(faPlus)
 library.add(faAngleLeft)
 library.add(faEdit)
+library.add(faEllipsisH)
+library.add(faTrash)
+library.add(faClock)
+library.add(faUsers)
+library.add(faLightbulb)
+library.add(faMapMarker)
+library.add(faUserTimes)
+library.add(faUserTie)
+library.add(faCalendarAlt)
+library.add(faAngleRight)
+library.add(faAngleDoubleLeft)
+library.add(faAngleDoubleRight)
+library.add(faUser)
+library.add(faHashtag)
+library.add(faSchool)
+library.add(faMarker)
+library.add(faAngleDown)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+
+Vue.use(VueTruncate)
 
 Vue.config.productionTip = false
 

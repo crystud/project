@@ -87,4 +87,10 @@ router.post('/getNext', checkRoles(['admin', 'teacher', 'student']), checkSchema
   return res.json(create)
 })
 
+router.post('/getAll', checkRoles(['admin', 'student', 'teacher']), async (req, res) => {
+  const days = await Controller.getAll()
+
+  return res.json(days)
+})
+
 export default router

@@ -60,10 +60,12 @@ export default class DepartmentsController {
       leaderID,
     } = department
 
-    const [updated] = await Departments.update({ name, description, leaderID }, {
-      where: {
-        id,
-      },
+    const [updated] = await Departments.update({
+      name,
+      description,
+      leaderID,
+    }, {
+      where: { id },
     })
 
     return {
@@ -161,7 +163,7 @@ export default class DepartmentsController {
           {
             model: Specialty,
             as: 'specialtys',
-            attributes: ['id'],
+            attributes: ['id', 'name'],
           },
         ],
       })

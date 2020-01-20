@@ -23,9 +23,8 @@ Subgroups.init({
   modelName: 'subgroups',
 })
 
-Subgroups.hasOne(Groups, {
-  foreignKey: 'id',
-  as: 'group',
+Subgroups.belongsTo(Groups, {
+  foreignKey: 'groupID',
 })
 
 export default Subgroups

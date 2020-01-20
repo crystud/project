@@ -63,28 +63,13 @@ router.post('/edit', checkSchema({
       errorMessage: 'No hours id provided',
     },
   },
-  subjectID: {
-    in: 'body',
-    isNumeric: {
-      errorMessage: 'Invalid subject id',
-    },
-    notEmpty: {
-      errorMessage: 'No subject id specified',
-    },
-  },
-  semesterID: {
-    in: 'body',
-    isNumeric: {
-      errorMessage: 'Invalid semester id',
-    },
-    notEmpty: {
-      errorMessage: 'No semester id specified',
-    },
-  },
   hours: {
     in: 'body',
-    isNumeric: {
+    isInt: {
       errorMessage: 'Invalid hours',
+      options: {
+        min: 1,
+      },
     },
     notEmpty: {
       errorMessage: 'No hours provided',
@@ -99,9 +84,66 @@ router.post('/edit', checkSchema({
     })
   }
 
-  const create = await Controller.edit(req.body)
+  const edit = await Controller.edit(req.body)
+
+  return res.json(edit)
+})
+
+router.post('/delete', checkSchema({
+  hoursID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid hours id',
+    },
+    notEmpty: {
+      errorMessage: 'No hours id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const create = await Controller.delete(req.body)
 
   return res.json(create)
+})
+
+router.post('/calculate', checkSchema({
+  groupID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid group id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No group id provided',
+    },
+  },
+  semesterID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid semester id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No semester id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const calculation = await Controller.calculate(req.body)
+
+  return res.json(calculation)
 })
 
 export default router

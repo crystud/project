@@ -43,6 +43,39 @@ router.post('/create', checkRoles(['admin']), checkSchema({
   return res.json(create)
 })
 
+router.post('/edit', checkRoles(['admin']), checkSchema({
+  subgroupID: {
+    in: 'body',
+    isInt: {
+      errorMessage: 'Invalid group id',
+      options: {
+        min: 1,
+      },
+    },
+    notEmpty: {
+      errorMessage: 'No group id provided',
+    },
+  },
+  name: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No subgroup name provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const edit = await Controller.edit(req.body)
+
+  return res.json(edit)
+})
+
 router.post('/addStudent', checkRoles(['admin']), checkSchema({
   studentID: {
     isInt: {

@@ -1,16 +1,25 @@
 <template>
-<div class="home-student">
-  <app-card>Уявімо, що тут інформація про теперішній урок і тд.</app-card>
-</div>
+  <div class="home-student">
+    <app-card class="header">Домівка</app-card>
+
+    <app-card class="body">
+      <app-schedule-list></app-schedule-list>
+      <app-current-class></app-current-class>
+    </app-card>
+  </div>
 </template>
 
 <script>
 import AppCard from '../../components/AppCard.vue'
+import AppScheduleList from '../../components/home/student/AppScheduleList.vue'
+import AppCurrentClass from '../../components/home/student/AppCurrentClass.vue'
 
 export default {
-  name: 'HomeStudent',
+  name: 'HomeStudent.vue',
   components: {
     AppCard,
+    AppScheduleList,
+    AppCurrentClass,
   },
 }
 </script>
@@ -20,6 +29,17 @@ export default {
   .app-card {
     padding: 20px;
     color: #fff;
+  }
+
+  .header {
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  .body {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    grid-gap: 20px;
   }
 }
 </style>

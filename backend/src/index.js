@@ -15,10 +15,15 @@ import semester from './modules/semester'
 import teacher from './modules/teachers'
 import rooms from './modules/rooms'
 import classes from './modules/classes'
-import scoringSystems from './modules/scoringSystems'
-import users from './modules/users'
 import subgroups from './modules/subgroups'
+import shortenedDays from './modules/shortenedDays'
+import users from './modules/users'
+import groups from './modules/groups'
+import student from './modules/student'
+import scoringSystems from './modules/scoringSystems'
 import schedule from './modules/schedule'
+import timetable from './modules/timetable'
+import lessons from './modules/lessons'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -47,10 +52,14 @@ semester(app)
 teacher(app)
 rooms(app)
 classes(app)
-scoringSystems(app)
 users(app)
 subgroups(app)
+shortenedDays(app)
+groups(app)
+student(app)
+scoringSystems(app)
 schedule(app)
-department(app)
+timetable(app)
+lessons(app)
 
 app.listen(port)

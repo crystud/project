@@ -5,7 +5,17 @@ export default {
 
   state: {
     teachers: [],
-    teacher: {},
+    teacher: {
+      name: '',
+      user: {
+        email: '',
+      },
+      commission: {
+        name: '',
+        id: 0,
+      },
+      department: {},
+    },
   },
 
   getters: {
@@ -23,29 +33,79 @@ export default {
   },
 
   actions: {
-    async loadTeachers({ commit }) {
-      axios.post('/teacher/getAll').then(({ data: { teacher, errors } }) => {
+    async loadAllTeachers({ commit }) {
+      axios.post('/teacher/getAll').then(({ data: { teachers, errors } }) => {
         if (errors) {
           return Promise.reject(errors)
         }
 
-        commit('setTeachers', teacher)
+        commit('setTeachers', teachers)
+
+        return Promise.resolve()
+      }).catch(() => {})
+    },
+    async loadTeachers({ commit }, commissionID) {
+      axios.post('/teacher/getAllOnCommission', { commissionID }).then(({ data: { teachers, errors } }) => {
+        if (errors) {
+          return Promise.reject(errors)
+        }
+
+        commit('setTeachers', teachers)
 
         return Promise.resolve()
       }).catch(() => {})
     },
     async loadTeacher({ commit }, teacherID) {
-      axios.post('/teachers/get', {
-        teacherID,
+      axios.post('/teacher/get', {
+        id: teacherID,
       }).then(({ data: { teacher, errors } }) => {
         if (errors) {
           return Promise.reject(errors)
         }
 
-        commit('setDepartment', teacher)
+        commit('setTeacher', teacher)
 
         return Promise.resolve()
       })
+    },
+    async create(_, teacherData) {
+      try {
+        const {
+          data: {
+            created,
+            errors,
+          },
+        } = await axios.post('/teacher/create', teacherData)
+
+        if (created && !errors) {
+          return Promise.resolve()
+        }
+
+        return Promise.reject()
+      } catch (e) {
+        console.error(e)
+
+        return Promise.reject(e)
+      }
+    },
+    async edit(_, teacherData) {
+      try {
+        const {
+          data: {
+            errors,
+          },
+        } = await axios.post('/teacher/edit', teacherData)
+
+        if (!errors) {
+          return Promise.resolve()
+        }
+
+        return Promise.reject()
+      } catch (e) {
+        console.error(e)
+
+        return Promise.reject(e)
+      }
     },
   },
 }

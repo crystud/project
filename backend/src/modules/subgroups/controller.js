@@ -35,6 +35,20 @@ export default class SubgroupsController {
     }
   }
 
+  static async edit({ name, subgroupID: id }) {
+    try {
+      const [edited] = await Subgroups.update({ name }, {
+        where: { id },
+      })
+
+      return { edited: !!edited }
+    } catch (e) {
+      console.error(e)
+
+      return { edited: false }
+    }
+  }
+
   static async addStudent({ studentID, subgroupID }) {
     const errors = []
 
@@ -126,17 +140,14 @@ export default class SubgroupsController {
           {
             model: Groups,
             as: 'group',
-            required: true,
+            include: {
+              model: Students,
+              as: 'students',
+            },
           },
           {
             model: SubgroupsStudents,
             as: 'students',
-            include: [
-              {
-                model: Students,
-                as: 'studentData',
-              },
-            ],
           },
         ],
       })

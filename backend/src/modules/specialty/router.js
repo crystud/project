@@ -29,6 +29,15 @@ router.post('/create', checkRoles(['admin']), checkSchema({
       errorMessage: 'No specialty name provided',
     },
   },
+  symbol: {
+    in: 'body',
+    isString: {
+      errorMessage: 'Invalid specialty symbol provided',
+    },
+    notEmpty: {
+      errorMessage: 'No specialty symbol provided',
+    },
+  },
 }), async (req, res) => {
   const errors = validationResult(req)
 
@@ -69,6 +78,15 @@ router.post('/edit', checkRoles(['admin']), checkSchema({
     },
     notEmpty: {
       errorMessage: 'No specialty name provided',
+    },
+  },
+  symbol: {
+    in: 'body',
+    isString: {
+      errorMessage: 'Invalid specialty symbol provided',
+    },
+    notEmpty: {
+      errorMessage: 'No specialty symbol provided',
     },
   },
 }), async (req, res) => {
@@ -134,6 +152,12 @@ router.post('/getAll', checkRoles(['admin', 'teacher', 'student']), checkSchema(
   const list = await Controller.list(req.body)
 
   return res.json(list)
+})
+
+router.post('/list', async (req, res) => {
+  const specialtys = await Controller.getAll()
+
+  return res.json(specialtys)
 })
 
 export default router

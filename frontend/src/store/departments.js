@@ -46,5 +46,19 @@ export default {
         return Promise.resolve()
       })
     },
+    async edit(_, data) {
+      const {
+        data: {
+          errors,
+          updated,
+        },
+      } = await axios.post('/department/edit', data)
+
+      if (!errors && updated) {
+        return Promise.resolve()
+      }
+
+      return Promise.reject()
+    },
   },
 }

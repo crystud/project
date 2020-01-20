@@ -2,8 +2,13 @@
   <div class="select">
     <span class="placeholder">{{placeholder}}</span>
 
-    <select ref="select" class="select-input" @change="$emit('change', $event.target.value)">
-      <option v-if="!defaultValue">Обрати...</option>
+    <select
+      ref="select"
+      class="select-input"
+      @change="onChange"
+      :class="selected ? 'success-border' : 'fail-border'"
+    >
+      <option :value="notSelectedValue" v-if="!defaultValue">Обрати...</option>
 
       <option
         v-for="(item, index) in options"
@@ -18,6 +23,24 @@
 <script>
 export default {
   name: 'AppSelect',
+  methods: {
+    onChange(ev) {
+      const { value } = ev.target
+      const { notSelectedValue } = this
+
+      if (notSelectedValue && value === notSelectedValue.toString()) {
+        this.value = 0
+        this.selected = false
+
+        this.$emit('change', 0)
+      } else {
+        this.value = value
+        this.selected = true
+
+        this.$emit('change', value)
+      }
+    },
+  },
   props: {
     option: {
       type: Function,
@@ -39,8 +62,15 @@ export default {
       default: () => {},
     },
   },
-  update() {
-    this.$emit('change', this.$refs.select.value)
+  created() {
+    this.selected = !!this.defaultValue
+  },
+  data() {
+    return {
+      notSelectedValue: Math.random(),
+      value: 0,
+      selected: false,
+    }
   },
 }
 </script>
@@ -48,25 +78,35 @@ export default {
 <style lang="less" scoped>
 .select {
   width: 100%;
-  margin: 10px 0;
 
   .placeholder {
     display: flex;
     justify-content: left;
 
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 
   .select-input {
     width: 100%;
-    padding: 15px 10px;
+    padding: 10px;
     font-size: 1em;
 
-    border-radius: 8px;
+    border-radius: 5px;
     background: var(--color-bg-light);
     border: 0;
 
     color: var(--color-font-main);
+
+    border-bottom: 4px solid transparent;
+    transition: all .3s;
+  }
+
+  .fail-border {
+    border-color: #d43f3e;
+  }
+
+  .success-border {
+    border-color: #00ff87;
   }
 }
 </style>

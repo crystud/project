@@ -2,15 +2,29 @@ import SubjectType from '../../models/subject_types'
 import ScoringSystems from '../../models/scoring_systems'
 
 export default class SubjectTypeController {
-  static async createSubjectType({ name, coefficient }) {
+  static async createSubjectType(subjectTypeData) {
     const errors = []
 
-    const subjectTypeData = {
-      name,
-      coefficient,
-    }
-
     try {
+      const { scoringSystemID } = subjectTypeData
+
+      const scoringSystemExists = await ScoringSystems.findOne({
+        attributes: ['id'],
+        where: {
+          id: scoringSystemID,
+        },
+      })
+
+      if (!scoringSystemExists) {
+        errors.push({
+          msg: 'Such scoring system does not exist',
+          param: 'scoringSystemID',
+          location: 'body',
+        })
+
+        return { errors }
+      }
+
       const exists = await SubjectType.findAll({
         where: subjectTypeData,
       })
@@ -41,21 +55,22 @@ export default class SubjectTypeController {
       name,
       coefficient,
       subjectTypeID: id,
+      scoringSystemID,
     } = data
 
-    const [edit] = await SubjectType.update({
+    const updateData = {
       name,
       coefficient,
-    }, {
+      scoringSystemID,
+    }
+
+    const [edit] = await SubjectType.update(updateData, {
       where: { id },
     })
 
     return {
       edited: !!edit,
-      subjectType: edit ? {
-        name,
-        coefficient,
-      } : null,
+      subjectType: edit ? updateData : null,
     }
   }
 

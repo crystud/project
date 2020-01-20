@@ -5,12 +5,14 @@ export default {
 
   state: {
     specialtys: [],
+    specialtysList: [],
     specialty: {},
   },
 
   getters: {
     specialtys: state => state.specialtys,
     specialty: state => state.specialty,
+    specialtysList: state => state.specialtysList,
   },
 
   mutations: {
@@ -19,6 +21,9 @@ export default {
     },
     setSpecialty(state, specialty) {
       state.specialty = specialty
+    },
+    setSpecialtysList(state, specialtys) {
+      state.specialtysList = specialtys
     },
   },
 
@@ -41,7 +46,14 @@ export default {
         commit('setSpecialtys', specialtys)
 
         return Promise.resolve()
-      }).catch(() => {})
+      }).catch(() => {
+        commit('setSpecialtys', [])
+      })
+    },
+    async listSpecialtys({ commit }) {
+      const { data: { specialtys } } = await axios.post('/specialty/list')
+
+      commit('setSpecialtysList', specialtys)
     },
     async edit(_, data) {
       const { data: { updated, errors } } = await axios.post('/specialty/edit', data)
@@ -51,6 +63,9 @@ export default {
       }
 
       return Promise.reject(errors)
+    },
+    setNoSpecialtys({ commit }) {
+      commit('setSpecialtys', [])
     },
   },
 }

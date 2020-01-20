@@ -111,6 +111,7 @@ export default class ClassesController {
       }
 
       const lessonExists = await Lessons.findOne({
+        attributes: ['date'],
         where: {
           id: lessonID,
         },
@@ -121,6 +122,19 @@ export default class ClassesController {
           msg: 'Such lesson does not exists',
           param: 'lessonID',
           location: 'body',
+        })
+
+        return { errors }
+      }
+
+      const lessonDate = new Date(lessonExists.date)
+      const currentDate = new Date()
+
+      if (currentDate < lessonDate) {
+        errors.push({
+          msg: 'You cannot set mark to a future lessons',
+          location: 'body',
+          param: 'lessonID',
         })
 
         return { errors }
@@ -178,13 +192,9 @@ export default class ClassesController {
         mark: isMiss ? false : mark,
       })
 
-      if (!set) {
-        return { set: false }
-      }
-
       return {
-        set: true,
-        mark: set.dataValues,
+        set: !!set,
+        mark: set,
       }
     } catch (e) {
       console.error(e)
@@ -417,18 +427,14 @@ export default class ClassesController {
         where: { id },
       })
 
-      if (!edit) {
-        return { edited: false }
-      }
-
       return {
-        edited: true,
+        edited: !!edit,
         class: newClassData,
       }
     } catch (e) {
       console.error(e)
 
-      return { created: false }
+      return { edited: false }
     }
   }
 
@@ -472,6 +478,61 @@ export default class ClassesController {
         fetched: true,
         class: classData,
       }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async getStudentInfo({ studentID, classID }) {
+    try {
+      const student = await Students.findOne({
+        where: { id: studentID },
+      })
+
+      if (!student) {
+        return {
+          errors: [{
+            msg: 'Such student does not exist',
+            location: 'body',
+            param: 'studentID',
+          }],
+        }
+      }
+
+      const classData = await Classes.findOne({
+        where: { id: classID },
+        include: {
+          model: Subjects,
+          as: 'subject',
+          include: {
+            model: SubjectTypes,
+            as: 'subjectTypeData',
+            include: {
+              model: ScoringSystems,
+              as: 'scoring_system',
+            },
+          },
+        },
+      })
+
+      const marks = await Marks.findAll({
+        where: { studentID },
+        include: [{
+          model: Lessons,
+          as: 'lesson',
+          where: { classID },
+        }],
+        order: [
+          [{
+            model: Lessons,
+            as: 'lesson',
+          }, 'date', 'asc'],
+        ],
+      })
+
+      return { marks, student, classData }
     } catch (e) {
       console.error(e)
 

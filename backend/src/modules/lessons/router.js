@@ -39,6 +39,10 @@ router.post('/create', checkSchema({
       errorMessage: 'No topic provided',
     },
   },
+  home_work: {
+    in: 'body',
+    optional: true,
+  },
 }), async (req, res) => {
   const errors = validationResult(req)
 
@@ -122,6 +126,91 @@ router.post('/setHomeWork', checkSchema({
   })
 
   return res.json(edited)
+})
+
+router.post('/delete', checkSchema({
+  lessonID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid lesson id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No lesson id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const deleting = await Controller.deleteLesson(req.body)
+
+  return res.json(deleting)
+})
+
+router.post('/edit', checkSchema({
+  lessonID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid lesson id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No lesson id provided',
+    },
+  },
+  topic: {
+    in: 'body',
+    notEmpty: {
+      errorMessage: 'No topic provided',
+    },
+  },
+  homeWork: {
+    in: 'body',
+    optional: true,
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const deleting = await Controller.edit({
+    ...req.body,
+    user: req.user,
+  })
+
+  return res.json(deleting)
+})
+
+router.post('/getAll', checkSchema({
+  classID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid class id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No class id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const lessons = await Controller.getAll(req.body)
+
+  return res.json(lessons)
 })
 
 export default router

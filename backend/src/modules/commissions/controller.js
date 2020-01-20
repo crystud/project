@@ -1,4 +1,5 @@
 import Commissions from '../../models/commissions'
+import Teachers from '../../models/teachers'
 
 export default class CommissionsController {
   static async create(commission) {
@@ -48,6 +49,10 @@ export default class CommissionsController {
     try {
       const commissions = await Commissions.findAll({
         order: [['name']],
+        include: {
+          model: Teachers,
+          as: 'teachers',
+        },
       })
 
       return { commissions }

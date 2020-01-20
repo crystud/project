@@ -1,7 +1,15 @@
+import { Op } from 'sequelize'
+
 import Subject from '../../models/subjects'
 import Commissions from '../../models/commissions'
 import SubjectTypes from '../../models/subject_types'
 import ScoringSystems from '../../models/scoring_systems'
+import Hours from '../../models/hours'
+import Groups from '../../models/groups'
+import Semesters from '../../models/semesters'
+import Classes from '../../models/classes'
+import Subgroups from '../../models/subgroups'
+import Teachers from '../../models/teachers'
 
 export default class SubjectController {
   static async createSubject(data) {
@@ -11,33 +19,15 @@ export default class SubjectController {
       name,
       commissionID,
       subjectTypeID: subjectType,
-      scoringSystemID,
     } = data
 
     const subjectData = {
       name,
       commissionID,
       subjectType,
-      scoringSystemID,
     }
 
     try {
-      const scoringSystemExists = await ScoringSystems.findOne({
-        where: {
-          id: scoringSystemID,
-        },
-      })
-
-      if (!scoringSystemExists) {
-        errors.push({
-          msg: 'Such scoring system does not exist',
-          param: 'scoringSystemID',
-          location: 'body',
-        })
-
-        return { errors }
-      }
-
       const exists = await Subject.findOne({
         where: subjectData,
       })
@@ -81,12 +71,8 @@ export default class SubjectController {
       where: { id },
     })
 
-    if (!edit) {
-      return { edited: false }
-    }
-
     return {
-      edited: true,
+      edited: !!edit,
       subject: newData,
     }
   }
@@ -134,7 +120,7 @@ export default class SubjectController {
   static async getAll() {
     try {
       const subjects = await Subject.findAll({
-        order: ['id', 'DESC'],
+        order: [['id', 'DESC']],
         include: [
           {
             model: Commissions,
@@ -149,6 +135,96 @@ export default class SubjectController {
               as: 'scoring_system',
             },
             required: true,
+          },
+        ],
+      })
+
+      return { subjects }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async getSubjectsOnGroup({ groupID }) {
+    try {
+      const subgroupsList = await Subgroups.findAll({
+        where: { groupID },
+      })
+
+      const mapped = subgroupsList.map((subgroup) => subgroup.id)
+
+      const groupClasses = await Subject.findAll({
+        include: [
+          {
+            model: Classes,
+            as: 'class',
+            include: [
+              {
+                model: Subgroups,
+                as: 'subgroup',
+              },
+              {
+                model: Teachers,
+                as: 'teacher',
+              },
+            ],
+            where: {
+              [Op.or]: {
+                groupID,
+                subgroupID: {
+                  [Op.or]: mapped,
+                },
+              },
+            },
+            required: true,
+          },
+        ],
+      })
+
+      return {
+        subjects: [
+          ...groupClasses,
+        ],
+      }
+    } catch (e) {
+      console.error(e)
+
+      return { fetched: false }
+    }
+  }
+
+  static async getGroupAvailableSubjects({ groupID }) {
+    try {
+      const groupData = await Groups.findOne({
+        where: { id: groupID },
+      })
+
+      if (!groupData) {
+        return {
+          errors: [{
+            msg: 'Such group does not exist',
+            location: 'body',
+            param: 'groupID',
+          }],
+        }
+      }
+
+      const subjects = await Semesters.findAll({
+        where: {
+          specialtyID: groupData.specialtyID,
+        },
+        include: [
+          {
+            model: Hours,
+            as: 'hours',
+            required: true,
+            include: {
+              model: Subject,
+              as: 'subject',
+              required: true,
+            },
           },
         ],
       })

@@ -50,18 +50,33 @@ router.post('/edit', checkSchema({
   },
   name: {
     in: 'body',
+    isString: {
+      errorMessage: 'Invalid department name provided',
+    },
+    notEmpty: {
+      errorMessage: 'No department name provided',
+    },
   },
   description: {
     in: 'body',
+    optional: true,
   },
   leaderID: {
     in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid leader id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No leader id provided',
+    },
   },
 }), async (req, res) => {
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.json({ errors: errors.array() })
+    return res.json({
+      errors: errors.array(),
+    })
   }
 
   const result = await Controller.edit(req.body)

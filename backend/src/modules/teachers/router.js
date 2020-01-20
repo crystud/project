@@ -57,17 +57,20 @@ router.post('/edit', verifyUser, checkRoles(['admin']), checkSchema({
   },
   name: {
     in: 'body',
+    notEmpty: {
+      errors: 'name shouldn`t be empty',
+    },
+    isString: {
+      errorMessage: 'name must be string',
+    },
   },
   commissionID: {
     in: 'body',
-    custom: {
-      in: 'body',
-      notEmpty: {
-        errors: 'Commission shouldn`t be empty',
-      },
-      isNumeric: {
-        errorMessage: 'Commission id must be numeric',
-      },
+    notEmpty: {
+      errors: 'Commission shouldn`t be empty',
+    },
+    isNumeric: {
+      errorMessage: 'Commission id must be numeric',
     },
   },
 }), async (req, res) => {
@@ -122,6 +125,30 @@ router.post('/get', verifyUser, checkRoles(['admin', 'teacher', 'student']), che
   }
 
   const result = await Controller.get(req.body)
+
+  return res.json(result)
+})
+
+router.post('/getAllOnCommission', verifyUser, checkRoles(['admin', 'teacher', 'student']), checkSchema({
+  commissionID: {
+    in: 'body',
+    isNumeric: {
+      errorMessage: 'Invalid commission id provided',
+    },
+    notEmpty: {
+      errorMessage: 'No commission id provided',
+    },
+  },
+}), async (req, res) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.json({
+      errors: errors.array(),
+    })
+  }
+
+  const result = await Controller.getAllOnCommission(req.body)
 
   return res.json(result)
 })

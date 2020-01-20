@@ -1,10 +1,4 @@
 import Rooms from '../../models/rooms'
-import Schedule from '../../models/schedule'
-import Timetable from '../../models/timetable'
-import Classes from '../../models/classes'
-import Teachers from '../../models/teachers'
-import Groups from '../../models/groups'
-import Subjects from '../../models/subjects'
 
 export default class RoomController {
   static async create({ name, floor }) {
@@ -17,7 +11,7 @@ export default class RoomController {
 
     try {
       const exists = await Rooms.findOne({
-        where: { roomData },
+        where: roomData,
       })
 
       if (exists) {
@@ -53,6 +47,7 @@ export default class RoomController {
 
     try {
       const exists = await Rooms.findOne({
+        attributes: ['id'],
         where: { id },
       })
 
@@ -61,6 +56,21 @@ export default class RoomController {
           msg: 'Such room does not exist',
           location: 'body',
           param: 'roomID',
+        })
+
+        return { errors }
+      }
+
+      const isBusy = await Rooms.findOne({
+        attributes: ['id'],
+        where: newRoomData,
+      })
+
+      if (isBusy) {
+        errors.push({
+          msg: 'Such room already exist',
+          location: 'body',
+          param: ['name', 'floor'],
         })
 
         return { errors }
@@ -87,34 +97,6 @@ export default class RoomController {
     try {
       const room = await Rooms.findOne({
         where: { id },
-        include: {
-          model: Schedule,
-          as: 'schedules',
-          include: [
-            {
-              model: Timetable,
-              as: 'timetable',
-            },
-            {
-              model: Classes,
-              as: 'class',
-              include: [
-                {
-                  model: Teachers,
-                  as: 'teacher',
-                },
-                {
-                  model: Groups,
-                  as: 'group',
-                },
-                {
-                  model: Subjects,
-                  as: 'subject',
-                },
-              ],
-            },
-          ],
-        },
       })
 
       if (!room) {
@@ -127,9 +109,14 @@ export default class RoomController {
         return { errors }
       }
 
+      const schedule = await this.getRoomSchedule({ id })
+
       return {
         fetched: !!room,
-        room: room || null,
+        room: {
+          ...room.toJSON(),
+          schedule,
+        },
       }
     } catch (e) {
       console.error(e)
@@ -138,10 +125,9 @@ export default class RoomController {
     }
   }
 
-  static async getAll({ floor }) {
+  static async getAll() {
     try {
       const rooms = await Rooms.findAll({
-        where: { floor },
         order: [['name']],
       })
 

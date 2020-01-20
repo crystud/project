@@ -48,18 +48,22 @@ Classes.init({
   modelName: 'classes',
 })
 
+Groups.hasMany(Classes, {
+  foreignKey: 'groupID',
+  as: 'classes',
+})
+
 Classes.belongsTo(Groups, {
   foreignKey: 'groupID',
-  as: 'group',
 })
 
 Classes.belongsTo(Subgroups, {
   foreignKey: 'subgroupID',
 })
 
-Subgroups.hasOne(Classes, {
-  foreignKey: 'id',
-  as: 'class',
+Subgroups.hasMany(Classes, {
+  foreignKey: 'subgroupID',
+  as: 'classes',
 })
 
 Classes.belongsTo(Teachers, {
@@ -69,7 +73,12 @@ Classes.belongsTo(Teachers, {
 
 Classes.belongsTo(Subjects, {
   foreignKey: 'subjectID',
-  as: 'subject',
+})
+
+Subjects.belongsTo(Classes, {
+  foreignKey: 'id',
+  targetKey: 'subjectID',
+  as: 'class',
 })
 
 Teachers.belongsTo(Classes, {

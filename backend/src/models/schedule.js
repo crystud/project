@@ -33,7 +33,11 @@ Schedule.init({
       key: 'id',
     },
   },
-  type: DataTypes.ENUM('numerator', 'denominator'),
+  type: {
+    allowNull: true,
+    defaultValue: null,
+    type: DataTypes.ENUM('numerator', 'denominator'),
+  },
 },
 {
   sequelize,
@@ -41,7 +45,7 @@ Schedule.init({
   tableName: 'schedule',
 })
 
-Classes.belongsTo(Schedule, {
+Classes.hasMany(Schedule, {
   foreignKey: 'id',
   as: 'schedule',
 })
@@ -54,6 +58,11 @@ Schedule.belongsTo(Timetable, {
 Schedule.belongsTo(Classes, {
   foreignKey: 'classID',
   as: 'class',
+})
+
+Schedule.belongsTo(Rooms, {
+  foreignKey: 'roomID',
+  as: 'room',
 })
 
 Rooms.hasMany(Schedule, {
