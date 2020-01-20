@@ -105,8 +105,6 @@ export default {
         },
       } = await axios.post('/student/get', { studentID })
 
-      console.log(errors, student)
-
       commit('setStudent', student || {})
 
       if (errors) {

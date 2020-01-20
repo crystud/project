@@ -72,11 +72,7 @@ export default {
       schedule.forEach((dayItem, i) => {
         const { classes, day } = dayItem
 
-        classes.sort((a, b) => {
-          console.log(a.order < b.order ? 1 : 0)
-
-          return a.order > b.order ? 1 : -1
-        })
+        classes.sort((a, b) => (a.order > b.order ? 1 : -1))
 
         schedule[i] = {
           day,
