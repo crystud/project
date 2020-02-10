@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css?family=PT+Sans:400,700&display=swap&subset=cyrillic');
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+
+	font: 20px 'PT Sans', 'Courier New';
+}
+
+body {
+	height: 100vh;
+	width: 100vw;
+	margin: 0;
+	padding: 0;
+
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	grid-template-rows: 2fr 7fr;
+
+	grid-template-areas: "h h" "a c"
+}
+
+header {
+	grid-area: h;
+	overflow: hidden;
+	background: url("https://wallpapers-fenix.eu/full/180815/211731953.jpg") no-repeat;
+	background-size: 100%;
+	background-position: center;
+}
+
+.bg {
+	width: 100%;
+	height: 100%;
+
+	background: rgb(0, 0, 0, .6);
+	position: relative;
+}
+
+.bg-tri {
+	height: 140px;
+	width: 140px;
+	position: absolute;
+	transform: rotate(45deg);
+	background: rgb(255, 255, 255, .4);
+}
+
+.bg-tri:nth-of-type(1) {
+	right: -70px;
+	bottom: -70px;
+}
+
+.bg-tri:nth-of-type(2) {
+	left: -70px;
+	top: -70px;
+}
+
+header .title {
+	position: absolute;
+	top: 10px;
+	left: 120px;
+	right: 120px;
+	margin: auto;
+	width: 30%;
+	color: #fff;
+}
+
+header .title marquee div {
+	font-size: 24pt;
+	text-align: center;
+}
+
+header .title marquee div a {
+	font-size: 13pt;
+	color: #fff;
+	text-decoration: underline;
+}
+
+content {
+	grid-area: c
+}
+
+aside {
+	grid-area: a
+}
